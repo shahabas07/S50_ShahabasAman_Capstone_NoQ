@@ -10,10 +10,6 @@ const connectDB = () => {
         .catch(err => {
             console.error('MongoDB connection error:', err);
         });
-
-    mongoose.connection.on('error', (err) => {
-        console.error('MongoDB connection error:', err);
-    });
 };
 
 module.exports = connectDB;
