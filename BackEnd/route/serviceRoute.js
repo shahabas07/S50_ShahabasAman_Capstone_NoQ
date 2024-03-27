@@ -3,14 +3,14 @@ const router = express.Router();
 const serviceModal = require("../schema/serviceModal");
 const serviceProfile = require("../schema/serviceProfile");
 const Joi = require("joi");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require('dotenv').config()
 router.use(express.json());
 
-SECRET_KEY="secretkey"
+
 const generateToken = (service) => {
-    return jwt.sign({ username: service.username }, SECRET_KEY, { expiresIn: "2h" })
+    return jwt.sign({ username: service.username }, process.env.SECRET_KEY, { expiresIn: "2h" })
 }
 
 const serviceJoiSchema = Joi.object({
