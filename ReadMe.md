@@ -1,6 +1,6 @@
 ##### Project Name:
 ## NoQ *- Your Seamless Appointment Manager.*
-
+#### [FrontEnd Deployed](https://s50-shahabas-aman-capstone-no-q.vercel.app/)
 ##### Description:
 
 NoQ is a comprehensive platform designed to optimize the scheduling process for service appointments across various industries. By providing a centralized hub for service providers and customers, NoQ revolutionizes the way appointments are booked and managed, ultimately minimizing wait times and enhancing efficiency.
