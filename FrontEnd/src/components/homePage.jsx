@@ -11,6 +11,7 @@ import pp from "../assets/profile.png";
 import facebook from "../assets/facebook.png";
 import instagram from "../assets/instagram.png";
 import github from "../assets/github-sign.png";
+import find from "../assets/find.png"
 
 function homePage() {
   return (
@@ -20,13 +21,14 @@ function homePage() {
           NoQ
         </a>
 
-        <div className="ml-36">
-          <input
-            className="search px-2 p-1 rounded-full"
-            type="text"
-            placeholder="Search"
-          />
-        </div>
+        <div className="relative">
+            <input
+              className="search px-2 p-1 rounded-full"
+              type="text"
+              placeholder="Search"
+            />
+            <img src={find} className="absolute right-2 top-1/2 transform -translate-y-1/2 w-5 h-5" alt="Search Icon" />
+          </div>
         <div className="flex text-white">
           <div className="mr-14 mt-1">
             <a
@@ -38,16 +40,18 @@ function homePage() {
           </div>
           <div className="mr-20 mt-1">
             <a
-              href="/"
+              href="/Docs"
               className="text-md hover:text-purple-300 hover:underline"
             >
               Docs
             </a>
           </div>
           <div className="mr-8 ml-6">
+            <a href="/sign-in">
             <button className="hover:bg-orange-500 hover:text-red-100 text-white font-bold py-1 px-4 rounded-lg ">
               Login
             </button>
+            </a>
           </div>
         </div>
       </nav>
@@ -62,9 +66,11 @@ function homePage() {
           <p className="text-gray-600">
             Say goodbye to long waits and scheduling headaches.
           </p>
+          <a href="/sign-up">
           <button className="block mt-8 text-white px-5 py-3 rounded-lg hover:bg-violet-800 font-medium">
             Get started
           </button>
+          </a>
         </div>
         <div className="w-1/2 mt-24">
           <img src={calu} alt="" />
