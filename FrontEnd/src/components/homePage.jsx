@@ -11,6 +11,7 @@ import pp from "../assets/profile.png";
 import facebook from "../assets/facebook.png";
 import instagram from "../assets/instagram.png";
 import github from "../assets/github-sign.png";
+import find from "../assets/find.png"
 
 function homePage() {
   return (
@@ -20,13 +21,14 @@ function homePage() {
           NoQ
         </a>
 
-        <div className="ml-36">
-          <input
-            className="search px-2 p-1 rounded-full"
-            type="text"
-            placeholder="Search"
-          />
-        </div>
+        <div className="relative">
+            <input
+              className="search px-2 p-1 rounded-full"
+              type="text"
+              placeholder="Search"
+            />
+            <img src={find} className="absolute right-2 top-1/2 transform -translate-y-1/2 w-5 h-5" alt="Search Icon" />
+          </div>
         <div className="flex text-white">
           <div className="mr-14 mt-1">
             <a
@@ -38,16 +40,18 @@ function homePage() {
           </div>
           <div className="mr-20 mt-1">
             <a
-              href="/"
+              href="/Docs"
               className="text-md hover:text-purple-300 hover:underline"
             >
               Docs
             </a>
           </div>
           <div className="mr-8 ml-6">
+            <a href="/sign-in">
             <button className="hover:bg-orange-500 hover:text-red-100 text-white font-bold py-1 px-4 rounded-lg ">
               Login
             </button>
+            </a>
           </div>
         </div>
       </nav>
@@ -62,12 +66,14 @@ function homePage() {
           <p className="text-gray-600">
             Say goodbye to long waits and scheduling headaches.
           </p>
+          <a href="/sign-up">
           <button className="block mt-8 text-white px-5 py-3 rounded-lg hover:bg-violet-800 font-medium">
             Get started
           </button>
+          </a>
         </div>
         <div className="w-1/2 mt-24">
-          <img src={calu} alt="" />
+          <img src={calu} alt="Cal" />
         </div>
       </div>
       <div className="scroll-animation mx-auto py-2 flex items-center justify-around mt-10 rounded-md">
@@ -92,42 +98,42 @@ function homePage() {
         <h1 className="font-bold text-3xl text-center mb-10">Our Features</h1>
         <div className="grid grid-cols-8 sm:grid-cols-8 md:grid-cols-3 gap-8 px-12">
           <div className="p-4 text-center py-4 rounded-md">
-            <img src={profilecus} className="mx-auto w-16" alt="" />
+            <img src={profilecus} className="mx-auto w-16" alt="Customizable" />
             <h2 className="text-xl font-bold mb-4 mt-2">Customizable Profiles</h2>
             <p className="text-sm">
             enable users to personalize their accounts, adjusting preferences, visuals, and information to suit individual needs and preferences seamlessly
             </p>
           </div>
           <div className="p-4 text-center py-4 rounded-md">
-            <img src={time} className="mx-auto w-16" alt="" />
+            <img src={time} className="mx-auto w-16" alt="Availability" />
             <h2 className="text-xl font-bold mb-4 mt-2">Real-Time Availability Updates</h2>
             <p className="text-sm">
             instantly reflects changes in schedules or resources, ensuring users access the most current information in a dynamic environment
             </p>
           </div>
           <div className="p-4 text-center py-4 rounded-md">
-            <img src={email} className="mx-auto w-16" alt="" />
+            <img src={email} className="mx-auto w-16" alt="Alerts" />
             <h2 className="text-xl font-bold mb-4 mt-2">Email Alerts</h2>
             <p className="text-sm">
             notifies users via email about important events, updates, or actions, ensuring timely communication and information delivery.
             </p>
           </div>
           <div className="p-4 text-center py-4 rounded-md">
-            <img src={feature} className="mx-auto w-16" alt="" />
+            <img src={feature} className="mx-auto w-16" alt="Scheduling" />
             <h2 className="text-xl font-bold mb-4 mt-2">Appointment Scheduling</h2>
             <p className="text-sm">
             facilitating the efficient booking and management of appointments, enabling users to easily schedule, modify, and track their engagements.
             </p>
           </div>
           <div className="p-4 text-center py-4 rounded-md">
-            <img src={profile} className="mx-auto w-16" alt="" />
+            <img src={profile} className="mx-auto w-16" alt="Interface" />
             <h2 className="text-xl font-bold mb-4 mt-2">User-Friendly Interface</h2>
             <p className="text-sm">
             Designed with intuitive navigation and clear visuals, ensuring ease of use and enhancing the overall user experience
             </p>
           </div>
           <div className="p-4 text-center py-4 rounded-md">
-            <img src={person} className="mx-auto w-16" alt="" />
+            <img src={person} className="mx-auto w-16" alt="Facility" />
             <h2 className="text-xl font-bold mb-4 mt-2">Facilitation</h2>
             <p className="text-sm">
             simplifies interactions between customers and providers, streamlining processes for seamless communication and transactions.
@@ -140,7 +146,7 @@ function homePage() {
           <div className="grid grid-cols-4 gap-10">
             <div className="bg-gray-950 p-4 border border-gray-300 rounded-lg h-auto">
               <span className="flex">
-                <img className="rounded-full w-9 h-9" src={pp} alt="" />
+                <img className="rounded-full w-9 h-9" src={pp} alt="Profile" />
                 <div className="pl-2 ">
                   <h2 className="text-xl font-bold text-white">Musthafa.c.p</h2>
                   <h3 className="text-sm text-gray-400">@musthafaa</h3>
@@ -153,7 +159,7 @@ function homePage() {
             </div>
             <div className="bg-gray-950 p-4 border border-gray-300 rounded-lg">
               <span className="flex">
-                <img className="rounded-full w-9 h-9" src={pp} alt="" />
+                <img className="rounded-full w-9 h-9" src={pp} alt="Profile" />
                 <div className="pl-2 ">
                   <h2 className="text-xl font-bold text-white">Musthafa.c.p</h2>
                   <h3 className="text-sm text-gray-400">@musthafaa</h3>
@@ -168,7 +174,7 @@ function homePage() {
             </div>
             <div className="bg-gray-950 p-4 border border-gray-300 rounded-lg">
               <span className="flex">
-                <img className="rounded-full w-9 h-9" src={pp} alt="" />
+                <img className="rounded-full w-9 h-9" src={pp} alt="Profile" />
                 <div className="pl-2 ">
                   <h2 className="text-xl font-bold text-white">Musthafa.c.p</h2>
                   <h3 className="text-sm text-gray-400">@musthafaa</h3>
@@ -181,7 +187,7 @@ function homePage() {
             </div>
             <div className="bg-gray-950 p-4 border border-gray-300 rounded-lg">
               <span className="flex">
-                <img className="rounded-full w-9 h-9" src={pp} alt="" />
+                <img className="rounded-full w-9 h-9" src={pp} alt="Profile" />
                 <div className="pl-2 ">
                   <h2 className="text-xl font-bold text-white">Musthafa.c.p</h2>
                   <h3 className="text-sm text-gray-400">@musthafaa</h3>
@@ -195,7 +201,7 @@ function homePage() {
             </div>
             <div className="bg-gray-950 p-4 border border-gray-300 rounded-lg">
               <span className="flex">
-                <img className="rounded-full w-9 h-9" src={pp} alt="" />
+                <img className="rounded-full w-9 h-9" src={pp} alt="Profile" />
                 <div className="pl-2 ">
                   <h2 className="text-xl font-bold text-white">Musthafa.c.p</h2>
                   <h3 className="text-sm text-gray-400">@musthafaa</h3>
@@ -208,7 +214,7 @@ function homePage() {
             </div>
             <div className="bg-gray-950 p-4 border border-gray-300 rounded-lg">
               <span className="flex">
-                <img className="rounded-full w-9 h-9" src={pp} alt="" />
+                <img className="rounded-full w-9 h-9" src={pp} alt="Profile" />
                 <div className="pl-2 ">
                   <h2 className="text-xl font-bold text-white">Musthafa.c.p</h2>
                   <h3 className="text-sm text-gray-400">@musthafaa</h3>
@@ -237,9 +243,9 @@ function homePage() {
           <p className="mt-6 text-sm">Inspired by Cal</p>
         </div>
         <div class="flex justify-between items-end w-60">
-          <img class="w-10 h-10" src={facebook} alt="" />
-          <img class="w-10 h-10" src={github} alt="" />
-          <img class="w-10 h-10" src={instagram} alt="" />
+          <img class="w-10 h-10" src={facebook} alt="facebook" />
+          <img class="w-10 h-10" src={github} alt="github" />
+          <img class="w-10 h-10" src={instagram} alt="instagram" />
         </div>
       </div>
     </div>

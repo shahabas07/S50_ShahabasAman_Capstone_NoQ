@@ -5,9 +5,11 @@ const serviceProfile = require("../schema/serviceProfile");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const cors = require("cors"); 
 require('dotenv').config()
 router.use(express.json());
 
+router.use(cors()); 
 
 const generateToken = (service) => {
     return jwt.sign({ username: service.username }, process.env.SECRET_KEY, { expiresIn: "2h" })
@@ -70,7 +72,7 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", validateservice, async (req, res) => {
     try {
-        const { username, email, password , name, timezone } = req.body;
+        const { username, email,timezone, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
         const profile = (await serviceProfile.create({ username: username, email }));
         const newservice = await serviceModal.create({
@@ -79,7 +81,6 @@ router.post("/", validateservice, async (req, res) => {
             password: hashedPassword,
             profile: profile._id,
             timezone: timezone,
-            name: name
         });
         const token = generateToken(newservice);
 
@@ -89,6 +90,41 @@ router.post("/", validateservice, async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
+
+router.post("/sign-in", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        const service = await serviceModal.findOne({ username });
+        if (!service) {
+            return res.status(401).json({ error: "Invalid username" });
+        }   
+        
+        
+        if (!password || !service.password) {
+            return res.status(401).json({ error: "Invalid credentials" });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, service.password); // Await here
+        
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: "Invalid credentials" });
+        }
+
+        const token = generateToken(service);
+        if (!token) { // Check if token generation failed
+            return res.status(500).json({ error: "Failed to generate token" });
+        }
+
+        res.status(201).json({ username: service.username, token });
+       
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+
 
 router.put("/:id", validatePutservice, async (req, res) => {
     try {
