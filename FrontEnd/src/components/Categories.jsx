@@ -1,28 +1,10 @@
 import React, { useState } from "react";
+import Categories from "./dummyServices";
 
 const ServicesCategories = () => {
-  const initialCategories = [
-    "Automotive Repair",
-    "Healthcare",
-    "Plumbing",
-    "Electrical",
-    "Legal Services",
-    "Beauty and Wellness",
-    "Home Maintenance",
-    "Financial Services",
-    "Babysitting",
-    "Furniture Repair",
-    "Gardening",
-    "Cleaning",
-    "Pest Control Services",
-    "Counseling",
-    "Managing",
-    "others"
-  ];
-
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredCategories = initialCategories.filter(category =>
+  const filteredCategories = Categories.filter(category =>
     category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
