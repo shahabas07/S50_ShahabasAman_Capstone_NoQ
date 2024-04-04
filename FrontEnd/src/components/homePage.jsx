@@ -32,7 +32,7 @@ function homePage() {
         <div className="flex text-white">
           <div className="mr-14 mt-1">
             <a
-              href="/"
+              href="/categories"
               className="text-md hover:text-purple-300 hover:underline"
             >
               Service Categories
