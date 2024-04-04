@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
@@ -32,12 +32,12 @@ function SignIn() {
         </p>
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8  lg:w-1/2 bg-violet-950 text-gray-50 rounded-[24px] px-10 py-6 shadow-md ">
           <div className="mb-6">
-            <a href="">
+            {/* <a href="">
               <img
                 className="h-2 w-2 mr-2 rounded"
                 src="path/to/google-sign-in-button.png"
               />
-            </a>
+            </a> */}
             <label htmlFor="username" className="ml-2 text-yellow-100">Username:</label> <br />
             <input
               {...register("username")}
