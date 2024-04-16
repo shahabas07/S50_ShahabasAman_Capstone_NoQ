@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Categories from "./dummyServices";
 
 const ServicesCategories = () => {
@@ -20,7 +21,7 @@ const ServicesCategories = () => {
 
         <center>
           <input
-            className="mb-8 w-4/5 border border-gray-800 rounded-lg py-3 px-7"
+            className="mb-8 w-4/5 border outline-none border-gray-800 rounded-lg py-3 px-7"
             type="search"
             placeholder="Search your service"
             style={{
@@ -33,9 +34,11 @@ const ServicesCategories = () => {
         <div className="categories grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 bg-violet-900 h-96 pt-7 pr-7 pl-7">
           {filteredCategories.map((category, index) => (
             <div className="p-4" key={index}>
-              <div className="bg-white shadow-lg rounded-lg p-3 text-center hover:bg-orange-400 hover:text-white">
-                <h2 className="text-sm font-semibold">{category}</h2>
-              </div>
+              <Link to={`/categories/${category}`} className="block">
+                <div className="bg-white shadow-lg rounded-lg p-3 text-center hover:bg-orange-400 hover:text-white">
+                  <h2 className="text-sm font-semibold">{category}</h2>
+                </div>
+              </Link>
             </div>
           ))}
         </div>
