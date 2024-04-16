@@ -10,6 +10,20 @@ const initialCategories = [
             "availability": true
           },
           {
+            "name": "Green Leaf Florist",
+            "username": "green_leaf_florist",
+            "location": "Park Street, Kolkata",
+            "rating": 2,
+            "availability": true
+          },
+          {
+            "name": "Sunrise cars",
+            "username": "sunrise_cars",
+            "location": "Main Street, Springfield",
+            "rating": 2,
+            "availability": true
+          },                    
+          {
             "name": "Another Service",
             "username": "another_service",
             "location": "Some Place, Somewhere",
