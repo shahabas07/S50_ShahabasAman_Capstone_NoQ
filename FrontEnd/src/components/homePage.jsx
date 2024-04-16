@@ -141,7 +141,7 @@ function homePage() {
           </div>
         </div>
         <hr className="mt-10" />
-        <div className="container mx-auto p-8 pb-10">
+        <div className="container mx-auto p-8 pb-4">
           <h1 className="font-bold text-3xl text-center mb-10">Reviews</h1>
           <div className="grid grid-cols-4 gap-10">
             <div className="bg-gray-950 p-4 border border-gray-300 rounded-lg h-auto">
@@ -199,32 +199,8 @@ function homePage() {
                 aliquip ex ea commodo consequat.
               </p>
             </div>
-            <div className="bg-gray-950 p-4 border border-gray-300 rounded-lg">
-              <span className="flex">
-                <img className="rounded-full w-9 h-9" src={pp} alt="Profile" />
-                <div className="pl-2 ">
-                  <h2 className="text-xl font-bold text-white">Musthafa.c.p</h2>
-                  <h3 className="text-sm text-gray-400">@musthafaa</h3>
-                </div>
-              </span>
-              <p className="text-gray-200 mt-3">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt
-              </p>
-            </div>
-            <div className="bg-gray-950 p-4 border border-gray-300 rounded-lg">
-              <span className="flex">
-                <img className="rounded-full w-9 h-9" src={pp} alt="Profile" />
-                <div className="pl-2 ">
-                  <h2 className="text-xl font-bold text-white">Musthafa.c.p</h2>
-                  <h3 className="text-sm text-gray-400">@musthafaa</h3>
-                </div>
-              </span>
-              <p className="text-gray-200 mt-3">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt
-              </p>
-            </div>
+            
+           
           </div>
         </div>
       </div>
