@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 
 //Schema for Service Provider Reviews&Ratings.
 const reviewSchema = new mongoose.Schema({
-    reviewer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'customer' 
+  
+    reviewerName:{
+      type:  String,
+      required: true
     },
     rating: {
       type: Number,

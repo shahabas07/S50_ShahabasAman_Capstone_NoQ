@@ -16,9 +16,6 @@ const serviceSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  timezone: {
-    type: String, 
-  },
   profile: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'serviceProfile'

@@ -1,37 +1,33 @@
 const mongoose = require('mongoose');
 
-//schema for specific time slots
-const specificTimeSchema = new mongoose.Schema({
-  startTime: {
-    type: String, 
+const sectionSchema = new mongoose.Schema({
+  // Reference to the service provider profile
+  ServiceProvider_id:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Profile',
     required: true
   },
-  available: {
-    type: Boolean,
-    default: true 
-  },
-});
-
-// schema for calendar availability
-const availabilitySchema = new mongoose.Schema({
-  date: {
+  startTime: {
     type: Date,
     required: true
   },
-  specificTimes: [specificTimeSchema]
-});
-
-// schema for Service Provider section of each service points
-const sectionSchema = new mongoose.Schema({
-  sectionName: String,
-  note: String,
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Profile' 
+  endTime: {
+    type: Date,
+    required: true
   },
-  availability: [availabilitySchema] 
+  // Days of the week when the availability repeats
+  // You can adjust this based on your requirements
+  daysOfWeek: {
+    type: [Number], // 0: Sunday, 1: Monday, ..., 6: Saturday
+    required: true
+  },
+  // Maximum number of appointments that can be scheduled in this slot
+  bookedHours: {
+    type: [Date],
+    default: [] 
+  }
 });
 
-const SectionModel = mongoose.model('Section', sectionSchema);
+const section = mongoose.model('section', sectionSchema);
 
-module.exports = SectionModel;
+module.exports = section;
