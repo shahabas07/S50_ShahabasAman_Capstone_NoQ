@@ -39,8 +39,12 @@ router.post('/', async (req, res) => {
     const newSection = await section.save();
     res.status(201).json(newSection);
   } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
+    if (err.name === 'ValidationError') {
+      res.status(422).json({ message: err.message });
+    } else {
+      res.status(400).json({ message: err.message });
+    }
+  }  
 });
 
 // PUT update an existing availability section
