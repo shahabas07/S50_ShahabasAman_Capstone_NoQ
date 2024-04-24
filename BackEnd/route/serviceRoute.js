@@ -112,7 +112,7 @@ router.post("/sign-in", async (req, res) => {
         }
 
         const token = generateToken(service);
-        if (!token) { // Check if token generation failed
+        if (!token) { 
             return res.status(500).json({ error: "Failed to generate token" });
         }
 

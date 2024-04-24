@@ -8,7 +8,6 @@ router.use(express.json());
 const putProfileJoiSchema = Joi.object({
     username: Joi.string().alphanum().min(3).max(30),
     email: Joi.string().email(),
-    password: Joi.string(),
     timezone: Joi.string(),
     name: Joi.string(),
     avatar: Joi.any(), 
@@ -52,16 +51,28 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", validateputProfile, async (req, res) => {
     try {
-        const updatedservice = await serviceProfile.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const id = req.params.id;
+        const updateFields = { ...req.body };
+
+        const updatedservice = await serviceProfile.findByIdAndUpdate(
+            id,
+            updateFields,
+            { new: true }
+        );
+
         if (!updatedservice) {
             return res.status(404).json({ message: "service not found" });
         }
+
         res.json(updatedservice);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
+
+
+
 
 router.delete("/:id", async (req, res) => {
     try {
