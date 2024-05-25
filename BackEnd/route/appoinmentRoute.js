@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Appointment = require('../schema/appointmentSchema'); // Corrected typo here
+const Appointment = require('../schema/appointmentSchema'); 
 const moment = require('moment')
 
 // Create a new appointment
@@ -8,7 +8,7 @@ router.post('/', async (req, res, next) => {
     try {
         req.body.date = moment(req.body.date, 'DD-MM-YYYY').add(1, 'day').toISOString();
         let reqBody = req.body;
-        let appointment = new Appointment(reqBody); // Corrected typo here
+        let appointment = new Appointment(reqBody); 
         await appointment.save();
         res.setHeader("Content-Type", "application/json");
         res.status(201).json({ message: "Appointment successfully booked", isError: false, data: { appointment: appointment } });

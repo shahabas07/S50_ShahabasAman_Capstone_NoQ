@@ -105,7 +105,7 @@ router.post("/sign-in", async (req, res) => {
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
-        const isPasswordValid = await bcrypt.compare(password, service.password); // Await here
+        const isPasswordValid = await bcrypt.compare(password, service.password); 
         
         if (!isPasswordValid) {
             return res.status(401).json({ error: "Invalid credentials" });
@@ -126,30 +126,47 @@ router.post("/sign-in", async (req, res) => {
 
 
 
-router.put("/:id", validatePutservice, async (req, res) => {
+// router.put("/:id", validatePutservice, async (req, res) => {
+//     try {
+//         const updatedservice = await serviceModal.findByIdAndUpdate(req.params.id, req.body, { new: true });
+//         if (!updatedservice) {
+//             return res.status(404).json({ message: "service not found" });
+//         }
+//         res.json(updatedservice);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: "Internal server error" });
+//     }
+// });
+
+// router.delete("/:id", async (req, res) => {
+//     try {
+//         const deletedservice = await serviceModal.findByIdAndDelete(req.params.id);
+//         if (!deletedservice) {
+//             return res.status(404).json({ message: "service not found" });
+//         }
+//         res.json({ message: "service deleted successfully" });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: "Internal server error" });
+//     }
+// });
+
+router.delete("/:username", async (req, res) => {
     try {
-        const updatedservice = await serviceModal.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updatedservice) {
-            return res.status(404).json({ message: "service not found" });
+        const usernameToDelete = req.params.username;
+        const deletedservice = await serviceModal.deleteOne({ username: usernameToDelete });
+        if (deletedservice.deletedCount === 0) {
+            return res.status(404).json({ message: "Service not found" });
         }
-        res.json(updatedservice);
+        res.json({ message: "Service deleted successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
 
-router.delete("/:id", async (req, res) => {
-    try {
-        const deletedservice = await serviceModal.findByIdAndDelete(req.params.id);
-        if (!deletedservice) {
-            return res.status(404).json({ message: "service not found" });
-        }
-        res.json({ message: "service deleted successfully" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-});
+
+
 
 module.exports = router;

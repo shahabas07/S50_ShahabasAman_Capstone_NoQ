@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const profileSchema = new mongoose.Schema({
   username: String,
   name:String,
+  category: String,
   avatar: { type: Buffer },
   location:String,
   zip: Number,
@@ -12,6 +13,7 @@ const profileSchema = new mongoose.Schema({
   email: String,
   picture:{ type: Buffer },
   timezone:String,
+  review: Number
 }); 
 
 const serviceProfile = mongoose.model('Profile', profileSchema);

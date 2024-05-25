@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 function SignIn() {
   const { register, handleSubmit } = useForm();
-  const [serviceProviderData, setServiceProviderData] = useState([]);
+  const [error, setError] = useState(null);
 
   const onSubmit = (data) => {
     const { username, password } = data;
@@ -12,14 +13,19 @@ function SignIn() {
     axios.post('http://localhost:2024/service/sign-in', { username, password })
       .then(response => {
         console.log(response);
-        setServiceProviderData(response.data); 
-      })
+        const token = response.data.token;
+        Cookies.set('token', token, { expires: 7 });
+        const usernameFromResponse = response.data.username;
+        window.location.href = `/profile/${usernameFromResponse}`; 
+        console.log(token)
+      }) 
       .catch(error => {
         console.error('Error fetching serviceProvider data:', error);
+        setError('Invalid username or password');
       });
+
   };
   
-
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className=" flex justify-center align-middle bg-violet-950 pt-2">
@@ -32,12 +38,6 @@ function SignIn() {
         </p>
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8  lg:w-1/2 bg-violet-950 text-gray-50 rounded-[24px] px-10 py-6 shadow-md ">
           <div className="mb-6">
-            {/* <a href="">
-              <img
-                className="h-2 w-2 mr-2 rounded"
-                src="path/to/google-sign-in-button.png"
-              />
-            </a> */}
             <label htmlFor="username" className="ml-2 text-yellow-100">Username:</label> <br />
             <input
               {...register("username")}
@@ -59,6 +59,11 @@ function SignIn() {
               Sign In&nbsp;  &#x2B62;
             </button>
           </div>
+          {error && (
+            <div className="text-center mt-2 text-red-600">
+              {error}
+            </div>
+          )}
           <div className="text-center mt-6 text-gray-300">
             <div className="flex justify-center">
               <p>Don't have an account?</p> &nbsp; 
@@ -77,3 +82,5 @@ function SignIn() {
 }
 
 export default SignIn;
+
+

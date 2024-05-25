@@ -17,9 +17,9 @@ app.use(express.json());
 
 app.use("/service", serviceRoute);
 app.use("/profile", profileRoute);
-app.use("/appointments", appoinmentRoute);
+app.use("/appointment", appoinmentRoute);
 app.use("/section", sectionRoute);
-app.use("/reviews", reviewRoute);
+app.use("/review", reviewRoute);
 
 app.listen(port, () => {
   console.log(`🚀 Server running on PORT: ${port}`);

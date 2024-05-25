@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-//Schema for Service Provider SignUP/SignIn 
 const serviceSchema = new mongoose.Schema({
   username: {
     type: String,

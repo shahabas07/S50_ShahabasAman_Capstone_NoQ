@@ -1,0 +1,81 @@
+:root {
+    --fc-button-text-color: #000000;
+    --fc-button-bg-color: #ffffff;
+    --fc-button-hover-bg-color: rgba(217, 222, 201, 0);
+    --fc-button-hover-border-color: rgba(255, 255, 255, 0);
+    --fc-button-active-bg-color: #d8d9d200;
+    --fc-button-active-border-color: #4b535a00;
+    --fc-event-bg-color: #3788d8;
+    --fc-event-border-color: #3788d8;
+    --fc-event-text-color: #fff;
+    --fc-event-selected-overlay-color: rgba(0, 0, 0, 0);
+    --fc-more-link-bg-color: #d0d0d0;
+    --fc-more-link-text-color: inherit;
+    --fc-event-resizer-thickness: 8px;
+    --fc-event-resizer-dot-total-width: 8px;
+    --fc-event-resizer-dot-border-width: 1px;
+    --fc-non-business-color: hsla(0, 77%, 47%, 0);
+    --fc-bg-event-color: #8edf8200;
+    --fc-bg-event-opacity: 1;
+    --fc-highlight-color: rgba(18, 141, 63, 0);
+    --fc-today-bg-color: rgb(189, 246, 195);
+    --fc-now-indicator-color: red;
+    --fc-button-border-color: rgba(69, 32, 32, 0);
+    --fc-small-font-size: 20px;
+    --fc-page-bg-color: #27cd2400;
+    --fc-neutral-bg-color: hsla(0, 55%, 31%, 0);
+    --fc-neutral-text-color: rgba(124, 29, 233, 0);
+    --fc-border-color: #a9414100;
+}
+.fc-theme-standard td, .fc-theme-standard th {
+    border: 0px solid var(--fc-border-color);
+}
+.fc-daygrid-day-events{
+    display:none;
+}
+.fc-daygrid-day-bg{
+    display:none;
+}
+tbody{
+    margin-top: 10px;
+}
+.fc-day-other{  
+     visibility: hidden;
+}
+.fc-day{
+    background-color: #dce4e9;
+    border-radius: 10px;
+    border: 14px rgb(255, 255, 255) solid !important ;
+    
+}
+.fc-day:hover{
+    background-color: rgb(193, 193, 193);
+}
+.fc-daygrid-day-frame{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fc-col-header-cell:hover{
+    background-color: #8c959e;
+}
+
+.fc-col-header-cell {
+    color:#fff;
+    background-color: #8c959e;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+.fc-daygrid-day-frame:hover{
+    border-radius: 50px;
+}
+.fc-day-today {
+    font-weight: bold;
+}
+.fc-day-today:hover{
+    background-color: #c7c4c4 !important;
+}
+.Time{
+    border-left: 1px black solid;
+}

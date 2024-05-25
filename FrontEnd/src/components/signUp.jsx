@@ -1,19 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 function SignUp() {
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const [error, setError] = useState(null); // State to store sign-up error
 
   const onSubmit = (data) => {
     axios.post("http://localhost:2024/service", data)
       .then(response => {
-        console.log(response)
+        const token = response.data.token;
+        Cookies.set('token', token, { expires: 7 });
+  
+        // Get the username from the form data
+        const usernameFromInput = data.username;
+  
+        if (usernameFromInput) {
+          window.location.href = `/profile/${usernameFromInput}`; // Redirect to profile page
+        } else {
+          setError('Error signing up. Username not found.');
+        }
       })
       .catch(error => {
-        console.log(error)
-      })
+        console.error('Error signing up:', error);
+        setError('Error signing up. Please try again.');
+      });
   };
+  
+  
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -41,12 +56,6 @@ function SignUp() {
               type="email"
             /> <br/>
             {errors.email && <p className="text-red-500">Email is required</p>}
-            <label htmlFor="timezone" className="ml-2 text-yellow-100">Time Zone:</label> <br />
-            <input
-              {...register("timezone")}
-              className="border mb-4 p-2 w-full text-black rounded-full shadow-sm focus:outline-none focus:shadow-outline"
-              type="text"
-            /> <br/>
             <label htmlFor="password" className="ml-2 text-yellow-100">Password:</label> <br />
             <input
               {...register("password", { required: true })}
@@ -58,11 +67,16 @@ function SignUp() {
           <div className="flex justify-center">
             <button
               className="bg-gray-800 hover:bg-gray-900 text-white font-medium py-1 px-6 rounded-lg focus:outline-none focus:shadow-outline mt-2"
-              type="submit"
+              type="submit" 
             >
               Sign Up&nbsp;  &#x2B62;
             </button>
           </div>
+          {error && (
+            <div className="text-center mt-2 text-red-600">
+              {error}
+            </div>
+          )}
           <div className="text-center mt-6 text-gray-300">
             <div className="flex justify-center">
               <p>Already have an account?</p> &nbsp;
