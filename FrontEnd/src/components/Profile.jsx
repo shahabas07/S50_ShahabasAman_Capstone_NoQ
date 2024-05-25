@@ -9,6 +9,7 @@ import QR from "./QR";
 import NoQ from "../assets/NoQ.png";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
+import API_URI from "../../Env"
 
 const Profile = () => {
   const { User } = useParams();
@@ -20,8 +21,9 @@ const Profile = () => {
   const [popupVisible, setPopupVisible] = useState(false);
 
   useEffect(() => {
+    console.log(API_URI)
     axios
-      .get(`https://s50-shahabasaman-capstone-noq.onrender.com/profile`)
+      .get(`${API_URI}/profile`)
       .then((response) => {
         const profiles = response.data;
         console.log("All Profiles:", profiles);
@@ -71,13 +73,13 @@ const Profile = () => {
   const handleConfirm = async (id, username) => {
     try {
       const profileResponse = await axios.delete(
-        `https://s50-shahabasaman-capstone-noq.onrender.com/profile/${id}`
+        `${API_URI}/profile/${id}`
       );
       console.log(profileResponse.data.message);
 
       // Delete service by username
       const serviceResponse = await axios.delete(
-        `https://s50-shahabasaman-capstone-noq.onrender.com/service/${username}`
+        `${API_URI}/service/${username}`
       );
       console.log(serviceResponse.data.message);
     } catch (error) {
