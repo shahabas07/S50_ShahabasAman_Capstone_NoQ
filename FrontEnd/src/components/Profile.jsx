@@ -21,7 +21,7 @@ const Profile = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:2024/profile`)
+      .get(`https://s50-shahabasaman-capstone-noq.onrender.com/profile`)
       .then((response) => {
         const profiles = response.data;
         console.log("All Profiles:", profiles);
@@ -71,13 +71,13 @@ const Profile = () => {
   const handleConfirm = async (id, username) => {
     try {
       const profileResponse = await axios.delete(
-        `http://localhost:2024/profile/${id}`
+        `https://s50-shahabasaman-capstone-noq.onrender.com/profile/${id}`
       );
       console.log(profileResponse.data.message);
 
       // Delete service by username
       const serviceResponse = await axios.delete(
-        `http://localhost:2024/service/${username}`
+        `https://s50-shahabasaman-capstone-noq.onrender.com/service/${username}`
       );
       console.log(serviceResponse.data.message);
     } catch (error) {

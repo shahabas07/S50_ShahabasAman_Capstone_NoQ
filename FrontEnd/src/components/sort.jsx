@@ -11,7 +11,7 @@ function Sort() {
   const [ratingFilter, setRatingFilter] = useState("");
 
   useEffect(() => {
-    axios.get(`http://localhost:2024/profile?category=${category}`)
+    axios.get(`https://s50-shahabasaman-capstone-noq.onrender.com/profile?category=${category}`)
       .then(response => {
         const filteredServices = response.data.filter(service => service.category === category);
         setFilteredItems(filteredServices);
@@ -44,7 +44,7 @@ function Sort() {
 
       setFilteredItems(newFilteredItems);
     } else {
-      axios.get(`http://localhost:2024/profile?category=${category}`)
+      axios.get(`https://s50-shahabasaman-capstone-noq.onrender.com/profile?category=${category}`)
         .then(response => {
           const filteredServices = response.data.filter(service => service.category === category);
           setFilteredItems(filteredServices);

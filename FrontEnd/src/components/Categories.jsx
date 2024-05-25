@@ -9,7 +9,7 @@ const ServicesCategories = () => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:2024/profile')
+    axios.get('https://s50-shahabasaman-capstone-noq.onrender.com/profile')
       .then(response => {
         const uniqueCategories = new Set(response.data.map(item => item.category));
         setCategories(Array.from(uniqueCategories));

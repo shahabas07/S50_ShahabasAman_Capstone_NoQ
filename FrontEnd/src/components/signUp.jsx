@@ -8,7 +8,7 @@ function SignUp() {
   const [error, setError] = useState(null); // State to store sign-up error
 
   const onSubmit = (data) => {
-    axios.post("http://localhost:2024/service", data)
+    axios.post("https://s50-shahabasaman-capstone-noq.onrender.com/service", data)
       .then(response => {
         const token = response.data.token;
         Cookies.set('token', token, { expires: 7 });
