@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const serviceProfile = require("../schema/serviceProfile");
 const Joi = require("joi");
+const cors = require("cors");
 require('dotenv').config()
 router.use(express.json());
-
+router.use(cors());
 const putProfileJoiSchema = Joi.object({
     username: Joi.string().alphanum().min(3).max(30),
     email: Joi.string().email(),
@@ -16,6 +17,9 @@ const putProfileJoiSchema = Joi.object({
     website: Joi.string().uri(), 
     bio: Joi.string(),
     picture: Joi.any(),
+    category: Joi.string(),
+    review: Joi.number().integer()
+
 }).min(1);
 
 function validateputProfile(req, res, next) {
@@ -53,17 +57,14 @@ router.put("/:id", validateputProfile, async (req, res) => {
     try {
         const id = req.params.id;
         const updateFields = { ...req.body };
-
         const updatedservice = await serviceProfile.findByIdAndUpdate(
             id,
             updateFields,
             { new: true }
         );
-
         if (!updatedservice) {
             return res.status(404).json({ message: "service not found" });
         }
-
         res.json(updatedservice);
     } catch (error) {
         console.error(error);
