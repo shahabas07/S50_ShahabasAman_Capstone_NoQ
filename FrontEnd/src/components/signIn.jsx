@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from 'js-cookie';
+import API_URI from "../../Env"
 
 function SignIn() {
   const { register, handleSubmit } = useForm();
@@ -10,7 +11,7 @@ function SignIn() {
   const onSubmit = (data) => {
     const { username, password } = data;
   
-    axios.post('http://localhost:2024/service/sign-in', { username, password })
+    axios.post(`${API_URI}/service/sign-in`, { username, password })
       .then(response => {
         console.log(response);
         const token = response.data.token;

@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from 'js-cookie';
+import API_URI from "../../Env"
 
 function SignUp() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [error, setError] = useState(null); // State to store sign-up error
 
   const onSubmit = (data) => {
-    axios.post("http://localhost:2024/service", data)
+    axios.post(`${API_URI}/service`, data)
       .then(response => {
         const token = response.data.token;
         Cookies.set('token', token, { expires: 7 });
