@@ -87,7 +87,7 @@ const Profile = () => {
         console.error("Error deleting:", error.message);
       }
     }
-    window.location.reload();
+    // window.location.reload();
   };
 
   const [isOpen, setIsOpen] = useState(false);
