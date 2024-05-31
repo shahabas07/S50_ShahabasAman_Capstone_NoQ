@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import NoQ from "../assets/NoQ.png"
-
+import API_URI from "../../Env"
 
 const ServicesCategories = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:2024/profile')
+    axios.get(`${API_URI}/profile`)
       .then(response => {
         const uniqueCategories = new Set(response.data.map(item => item.category));
         setCategories(Array.from(uniqueCategories));
