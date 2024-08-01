@@ -1,21 +1,24 @@
+// serviceProfile.js
 const mongoose = require('mongoose');
 
-//Schema for Service Provider Profile 
 const profileSchema = new mongoose.Schema({
   username: String,
-  name:String,
+  name: String,
   category: String,
   avatar: { type: Buffer },
-  location:String,
+  location: String,
   zip: Number,
   website: String,
   bio: String,
   email: String,
-  picture:{ type: Buffer },
-  timezone:String,
-  review: Number
-}); 
+  picture: { type: Buffer },
+  timezone: String,
+  review: Number,
+  section: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Section'
+  }
+});
 
-const serviceProfile = mongoose.model('Profile', profileSchema);
-
-module.exports = serviceProfile;
+const ServiceProfile = mongoose.model('Profile', profileSchema);
+module.exports = ServiceProfile;

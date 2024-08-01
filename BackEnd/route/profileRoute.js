@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const multer = require('multer');
 const serviceProfile = require("../schema/serviceProfile");
 const Joi = require("joi");
 const cors = require("cors");
 require('dotenv').config()
 router.use(express.json());
 router.use(cors());
+
 const putProfileJoiSchema = Joi.object({
     username: Joi.string().alphanum().min(3).max(30),
     email: Joi.string().email(),
@@ -53,24 +55,37 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.put("/:id", validateputProfile, async (req, res) => {
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+router.put("/:id", upload.fields([{ name: 'avatar' }, { name: 'picture' }]), async (req, res) => {
     try {
-        const id = req.params.id;
-        const updateFields = { ...req.body };
-        const updatedservice = await serviceProfile.findByIdAndUpdate(
-            id,
-            updateFields,
-            { new: true }
-        );
-        if (!updatedservice) {
-            return res.status(404).json({ message: "service not found" });
-        }
-        res.json(updatedservice);
+      const id = req.params.id;
+      const updateFields = { ...req.body };
+  
+      if (req.files['avatar']) {
+        updateFields.avatar = req.files['avatar'][0].buffer;
+      }
+      if (req.files['picture']) {
+        updateFields.picture = req.files['picture'][0].buffer;
+      }
+  
+      const updatedService = await serviceProfile.findByIdAndUpdate(
+        id,
+        updateFields,
+        { new: true }
+      );
+  
+      if (!updatedService) {
+        return res.status(404).json({ message: "Service not found" });
+      }
+  
+      res.json(updatedService);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal server error" });
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
     }
-});
+  });
 
 
 

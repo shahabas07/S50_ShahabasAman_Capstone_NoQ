@@ -2,3 +2,10 @@
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
 }
+
+.fc-day-disabled {
+    background-color: #f0f0f0; /* Light gray background */
+    color: #9b9b9b; /* Gray text */
+    pointer-events: none; /* Prevent clicks */
+  }
+  

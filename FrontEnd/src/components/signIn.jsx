@@ -11,14 +11,16 @@ function SignIn() {
   const onSubmit = (data) => {
     const { username, password } = data;
   
-    axios.post(`${API_URI}/service/sign-in`, { username, password })
+    // axios.post(`${API_URI}/service/sign-in`, { username, password })
+    axios.post('http://localhost:2024/service/sign-in', data)
+
       .then(response => {
         console.log(response);
         const token = response.data.token;
         Cookies.set('token', token, { expires: 7 });
         const usernameFromResponse = response.data.username;
         window.location.href = `/profile/${usernameFromResponse}`; 
-        console.log(token)
+        console.log(token)  
       }) 
       .catch(error => {
         console.error('Error fetching serviceProvider data:', error);
