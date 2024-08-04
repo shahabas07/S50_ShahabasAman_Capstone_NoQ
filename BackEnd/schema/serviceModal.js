@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+// serviceModal.js
+const mongoose = require('mongoose');
 
 const serviceSchema = new mongoose.Schema({
   username: {
@@ -10,16 +11,15 @@ const serviceSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  email: { 
+  email: {
     type: String,
-    required: true,
     unique: true
   },
   profile: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'serviceProfile'
+    ref: 'Profile'
   }
 });
 
-const serviceModal = mongoose.model("service", serviceSchema);
-module.exports = serviceModal;
+const Service = mongoose.model("Service", serviceSchema);
+module.exports = Service;

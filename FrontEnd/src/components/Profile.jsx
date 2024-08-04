@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Calendar from "./Calendar";
@@ -9,7 +9,7 @@ import QR from "./QR";
 import NoQ from "../assets/NoQ.png";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
-import API_URI from "../../Env"
+import API_URI from "../../Env";
 
 const Profile = () => {
   const { User } = useParams();
@@ -19,14 +19,25 @@ const Profile = () => {
   const [jwtUsername, setJwtUsername] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [editProfileVisible, setEditProfileVisible] = useState(false);
+  const editProfileModalRef = useRef(null);
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [profilePictureUrl, setProfilePictureUrl] = useState("");
+
+  const bufferToBase64 = (buffer) => {
+    const binary = new Uint8Array(buffer).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      ""
+    );
+    return btoa(binary);
+  };
 
   useEffect(() => {
-    console.log(API_URI)
     axios
-      .get(`${API_URI}/profile`)
+      .get(`http://localhost:2024/profile`)
       .then((response) => {
         const profiles = response.data;
-        console.log("All Profiles:", profiles);
         const userProfile = profiles.find(
           (profile) => profile.username === User
         );
@@ -51,6 +62,28 @@ const Profile = () => {
       });
   }, [User]);
 
+  useEffect(() => {
+    if (profileData) {
+      if (profileData.avatar) {
+        const base64String = bufferToBase64(profileData.avatar.data);
+        setAvatarUrl(`data:image/jpeg;base64,${base64String}`);
+      } else {
+        setAvatarUrl(
+          "https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"
+        );
+      }
+
+      if (profileData.picture) {
+        const base64String_2 = bufferToBase64(profileData.picture.data);
+        setProfilePictureUrl(`data:image/jpeg;base64,${base64String_2}`);
+      } else {
+        setProfilePictureUrl(
+          "https://static.vecteezy.com/system/resources/thumbnails/012/251/644/small/honeycomb-line-art-background-simple-beehive-seamless-pattern-illustration-of-flat-geometric-texture-symbol-hexagon-hexagonal-sign-or-cell-icon-honey-bee-hive-black-and-white-color-vector.jpg"
+        );
+      }
+    }
+  }, [profileData]);
+
   const getCookies = (name) => {
     const cookies = document.cookie.split("; ");
     for (let i = 0; i < cookies.length; i++) {
@@ -73,15 +106,14 @@ const Profile = () => {
   const handleConfirm = async (id, username) => {
     try {
       const profileResponse = await axios.delete(
-        `${API_URI}/profile/${id}`
+        `http://localhost:2024/profile/${id}`
       );
       console.log(profileResponse.data.message);
-
-      // Delete service by username
       const serviceResponse = await axios.delete(
-        `${API_URI}/service/${username}`
+        `http://localhost:2024/service/${username}`
       );
       console.log(serviceResponse.data.message);
+      window.location.reload();
     } catch (error) {
       if (error.response) {
         console.error("Failed to delete:", error.response.data.message);
@@ -89,10 +121,7 @@ const Profile = () => {
         console.error("Error deleting:", error.message);
       }
     }
-    // window.location.reload();
   };
-
-  const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -107,7 +136,14 @@ const Profile = () => {
   };
 
   const openEditProfilePopup = () => {
-    setPopupVisible(true);
+    console.log("Opening Edit Profile Popup");
+    setIsOpen(!isOpen);
+    setEditProfileVisible(true);
+  };
+
+  const closeEditProfilePopup = () => {
+    console.log("Closing Edit Profile Popup");
+    setEditProfileVisible(false);
   };
 
   return (
@@ -115,7 +151,7 @@ const Profile = () => {
       {loading ? (
         <div className="my-12">
           <p className="text-center mb-5 font-bold">Loading...</p>
-          <div class="flex justify-center items-center h-2/3">
+          <div className="flex justify-center items-center h-2/3">
             <Box sx={{ width: "30%" }}>
               <LinearProgress />
             </Box>
@@ -129,7 +165,7 @@ const Profile = () => {
           <p className="font-bold text-xl p-10">User doesn't exist.</p>
           <a
             href="/"
-            className="bg-violet-800 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded "
+            className="bg-violet-800 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded"
           >
             Go to Homepage
           </a>
@@ -188,24 +224,23 @@ const Profile = () => {
                     <ul
                       className={`absolute z-[1000] float-left m-0 ${
                         isOpen ? "block" : "hidden"
-                      } min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-base shadow-lg data-[twe-dropdown-show] dark:bg-surface-dark`}
+                      } min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-base shadow-lg dark:bg-surface-dark`}
                       aria-labelledby="dropdownMenuButton1s"
-                      data-twe-dropdown-menu-ref
                     >
                       <li>
                         <a
                           className="block w-full whitespace-nowrap hover:bg-gray-800 bg-black px-4 py-2 text-sm font-normal text-neutral-700 focus:outline-none dark:text-white"
                           href="#"
-                          data-twe-dropdown-item-ref
                         >
-                          <EditProfile openPopup={openEditProfilePopup} />
+                          <button onClick={openEditProfilePopup}>
+                            Edit Profile
+                          </button>
                         </a>
                       </li>
                       <li>
                         <a
-                          className="block w-full whitespace-nowrap bg-black px-4 py-2 text-sm font-normal  active:no-underline dark:bg-surface-dark text-white hover:bg-gray-800 "
+                          className="block w-full whitespace-nowrap bg-black px-4 py-2 text-sm font-normal dark:bg-surface-dark text-white hover:bg-gray-800"
                           href="#"
-                          data-twe-dropdown-item-ref
                         >
                           <button onClick={handleDeleteClick}>
                             Delete Acc
@@ -232,7 +267,6 @@ const Profile = () => {
                 <h2 className="text-2xl font-bold mt-2 ml-5">
                   {profileData.username}
                 </h2>
-
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="35"
@@ -265,11 +299,7 @@ const Profile = () => {
                   <div>
                     <img
                       className="border border-gray-500 w-36 h-36 rounded-full"
-                      src={
-                        profileData.avatar ||
-                        "https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"
-                      }
-                      alt="Profile Picture"
+                      src={avatarUrl} // Use avatarUrl here
                     />
                   </div>
                   <div className="ml-6 flex-1">
@@ -292,27 +322,36 @@ const Profile = () => {
                 <p className="text-xl font-semibold mb-2">4.9/5 Reviews</p>
               </div>
               <div className="mr-9">
-                <img
-                  src={
-                    profileData.picture ||
-                    "https://static.vecteezy.com/system/resources/thumbnails/012/251/644/small/honeycomb-line-art-background-simple-beehive-seamless-pattern-illustration-of-flat-geometric-texture-symbol-hexagon-hexagonal-sign-or-cell-icon-honey-bee-hive-black-and-white-color-vector.jpg"
-                  }
-                  alt=""
-                />
+                <div className="mr-9">
+                  <img src={profilePictureUrl} alt="ff" className="h-44 w-60" />
+                </div>
               </div>
             </div>
-            <h2 className="text-2xl mt-4 font-bold text-center">
-              Book your slots
-            </h2>
+
             <div className="flex justify-center">
               <div className="mt-6 mb-6 p-6 w-full mx-14 border border-black rounded-md">
                 {jwtUsername === profileData.username ? (
-                  <SetAvailability />
+                  <SetAvailability sectionId={profileData.section} />
                 ) : (
-                  <Calendar />
+                  <>
+                    <h2 className="text-2xl mt-4 font-bold text-center">
+                      Book your slots
+                    </h2>
+                    <Calendar sectionId={profileData.section} />
+                  </>
                 )}
               </div>
             </div>
+            {editProfileVisible && (
+              <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+                <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
+                  <EditProfile
+                    profileData={profileData}
+                    onClose={closeEditProfilePopup}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         )
       )}
