@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from 'js-cookie';
-import API_URI from "../../Env"
+// import API_URI from "../../Env"
 
 function SignUp() {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -10,7 +10,7 @@ function SignUp() {
 
   const onSubmit = (data) => {
     console.log('Form data:', data);
-    axios.post(`${API_URI}/service`, data)
+    // axios.post(`${API_URI}/service`, data)
     axios.post('http://localhost:2024/service', data)
       .then(response => {
         const token = response.data.token;

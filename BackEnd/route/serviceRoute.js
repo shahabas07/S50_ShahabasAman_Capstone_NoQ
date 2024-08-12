@@ -114,7 +114,7 @@ router.post("/", validateService, async (req, res) => {
   }
 });
 
-router.post('/signin', async (req, res) => {
+router.post('/sign-in', async (req, res) => {
   const { username, password } = req.body;
 
   try {
@@ -125,11 +125,14 @@ router.post('/signin', async (req, res) => {
     if (!validPassword) return res.status(400).json({ message: 'Invalid password' });
 
     const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
+    
+    // Include the username in the response
+    res.json({ token, username: user.username });
   } catch (error) {
     res.status(500).json({ message: 'Error signing in' });
   }
 });
+
 
 router.delete("/:username", async (req, res) => {
   try {

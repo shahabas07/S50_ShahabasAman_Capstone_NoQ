@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import NoQ from "../assets/NoQ.png"
-import API_URI from "../../Env"
+// import API_URI from "../../Env"
 
 const ServicesCategories = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios.get(`${API_URI}/profile`)
+    // axios.get(`${API_URI}/profile`)
+    axios.get(`http://localhost:2024/profile`)
       .then(response => {
         const uniqueCategories = new Set(response.data.map(item => item.category));
         setCategories(Array.from(uniqueCategories));
@@ -21,9 +22,9 @@ const ServicesCategories = () => {
 
   const filteredCategories = searchQuery
     ? categories.filter(category =>
-        category.toLowerCase().includes(searchQuery.toLowerCase())
+      category && category.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : categories.filter(Boolean); // Filters out empty categories
+    : categories.filter(Boolean); 
 
   return (
     <div className="min-h-screen">

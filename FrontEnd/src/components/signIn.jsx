@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from 'js-cookie';
-import API_URI from "../../Env"
+// import API_URI from "../../Env"
 
 function SignIn() {
   const { register, handleSubmit } = useForm();
@@ -21,7 +21,7 @@ function SignIn() {
         const usernameFromResponse = response.data.username;
         window.location.href = `/profile/${usernameFromResponse}`; 
         console.log(token)  
-      }) 
+      })
       .catch(error => {
         console.error('Error fetching serviceProvider data:', error);
         setError('Invalid username or password');
