@@ -13,7 +13,3 @@ const connectDB = () => {
 };
 
 module.exports = connectDB;
-
-
-
-// MongoUri="mongodb+srv://shahabas:819qUMxJLb5xeqS3@nodecluster.vnvihle.mongodb.net/NoQ"
