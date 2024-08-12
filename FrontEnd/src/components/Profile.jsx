@@ -9,7 +9,7 @@ import QR from "./QR";
 import NoQ from "../assets/NoQ.png";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
-import API_URI from "../../Env";
+// import API_URI from "../../Env";
 
 const Profile = () => {
   const { User } = useParams();

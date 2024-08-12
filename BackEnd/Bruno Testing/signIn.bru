@@ -1,0 +1,20 @@
+meta {
+  name: signIn
+  type: http
+  seq: 16
+}
+
+post {
+  url: http://localhost:5173/sign-in
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {
+      "username": "shahabas",
+      "password": "shahabas"
+    }
+  ]
+}

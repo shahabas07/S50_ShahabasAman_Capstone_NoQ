@@ -3,7 +3,7 @@ import pic from "../assets/carservice.png";
 import gps from "../assets/gps.png";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
-import API_URI from "../../Env"
+// import API_URI from "../../Env"
 
 function Sort() {
   const { category } = useParams();
@@ -12,7 +12,8 @@ function Sort() {
   const [ratingFilter, setRatingFilter] = useState("");
 
   useEffect(() => {
-    axios.get(`${API_URI}/profile?category=${category}`)
+    // axios.get(`${API_URI}/profile?category=${category}`)
+    axios.get(`http://localhost:2024/profile?category=${category}`)
       .then(response => {
         const filteredServices = response.data.filter(service => service.category === category);
         setFilteredItems(filteredServices);
@@ -21,8 +22,6 @@ function Sort() {
         console.error('Error fetching services:', error);
       });
   }, [category]);
-  
-
 
   const handleCityChange = (e) => {
     setCityFilter(e.target.value);
