@@ -62,7 +62,12 @@ function Sort() {
 
     return filteredItems.map((service) => (
       <div key={service._id} className="flex mx-10 my-3 bg-slate-300 rounded shadow-md">
-        <img src={pic} className="p-3 w-32 h-32" alt="" />
+        <img
+          src="https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"
+          className="p-3 w-32 h-32 rounded-full"
+          alt=""
+        />
+
         <div className="p-3">
           <h2 className="text-lg font-semibold mt-2">{service.name}</h2>
           <p className="text-sm">@{service.username}</p>
@@ -73,10 +78,10 @@ function Sort() {
         </div>
         <div className="ml-auto p-5 mr-8">
           <span className="flex justify-end mr-3 mb-5">
-            <p className="text-right">&#9733;</p>
+            <p className="text-right">-</p>
             <p className="text-sm text-right ">{service.rating}/5</p>
           </span>
-          <Link to={`/profile/${service.username}`} className="bg-yellow-950 hover:bg-yellow-800 text-white font-bold py-2 px-6 rounded">
+          <Link to={`/profile/${service.username}`} className="bg-yellow-900 hover:bg-yellow-800 text-white font-bold py-2 px-6 rounded">
             Check Availability
           </Link>
         </div>
@@ -85,14 +90,15 @@ function Sort() {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="mt-2">
-        <a href="/" className="logo text-black pl-6">
+    <div className="min-h-screen bg-violet-950">
+      
+        
+      
+      <div className="bg-violet-950 text-white pt-5">
+      <a href="/" className="logo text-black pl-6 ">
           NoQ
         </a>
-      </div>
-      <div className="bg-violet-900 text-white">
-        <p className="text-yellow-200 text-2xl py-5 text-center font-bold">
+        <p className="text-gray-200 text-2xl pb-5 text-center font-bold">
           {category}
         </p>
         <span className="flex justify-around pb-6 mx-20">
@@ -102,7 +108,7 @@ function Sort() {
             </label>
             <input
               type="text"
-              className="rounded text-black"
+              className="rounded text-black py-1"
               value={cityFilter}
               onChange={handleCityChange}
             />
@@ -112,7 +118,7 @@ function Sort() {
               Rating
             </label>
             <select
-              className="rounded border border-gray-400 text-black py-2 px-4 appearance-none"
+              className="rounded border border-gray-400 text-black py-1 px-4 appearance-none"
               value={ratingFilter}
               onChange={handleRatingChange}
             >
@@ -125,7 +131,7 @@ function Sort() {
             </select>
           </div>
           <button
-            className="bg-yellow-500 hover:bg-yellow-400 text-black font-semibold py-1 px-5 rounded"
+            className="bg-yellow-400 hover:bg-yellow-400 text-black font-semibold py-1 px-5 rounded"
             onClick={handleSort}
           >
             Sort

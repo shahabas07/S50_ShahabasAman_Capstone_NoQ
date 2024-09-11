@@ -1,62 +1,80 @@
+const Appointment = require('../schema/appointmentSchema');
 const express = require('express');
 const router = express.Router();
-const Appointment = require('../schema/appointmentSchema'); 
-const moment = require('moment')
 
-// Create a new appointment
-router.post('/', async (req, res, next) => {
+router.post('/create', async (req, res) => {
     try {
-        req.body.date = moment(req.body.date, 'DD-MM-YYYY').add(1, 'day').toISOString();
-        let reqBody = req.body;
-        let appointment = new Appointment(reqBody); 
-        await appointment.save();
-        res.setHeader("Content-Type", "application/json");
-        res.status(201).json({ message: "Appointment successfully booked", isError: false, data: { appointment: appointment } });
-    } catch (error) {
-        console.log(error);
-        next(error);
+      const { appointmentDate, location, time, email, customerName, adminName, adminId } = req.body;
+  
+      const appointment = new Appointment({
+        appointmentDate,
+        location,
+        time,
+        email,
+        customerName,   
+        adminName,
+        adminId
+      });
+  
+      await appointment.save();
+      
+      // Return the created appointment with its _id
+      res.status(201).json({ message: 'Appointment created successfully', appointment });
+    } catch (err) {
+      res.status(500).json({ message: 'Failed to create appointment', error: err.message });
     }
-});
+  });
+  
 
-// Get all appointments
+// GET route to fetch all appointments
 router.get('/', async (req, res) => {
-    try {
-        const appointments = await Appointment.find();
-        res.json(appointments);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+  try {
+    const appointments = await Appointment.find();
+    res.status(200).json(appointments);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch appointments', error: err.message });
+  }
 });
 
-// Middleware to get a single appointment by ID
-async function getAppointment(req, res, next) {
-    let appointment;
-    try {
-        appointment = await Appointment.findById(req.params.id);
-        if (appointment == null) {
-            return res.status(404).json({ message: 'Cannot find appointment' });
-        }
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
-    res.appointment = appointment;
-    next();
-}
+// GET route to fetch an appointment by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const appointment = await Appointment.findById(id);
 
-// Get a single appointment
-router.get('/:id', getAppointment, (req, res) => {
-    res.json(res.appointment);
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+
+    res.status(200).json(appointment);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch appointment', error: err.message });
+  }
 });
 
-// Delete an appointment
-router.delete('/:id', getAppointment, async (req, res) => {
+router.get('/adminId/:adminId', async (req, res) => {
+    const { adminId } = req.params;
+    const { appointmentDate } = req.query;  // Optional query parameter for filtering by date
+    
     try {
-        await Appointment.deleteOne({ _id: req.params.id });
-        res.json({ message: 'Appointment deleted' });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+      // Build query object to filter by adminId and optionally by appointmentDate
+      const query = { adminId };
+      
+      if (appointmentDate) {
+        query.appointmentDate = appointmentDate;
+      }
+  
+      const appointments = await Appointment.find(query);
+      
+      if (!appointments || appointments.length === 0) {
+        return res.status(404).json({ message: 'No appointments found' });
+      }
+      
+      res.status(200).json(appointments);
+    } catch (err) {
+      res.status(500).json({ message: 'Failed to fetch appointments', error: err.message });
     }
-});
-
+  });
+  
 
 module.exports = router;

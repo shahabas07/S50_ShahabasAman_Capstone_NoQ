@@ -2,40 +2,81 @@ import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import './styles/Cal.css';
+import Email from './Email';
 
-export default function Calendar({ sectionId }) {
+export default function Calendar({ sectionId, Adminlocation, Username, userId }) {
   const [enabledDays, setEnabledDays] = useState([]);
   const [isTimeVisible, setIsTimeVisible] = useState(false);
+  const [isEmailVisible, setIsEmailVisible] = useState(false);
+  const [renderTrigger, setRenderTrigger] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+  const [availability, setAvailability] = useState({});
+  const [appointments, setAppointments] = useState([]);
+
+  useEffect(()=>{
+    const fetchAppointment = async () => {
+      try {
+        const response = await fetch(`http://localhost:2024/appointment/adminId/${userId}`);
+        const data = await response.json();
+        console.log("appoinmentDetails:", data);
+
+        const filteredAppointments = data.filter(appointment => appointment.adminId === userId);
+        console.log("filteredAppointments:", filteredAppointments);
+
+        setAppointments(fetchAppointments);
+      }
+      catch(error){
+        console.log('error on filteredAppoinmtmnts:',error);
+      }
+    };
+    fetchAppointment();
+  }, [userId])
+
+
+  
 
   useEffect(() => {
     const fetchAvailability = async () => {
       try {
-        const response = await fetch(`http://localhost:2024/section?serviceProviderId=${sectionId}`);
+        const response = await fetch(`http://localhost:2024/section/${sectionId}`);
         const data = await response.json();
+        console.log('Fetched data:', data);
 
-        const section = data.find(item => item._id === sectionId);
+        const section = data;
+        console.log('Section:', section);
 
         if (section) {
-          const daysOfWeek = section.daysOfWeek;
-          console.log(daysOfWeek, sectionId, data);
-
-          const allDays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-
-          const enabledDays = allDays.filter(day => daysOfWeek[day]);
+          const { daysOfWeek, availability } = section;
 
           const dayMap = {
-            sunday: 'fc-day-sun',
-            monday: 'fc-day-mon',
-            tuesday: 'fc-day-tue',
-            wednesday: 'fc-day-wed',
-            thursday: 'fc-day-thu',
-            friday: 'fc-day-fri',
-            saturday: 'fc-day-sat'
+            Sunday: 'fc-day-sun',
+            Monday: 'fc-day-mon',
+            Tuesday: 'fc-day-tue',
+            Wednesday: 'fc-day-wed',
+            Thursday: 'fc-day-thu',
+            Friday: 'fc-day-fri',
+            Saturday: 'fc-day-sat'
           };
 
-          const enabledDayClasses = enabledDays.map(day => dayMap[day]);
+          const enabledDays = Object.keys(daysOfWeek).filter(day => daysOfWeek[day]);
+          console.log('Enabled Days:', enabledDays);
 
+          const enabledDayClasses = enabledDays.map(day => dayMap[day]);
           setEnabledDays(enabledDayClasses);
+          setAvailability(availability);
+
+          // Automatically select the first enabled day and update available time slots
+          if (enabledDays.length > 0) {
+            const firstEnabledDay = enabledDays[0];
+            const timeRange = availability[firstEnabledDay];
+            console.log('Time Range:', timeRange);
+            if (timeRange) {
+              const slots = timeRange.timeSlots.map(slot => slot.time);
+              setAvailableTimeSlots(slots);
+            }
+          }
         } else {
           console.error('No section found with the given sectionId');
         }
@@ -49,16 +90,15 @@ export default function Calendar({ sectionId }) {
 
   const applyDayStyles = () => {
     const dayMap = {
-      sunday: 'fc-day-sun',
-      monday: 'fc-day-mon',
-      tuesday: 'fc-day-tue',
-      wednesday: 'fc-day-wed',
-      thursday: 'fc-day-thu',
-      friday: 'fc-day-fri',
-      saturday: 'fc-day-sat'
+      Sunday: 'fc-day-sun',
+      Monday: 'fc-day-mon',
+      Tuesday: 'fc-day-tue',
+      Wednesday: 'fc-day-wed',
+      Thursday: 'fc-day-thu',
+      Friday: 'fc-day-fri',
+      Saturday: 'fc-day-sat'
     };
 
-    // Apply styles to each day class
     Object.keys(dayMap).forEach(day => {
       const dayClass = dayMap[day];
       const elements = document.querySelectorAll(`.${dayClass}`);
@@ -66,7 +106,23 @@ export default function Calendar({ sectionId }) {
         if (enabledDays.includes(dayClass)) {
           el.classList.add('enabled-day');
           el.addEventListener('click', () => {
+            const date = el.getAttribute('data-date');
+            console.log('Clicked Date:', date);
+            setSelectedDate(date);
             setIsTimeVisible(true);
+            setIsEmailVisible(false);
+            setRenderTrigger(prev => !prev);
+
+            const timeRange = availability[day];
+            if (timeRange) {
+              const slots = timeRange.timeSlots.map(slot => slot.time);
+              setAvailableTimeSlots(slots);
+            }
+          });
+        } else {
+          el.classList.add('disabled-day');
+          el.addEventListener('click', () => {
+            console.log('Clicked on a disabled day');
           });
         }
       });
@@ -74,34 +130,63 @@ export default function Calendar({ sectionId }) {
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      applyDayStyles();
-    }, 0);
+    // Initial call to apply day styles
+    applyDayStyles();
 
-    return () => clearTimeout(timer);
-  }, [enabledDays]);
+    // Reapply day styles on calendar view change
+    const handleDatesSet = () => {
+      applyDayStyles();
+    };
+
+    // Attach event listener for dates set
+    const calendarApi = document.querySelector('.fc');
+    if (calendarApi) {
+      calendarApi.addEventListener('datesSet', handleDatesSet);
+    }
+
+    return () => {
+      if (calendarApi) {
+        calendarApi.removeEventListener('datesSet', handleDatesSet);
+      }
+    };
+  }, [enabledDays, renderTrigger]);
+
+  const handleTimeClick = (time) => {
+    setSelectedTimeSlot(time);
+    setIsEmailVisible(true);
+    setIsTimeVisible(false);
+  };
 
   return (
     <div className='flex w-2/3 mx-auto'>
-      <div className='flex-grow w-auto'>
-        <FullCalendar
-          plugins={[dayGridPlugin]}
-          headerToolbar={{
-            end: 'prev,next'
-          }}
-        />
-      </div>
-      <div className={`Time w-[15vw] px-4 py-6 ml-5 border h-full text-center transition-transform duration-500 ${isTimeVisible ? 'translate-x-0' : 'translate-x-full'} ${isTimeVisible ? 'block' : 'hidden'}`}>
-        <h1 className='font-bold text-xl'>Time</h1>
-        <div className='mt-10 border p-3 rounded mt-1 bg-gray-200 mb-8 hover:bg-gray-300'>9AM</div>
-        <div className='border p-3 rounded mt-1 bg-gray-200 mb-8 hover:bg-gray-300'>10AM</div>
-        <div className='border p-3 rounded mt-1 bg-gray-200 mb-8 hover:bg-gray-300'>11AM</div>
-        <div className='border p-3 rounded mt-1 bg-gray-200 mb-8 hover:bg-gray-300'>12AM</div>
-        <div className='border p-3 rounded mt-1 bg-gray-200 mb-8 hover:bg-gray-300'>1PM</div>
-        <div className='border p-3 rounded mt-1 bg-gray-200 mb-8 hover:bg-gray-300'>2PM</div>
-        <div className='border p-3 rounded mt-1 bg-gray-200 mb-8 hover:bg-gray-300'>3PM</div>
-        <div className='border p-3 rounded mt-1 bg-gray-200 mb-8 hover:bg-gray-300'>4PM</div>
-      </div>
+      {!isEmailVisible && (
+        <div className='flex-grow w-auto'>
+          <FullCalendar
+            key={renderTrigger}
+            plugins={[dayGridPlugin]}
+            headerToolbar={{
+              end: 'prev,next'
+            }}
+            datesSet={() => applyDayStyles()}  // Reapply styles on date change
+          />
+        </div>
+      )}
+      {!isEmailVisible && isTimeVisible && (
+        <div className={`transition-transform w-[15vw] ml-10 px-4 py-6 border h-full text-center duration-500 ${isTimeVisible ? 'translate-x-0' : 'translate-x-full'} ${isTimeVisible ? 'block' : 'hidden'}`}>
+          <h1 className='font-bold text-xl'>Slot Time</h1>
+          {availableTimeSlots.map((time) => (
+            <div
+              key={time}
+              className='border p-3 rounded mb-4 hover:bg-gray-300 bg-gray-200'
+              onClick={() => handleTimeClick(time)}  // Click to select time
+            >
+              {time}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {isEmailVisible && <Email selectedDate={selectedDate} selectedTimeSlot={selectedTimeSlot} locat={Adminlocation} Username={Username} userId={userId} />}
     </div>
   );
 }

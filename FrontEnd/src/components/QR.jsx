@@ -15,7 +15,7 @@ function QR() {
     html2canvas(document.getElementById("qr-code-container")).then((canvas) => {
       const imageData = canvas.toDataURL("image/png");
       const pdf = new jsPDF();
-      pdf.addImage(imageData, "PNG", 0, 0);
+      pdf.addImage(imageData, "PNG", 60, 50);
       pdf.save("QRCode.pdf");
       setPdfGenerated(true);
     });
