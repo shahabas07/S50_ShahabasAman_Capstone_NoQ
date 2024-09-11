@@ -62,7 +62,7 @@
     background-color: #e0e4e95e;
     color:gray;
     border-radius: 10px;
-    border: 14px rgb(255, 255, 255) solid !important; /* Default border */
+    border: 14px rgb(255, 255, 255) solid !important; 
 }
 
 .fc-day.enabled-day {
@@ -99,6 +99,7 @@
     border-radius: 50px;
 }
 
+
 .fc-day-today {
     font-weight: bold;
     background-color: var(--fc-today-bg-color) !important; 
@@ -107,6 +108,7 @@
 .fc-day-today:hover {
     background-color: var(--fc-hover-bg-color) !important; /* Hover effect for today */
 }
+
 
 .Time {
     transform: translateX(100%);
@@ -126,4 +128,13 @@
   
 .fc-day-today:hover {
     background-color: var(--fc-today-bg-color1) !important; /* Hover effect for today */
+}
+
+.fc-day-past{
+     pointer-events: none !important;
+     cursor: default !important;
+     background-color: #e0e4e95e !important;
+    color:gray !important;
+    border-radius: 10px;
+
 }

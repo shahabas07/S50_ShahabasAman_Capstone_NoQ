@@ -41,6 +41,7 @@ const Profile = () => {
         const userProfile = profiles.find(
           (profile) => profile.username === User
         );
+        
         if (userProfile) {
           setProfileData(userProfile);
           const jwt = getCookies("token");
@@ -61,6 +62,8 @@ const Profile = () => {
         setError(true);
       });
   }, [User]);
+
+  
 
   useEffect(() => {
     if (profileData) {
@@ -146,6 +149,57 @@ const Profile = () => {
     setEditProfileVisible(false);
   };
 
+  function LogoutModal({ onCancel, onConfirm }) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-[1100]">
+        <div className="bg-white p-2 rounded-lg shadow-lg dark:bg-surface-dark">
+          <h2 className="text-md font-semibold m-6 text-white dark:text-black">
+            Are you sure you want to log out?
+          </h2>
+          <div className=" flex justify-between px-8 mb-4">
+            <button
+              onClick={onCancel}
+              className="px-4 py-2 bg-gray-300 rounded-lg mr-2 dark:bg-gray-700 dark:text-white"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={onConfirm}
+              className="px-4 py-2 bg-red-500 text-white rounded-lg"
+            >
+              Log-Out
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true);
+  };
+
+  const handleLogoutCancel = () => {
+    setShowLogoutModal(false);
+  };
+
+  const handleLogoutConfirm = () => {
+    // Clear cookies (you might want to clear specific cookies depending on your app)
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c
+        .replace(/^ +/, "")
+        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+
+    // Add your logout logic here, such as redirecting to the login page
+    window.location.reload();
+  };
+
+  
+
+
   return (
     <div>
       {loading ? (
@@ -167,7 +221,7 @@ const Profile = () => {
             href="/"
             className="bg-violet-800 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded"
           >
-            Go to Homepage
+            Navigate to Homepage
           </a>
         </div>
       ) : (
@@ -175,15 +229,29 @@ const Profile = () => {
           <div>
             {jwtUsername === profileData.username ? (
               <div className="flex justify-between mr-12">
-                <h2 className="text-2xl font-bold mt-2 ml-5">
-                  {profileData.username}
-                </h2>
+                <div className="flex">
+                  <a href="/">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-8 h-8 mt-2 ml-5" 
+                  >
+                    <path
+                      d="M12 3l10 9h-3v9H5v-9H2l10-9zm0-2L1 10v13h6v-7h6v7h6V10l-11-9z"
+                    />
+                  </svg></a>
+
+                  <h2 className="text-xl font-bold mt-2 ml-5">
+                    {profileData.username}
+                  </h2>
+                </div>
                 <div className="flex">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="35"
-                    height="35"
-                    viewBox="0 0 8 8"
+                    width="30"
+                    height="30"
+                    viewBox="0 0 10 10"
                     id="share"
                     className="mt-5 mr-5"
                     onClick={QRPopup}
@@ -213,18 +281,17 @@ const Profile = () => {
                         xmlns="http://www.w3.org/2000/svg"
                         x="0px"
                         y="0px"
-                        width="35"
-                        height="35"
+                        width="25"
+                        height="25"
                         viewBox="0 0 50 50"
-                        className="mt-2 mr-5"
+                        className="mt-2 mr-10"
                       >
                         <path d="M 3 8 A 2.0002 2.0002 0 1 0 3 12 L 47 12 A 2.0002 2.0002 0 1 0 47 8 L 3 8 z M 3 23 A 2.0002 2.0002 0 1 0 3 27 L 47 27 A 2.0002 2.0002 0 1 0 47 23 L 3 23 z M 3 38 A 2.0002 2.0002 0 1 0 3 42 L 47 42 A 2.0002 2.0002 0 1 0 47 38 L 3 38 z"></path>
                       </svg>
                     </button>
                     <ul
-                      className={`absolute z-[1000] float-left m-0 ${
-                        isOpen ? "block" : "hidden"
-                      } min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-base shadow-lg dark:bg-surface-dark`}
+                      className={`absolute z-[1000] float-left m-0 ${isOpen ? "block" : "hidden"
+                        } min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-base shadow-lg dark:bg-surface-dark`}
                       aria-labelledby="dropdownMenuButton1s"
                     >
                       <li>
@@ -258,22 +325,47 @@ const Profile = () => {
                           )}
                         </a>
                       </li>
+                      <li>
+                        <a
+                          className="block w-full whitespace-nowrap bg-black px-4 py-2 text-sm font-normal dark:bg-surface-dark text-white hover:bg-gray-800"
+                          href="#"
+                        >
+                          <button onClick={handleLogoutClick}>Log-Out</button>{showLogoutModal && (
+                            <LogoutModal onCancel={handleLogoutCancel} onConfirm={handleLogoutConfirm} />
+                          )}
+                        </a>
+                      </li>
                     </ul>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="flex justify-between mr-12">
-                <h2 className="text-2xl font-bold mt-2 ml-5">
-                  {profileData.username}
-                </h2>
+                <div className="flex">
+                  <a href="/">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-8 h-8 mt-2 ml-5" 
+                  >
+                    <path
+                      d="M12 3l10 9h-3v9H5v-9H2l10-9zm0-2L1 10v13h6v-7h6v7h6V10l-11-9z"
+                    />
+                  </svg></a>
+
+                  <h2 className="text-xl font-bold mt-2 ml-5">
+                    {profileData.username}
+                  </h2>
+                </div>
+                
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="35"
-                  height="35"
+                  width="25"
+                  height="25"
                   viewBox="0 0 8 8"
                   id="share"
-                  className="mt-2 mr-5"
+                  className="mt-2 mr-14"
                   onClick={QRPopup}
                 >
                   <path d="M5 0v2C1 2 0 4.05 0 7c.52-1.98 2-3 4-3h1v2l3-3.16L5 0z"></path>
@@ -323,13 +415,13 @@ const Profile = () => {
               </div>
               <div className="mr-9">
                 <div className="mr-9">
-                  <img src={profilePictureUrl} alt="ff" className="h-44 w-60" />
+                  <img src={profilePictureUrl} alt="" className="h-44 w-60" />
                 </div>
               </div>
             </div>
 
             <div className="flex justify-center">
-              <div className="mt-6 mb-6 p-6 w-full mx-14 border border-black rounded-md">
+              <div className="mt-14 mb-6 border border-transparent  w-full mx-14  rounded-md">
                 {jwtUsername === profileData.username ? (
                   <SetAvailability sectionId={profileData.section} />
                 ) : (
@@ -337,7 +429,8 @@ const Profile = () => {
                     <h2 className="text-2xl mt-4 font-bold text-center">
                       Book your slots
                     </h2>
-                    <Calendar sectionId={profileData.section} />
+                    <Calendar sectionId={profileData.section} Adminlocation={profileData.location} Username={profileData.name} userId={profileData._id} />
+
                   </>
                 )}
               </div>

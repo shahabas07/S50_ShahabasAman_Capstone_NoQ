@@ -43,7 +43,7 @@ function SignUp() {
         <p className="text-gray-600">
           Minimize wait times, maximize efficiency. Join us on this journey
         </p>
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 lg:w-1/2 bg-violet-950 text-gray-50 rounded-[24px] px-10 py-6 shadow-md">
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 lg:w-1/3 bg-violet-950 text-gray-50 rounded-[24px] px-10 py-6 shadow-md">
           <div className="mb-6">
             <label htmlFor="username" className="ml-2 text-yellow-100">Username:</label> <br />
             <input

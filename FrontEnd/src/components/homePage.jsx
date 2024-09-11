@@ -16,14 +16,14 @@ import NoQ from "../assets/NoQ.png"
 function homePage() {
   return (
     <div className="homepg">
-      <nav className="flex items-center justify-between pt-1 px-4 sm:px-6">
+      <nav className="flex items-center justify-between pt-1 px-4 pb-2 sm:px-6">
         <a href="/" className="logo ">
           <img className="w-24" src={NoQ} alt="" />
         </a>
 
         <div className="relative">
           <input
-            className="search bg-gray-300 px-2 p-2 text-sm text-black font-bold outline-none rounded-full"
+            className="search bg-white px-5 p-2 text-sm text-black font-bold outline-none rounded-full"
             type="text"
             placeholder="Search"
           />
@@ -41,7 +41,7 @@ function homePage() {
           <div className="mr-14 mt-1">
             <a
               href="/categories"
-              className="text-md hover:text-purple-400 hover:bg-slate-700  bg-gray-600 py-2 px-6 rounded-md"
+              className="text-md hover:text-purple-600 text-black hover:bg-slate-100  bg-gray-200 py-2 px-4 rounded-md"
             >
               Service Categories
             </a>
@@ -49,7 +49,7 @@ function homePage() {
           <div className="mr-20 mt-1">
             <a
               href="/Docs"
-              className="text-md hover:text-purple-400 hover:bg-slate-700  bg-gray-600 py-2 px-6 rounded-md"
+              className="text-md hover:text-purple-600 text-black hover:bg-slate-100  bg-gray-200 py-2 px-4 rounded-md"
             >
               Docs
             </a>
@@ -101,7 +101,7 @@ function homePage() {
         </ul>
       </div>
       <div className="py-10">
-        <h1 className="font-bold text-3xl text-center mb-10">Our Features</h1>
+        <h1 className="font-bold text-3xl text-center mb-10">Features of Q'</h1>
         <div className="grid grid-cols-8 sm:grid-cols-8 md:grid-cols-3 gap-8 px-12">
           <div className="p-4 text-center py-4 rounded-md">
             <img src={profilecus} className="mx-auto w-16" alt="Customizable" />
@@ -169,58 +169,55 @@ function homePage() {
           <div className="grid grid-cols-4 gap-10">
             <div className="bg-gray-950 p-4 border border-gray-300 rounded-lg h-auto">
               <span className="flex">
-                <img className="rounded-full w-9 h-9" src={pp} alt="Profile" />
+                <img className="rounded-full w-9 h-9" src="https://samkalvium.github.io/homepg3/mw.jpeg" alt="Profile" />
                 <div className="pl-2 ">
-                  <h2 className="text-xl font-bold text-white">Musthafa.c.p</h2>
-                  <h3 className="text-sm text-gray-400">@musthafaa</h3>
+                  <h2 className="text-xl font-bold text-white">Samarth Alva</h2>
+                  <h3 className="text-sm text-gray-400">@sam</h3>
                 </div>
               </span>
-              <p className="text-gray-200  mt-3 text-center">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incid
-              </p>
+              <p className="text-gray-200  mt-6 text-center">
+                <i>
+                Honestly, this app makes my life so much easier! I used to spend hours going back and forth with clients trying to find a time that worked for everyone. Now, they can just see when I'm available and book a slot that works for them. Plus, the reminders are a lifesaver—I never miss an appointment anymore!
+                </i></p>
             </div>
             <div className="bg-gray-950 p-4 border border-gray-300 rounded-lg">
               <span className="flex">
-                <img className="rounded-full w-9 h-9" src={pp} alt="Profile" />
+                <img className="rounded-full w-9 h-9" src="https://samkalvium.github.io/homepg3/mustu.jpg" alt="Profile" />
                 <div className="pl-2 ">
                   <h2 className="text-xl font-bold text-white">Musthafa.c.p</h2>
                   <h3 className="text-sm text-gray-400">@musthafaa</h3>
                 </div>
               </span>
-              <p className="text-gray-200  mt-3 text-center">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incidilore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat.
-              </p>
+              <p className="text-gray-200  mt-6 text-center">
+                <i>
+                I've been using this calendar app for a couple of months now, and I'm loving it. My clients can quickly check my availability and book a slot without having to call or email me. It’s super convenient for both sides, and I’ve noticed that it’s reduced a lot of the back-and-forth. Definitely recommend it to any small business owner!
+                </i></p>
             </div>
             <div className="bg-gray-950 p-4 border border-gray-300 rounded-lg">
               <span className="flex">
-                <img className="rounded-full w-9 h-9" src={pp} alt="Profile" />
+                <img className="rounded-full w-9 h-9" src="https://samkalvium.github.io/homepg3/shahina.jpeg" alt="Profile" />
                 <div className="pl-2 ">
-                  <h2 className="text-xl font-bold text-white">Musthafa.c.p</h2>
-                  <h3 className="text-sm text-gray-400">@musthafaa</h3>
+                  <h2 className="text-xl font-bold text-white">Shahina</h2>
+                  <h3 className="text-sm text-gray-400">@shahina</h3>
                 </div>
               </span>
-              <p className="text-gray-200  mt-3 text-center">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod te
-              </p>
+              <p className="text-gray-200  mt-6 text-center">
+                <i>
+                This scheduling app is a game-changer! My clients love that they can see my availability and book an appointment whenever it suits them. The interface is clean and easy to use, so they don't get confused or frustrated. I’ve also noticed fewer no-shows since I started using it, which is awesome
+                </i></p>
             </div>
             <div className="bg-gray-950 p-4 border border-gray-300 rounded-lg">
               <span className="flex">
-                <img className="rounded-full w-9 h-9" src={pp} alt="Profile" />
+                <img className="rounded-full w-9 h-9" src="https://samkalvium.github.io/homepg3/sil.png" alt="Profile" />
                 <div className="pl-2 ">
-                  <h2 className="text-xl font-bold text-white">Musthafa.c.p</h2>
-                  <h3 className="text-sm text-gray-400">@musthafaa</h3>
+                  <h2 className="text-xl font-bold text-white">Silu</h2>
+                  <h3 className="text-sm text-gray-400">@silambam</h3>
                 </div>
               </span>
-              <p className="text-gray-200  mt-3 text-center">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incidiostrud exercitation ullamco laboris nisi ut
-                aliquip ex ea commodo consequat.
-              </p>
+              <p className="text-gray-200  mt-6 text-center">
+                <i>
+              Super impressed with this app! It’s made managing my schedule a breeze. My customers can easily pick a time that works for them, and I don’t have to worry about overlapping bookings. The best part? It syncs with my personal calendar, so everything stays organized. Highly recommend!
+              </i></p>
             </div>
           </div>
         </div>
@@ -228,21 +225,24 @@ function homePage() {
       <div className="footer bg-violet-900 flex px-12 py-16 text-white rounded">
         <div className="pr-12">
           <h1 className="text-4xl font-extrabold mb-10">NoQ</h1>
-          <p className="text-sm">Credits</p>
-          <p className="text-sm">Ownerships</p>
+          <p className="text-sm">Credits@XyZ</p>
+          <p className="text-sm">Ownerships<strong>@shahabas</strong></p>
           <hr className="w-28 bg-gray-950 my-5" />
           <p className="text-sm">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni
-            labore at, laudantium dignissimos obcaecati vel explicabo non illo
-            corrupti quidem a neque id sunt dolores voluptate aperiam cumque
-            eius necessitatibus.
+          <strong>NoQ</strong> is a comprehensive platform designed to optimize the scheduling process for service appointments across various industries. By providing a centralized hub for service providers and customers, NoQ revolutionizes the way appointments are booked and managed, ultimately minimizing wait times and enhancing efficiency.
           </p>
-          <p className="mt-6 text-sm">Inspired by Cal</p>
+          <p className="mt-6 text-sm">Inspired from Cal.com OpenSource</p>
         </div>
         <div class="flex justify-between items-end w-60">
+          <a href="https://www.facebook.com/">
           <img class="w-10 h-10" src={facebook} alt="facebook" />
+          </a>
+          <a href="https://github.com/shahabas07">
           <img class="w-10 h-10" src={github} alt="github" />
+          </a>
+          <a href="https://www.instagram.com/">
           <img class="w-10 h-10" src={instagram} alt="instagram" />
+          </a>
         </div>
       </div>
     </div>

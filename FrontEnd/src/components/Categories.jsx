@@ -48,7 +48,7 @@ const ServicesCategories = () => {
           />
         </center>
         
-        <div className="categories grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 bg-violet-900 h-96 pt-7 pr-7 pl-7">
+        <div className="mt-14 min-h-screen categories grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 bg-violet-900  pt-7 pr-7 pl-7">
           {filteredCategories.map((category, index) => (
             <div className="p-4" key={index}>
               <Link to={`/Categories/${category}`} className="block">
@@ -58,6 +58,7 @@ const ServicesCategories = () => {
               </Link>
             </div>
           ))}
+        
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import React from 'react';
 function Docs() {
   return (
     <div className='flex'>
-      <div className='bg-violet-900 px-8 py-6 w-1/3 text-white navbar'>
+      <div className='bg-violet-900 px-8 py-6 w-1/3 h-screen text-white navbar'>
         <div>
           <a href="/" className="logo">
             NoQ
@@ -32,10 +32,10 @@ function Docs() {
           <div>
             <h1 className='text-2xl font-semibold mt-16 mb-3'>Contacts</h1>
             <p>Company Name: NoQ.pvt.LTD<br />
-               Website: [Your Website URL]<br />
-               Email: demo@[yourcompany].com<br />
-               Phone: +1 (555) 555-5555<br />
-               Address: [Your Company Address]
+               Website: www.NoQ.com<br />
+               Email: demo@NoQ.com<br />
+               Phone: +91 88489 87165<br />
+               Address: YIASCM, Yenepoya University, Mangalore.
             </p>
           </div>
           <div className='w-1/4'>
@@ -45,7 +45,8 @@ function Docs() {
         <h1 id='feedback' className='text-2xl font-semibold mt-16 mb-3'>Feedback</h1>
         <p className='w-2/3'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
         Praesentium odio odit quas facilis voluptas, laborum beatae itaque commodi magnam, 
-        quidem ducimus rem eligendi recusandae quaerat alias necessitatibus maxime corrupti natus!</p>
+        quidem ducimus rem eligendi recusandae quaerat alias necessitatibus maxime corrupti natus! facilis voluptas, laborum beatae itaque commodi magnam, 
+        quidem ducimus rem eligendi recusandae quaerat alias necessitatibus maxime co</p>
       </div>
     </div>
   );

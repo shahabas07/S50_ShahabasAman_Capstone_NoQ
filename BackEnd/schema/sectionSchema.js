@@ -1,5 +1,9 @@
-// sectionSchema.js
 const mongoose = require('mongoose');
+
+// Schema for individual time slots
+const timeSlotSchema = new mongoose.Schema({
+  time: { type: String, required: true }
+}, { _id: false });
 
 const sectionSchema = new mongoose.Schema({
   daysOfWeek: {
@@ -7,12 +11,20 @@ const sectionSchema = new mongoose.Schema({
     of: Boolean,
     required: true
   },
-  // This will hold references to service profiles linked to this section
+  availability: {
+    type: Map,
+    of: {
+      timeSlots: [timeSlotSchema]
+    },
+    required: false
+  },
   serviceProfiles: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Profile'
   }]
 });
 
-const Section = mongoose.model('Section', sectionSchema);
+
+// Check if the model already exists before defining it
+const Section = mongoose.models.Section || mongoose.model('Section', sectionSchema);
 module.exports = Section;
