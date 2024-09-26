@@ -1,8 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import './styles/Cal.css';
 import Email from './Email';
+import { format } from 'date-fns';
+import axios from 'axios';
+
+// Utility function to generate 30-minute interval time slots
+const generateTimeSlots = (startTime, endTime) => {
+  const timeSlots = [];
+  const start = new Date(`1970-01-01T${startTime}:00`);
+  const end = new Date(`1970-01-01T${endTime}:00`);
+  
+  while (start <= end) {
+    timeSlots.push(start.toTimeString().slice(0, 5)); // Get time in "HH:MM" format
+    start.setMinutes(start.getMinutes() + 30); // Add 30 minutes
+  }
+  
+  return timeSlots;
+};
 
 export default function Calendar({ sectionId, Adminlocation, Username, userId }) {
   const [enabledDays, setEnabledDays] = useState([]);
@@ -13,42 +29,19 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId })
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [availability, setAvailability] = useState({});
-  const [appointments, setAppointments] = useState([]);
-
-  useEffect(()=>{
-    const fetchAppointment = async () => {
-      try {
-        const response = await fetch(`http://localhost:2024/appointment/adminId/${userId}`);
-        const data = await response.json();
-        console.log("appoinmentDetails:", data);
-
-        const filteredAppointments = data.filter(appointment => appointment.adminId === userId);
-        console.log("filteredAppointments:", filteredAppointments);
-
-        setAppointments(fetchAppointments);
-      }
-      catch(error){
-        console.log('error on filteredAppoinmtmnts:',error);
-      }
-    };
-    fetchAppointment();
-  }, [userId])
-
-
-  
+  const [appointmentsdateTimePairs, setAppointmentsdateTimePairs] = useState([]);
+  const calendarRef = useRef(null);
+  const [appointmentConfirmed, setAppointmentConfirmed] = useState(false);
 
   useEffect(() => {
-    const fetchAvailability = async () => {
+    const fetchAvailabilityAndAppointments = async () => {
       try {
-        const response = await fetch(`http://localhost:2024/section/${sectionId}`);
-        const data = await response.json();
-        console.log('Fetched data:', data);
-
-        const section = data;
-        console.log('Section:', section);
-
-        if (section) {
-          const { daysOfWeek, availability } = section;
+        // Fetch section data
+        const sectionResponse = await fetch(`http://localhost:2024/section/${sectionId}`);
+        const sectionData = await sectionResponse.json();
+        
+        if (sectionData) {
+          const { daysOfWeek, availability } = sectionData;
 
           const dayMap = {
             Sunday: 'fc-day-sun',
@@ -61,31 +54,18 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId })
           };
 
           const enabledDays = Object.keys(daysOfWeek).filter(day => daysOfWeek[day]);
-          console.log('Enabled Days:', enabledDays);
-
           const enabledDayClasses = enabledDays.map(day => dayMap[day]);
           setEnabledDays(enabledDayClasses);
           setAvailability(availability);
-
-          // Automatically select the first enabled day and update available time slots
-          if (enabledDays.length > 0) {
-            const firstEnabledDay = enabledDays[0];
-            const timeRange = availability[firstEnabledDay];
-            console.log('Time Range:', timeRange);
-            if (timeRange) {
-              const slots = timeRange.timeSlots.map(slot => slot.time);
-              setAvailableTimeSlots(slots);
-            }
-          }
         } else {
           console.error('No section found with the given sectionId');
         }
       } catch (error) {
-        console.error('Error fetching availability:', error);
+        console.error('Error fetching availability and appointments:', error);
       }
     };
 
-    fetchAvailability();
+    fetchAvailabilityAndAppointments();
   }, [sectionId]);
 
   const applyDayStyles = () => {
@@ -115,7 +95,8 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId })
 
             const timeRange = availability[day];
             if (timeRange) {
-              const slots = timeRange.timeSlots.map(slot => slot.time);
+              // Generate time slots based on start and end time
+              const slots = generateTimeSlots(timeRange.start, timeRange.end);
               setAvailableTimeSlots(slots);
             }
           });
@@ -130,15 +111,11 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId })
   };
 
   useEffect(() => {
-    // Initial call to apply day styles
     applyDayStyles();
-
-    // Reapply day styles on calendar view change
     const handleDatesSet = () => {
       applyDayStyles();
     };
 
-    // Attach event listener for dates set
     const calendarApi = document.querySelector('.fc');
     if (calendarApi) {
       calendarApi.addEventListener('datesSet', handleDatesSet);
@@ -157,11 +134,127 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId })
     setIsTimeVisible(false);
   };
 
+  const onAppointmentConfirmed = (confirmed) => {
+    setAppointmentConfirmed(confirmed);
+  };
+
+
+
+  const renderTimeSlots = (availableSlots, bookedSlots) => {
+    return availableSlots.map((slot) => (
+      <div
+        key={slot}
+        className={`border p-3 rounded mb-4 hover:bg-gray-300 ${bookedSlots.includes(slot) ? 'bg-gray-200 opacity-50 cursor-not-allowed' : 'bg-gray-200'}`}
+        onClick={() => !bookedSlots.includes(slot) && handleTimeClick(slot)}  // Prevent click if slot is booked
+      >
+        {slot}
+      </div>
+    ));
+  };
+
+  
+
+  const disableDate = async (day, date) => {
+    const startTime = availability[day]?.start;
+    const endTime = availability[day]?.end;
+  
+    try {
+      const response = await axios.post('http://localhost:2024/disabled-dates', {
+        DisabledDate: date,
+        adminId: userId,
+        startTime: startTime,
+        endTime: endTime,
+        DisabledDay: day,
+      });
+  
+      if (response.status === 200) {
+        console.log('Date disabled successfully');
+      } else {
+        throw new Error('Failed to disable date');
+      }
+    } catch (error) {
+      console.error('Error disabling date:', error);
+      console.log(date,userId,startTime,endTime,day)
+    }
+  };
+
+  useEffect(() => {
+    // Add logic for disabling date if an appointment is confirmed
+    if (appointmentConfirmed && availableTimeSlots.length - appointmentsdateTimePairs.length === 1) {
+      const lastSlot = availableTimeSlots[availableTimeSlots.length - 1];
+      if (appointmentsdateTimePairs.includes(lastSlot)) {
+        const day = new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long' });
+        disableDate(day, format(new Date(selectedDate), 'yyyy-MM-dd'));
+      }
+    }
+  }, [appointmentConfirmed, availableTimeSlots, appointmentsdateTimePairs, selectedDate]);
+
+  
+
+  useEffect(() => {
+    const checkAndDisableDate = () => {
+      console.log(availableTimeSlots.length - appointmentsdateTimePairs.length)
+      if (availableTimeSlots.length - appointmentsdateTimePairs.length === 1) {
+        const lastSlot = availableTimeSlots[availableTimeSlots.length - 1];
+        console.log(lastSlot)
+
+        if (appointmentsdateTimePairs.includes(lastSlot)) {
+          console.log('Last slot is booked, disabling the date.');
+          const day = new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long' });
+          disableDate(day, format(new Date(selectedDate), 'yyyy-MM-dd'));
+        }
+      }
+    };
+
+    checkAndDisableDate();
+  }, [availableTimeSlots, appointmentsdateTimePairs, selectedDate]);
+
+  useEffect(() => {
+    if (appointmentConfirmed) {
+      // Check if the last available slot is booked
+      if (availableTimeSlots.length - appointmentsdateTimePairs.length === 1) {
+        const lastSlot = availableTimeSlots[availableTimeSlots.length - 1];
+        if (appointmentsdateTimePairs.includes(lastSlot)) {
+          const day = new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long' });
+          disableDate(day, format(new Date(selectedDate), 'yyyy-MM-dd'));
+        }
+      }
+    }
+  }, [appointmentConfirmed, availableTimeSlots, appointmentsdateTimePairs, selectedDate]);
+  
+  const fetchAndApplyBookedSlots = async () => {
+    if (selectedDate) {
+      const formattedDate = new Date(selectedDate).toISOString();
+      try {
+        const response = await fetch(`http://localhost:2024/appointment/admin/${userId}/${formattedDate}`);
+        if (response.status === 404) {
+          setAppointmentsdateTimePairs([]);  // Set booked slots to an empty array
+        } else if (response.ok) {
+          const appointments = await response.json();
+          const bookedSlots = appointments.map(appointment => appointment.time);
+          setAppointmentsdateTimePairs(bookedSlots);
+        } else {
+          console.error('Error fetching booked slots:', response.status);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error);
+        setAppointmentsdateTimePairs([]);  // Reset in case of any error
+      }
+    }
+  };
+  
+  useEffect(() => {
+    fetchAndApplyBookedSlots();
+  }, [selectedDate, userId]);
+  
+  
+
   return (
     <div className='flex w-2/3 mx-auto'>
       {!isEmailVisible && (
         <div className='flex-grow w-auto'>
           <FullCalendar
+            ref={calendarRef}
             key={renderTrigger}
             plugins={[dayGridPlugin]}
             headerToolbar={{
@@ -172,21 +265,16 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId })
         </div>
       )}
       {!isEmailVisible && isTimeVisible && (
-        <div className={`transition-transform w-[15vw] ml-10 px-4 py-6 border h-full text-center duration-500 ${isTimeVisible ? 'translate-x-0' : 'translate-x-full'} ${isTimeVisible ? 'block' : 'hidden'}`}>
-          <h1 className='font-bold text-xl'>Slot Time</h1>
-          {availableTimeSlots.map((time) => (
-            <div
-              key={time}
-              className='border p-3 rounded mb-4 hover:bg-gray-300 bg-gray-200'
-              onClick={() => handleTimeClick(time)}  // Click to select time
-            >
-              {time}
-            </div>
-          ))}
+        <div className={`transition-transform w-[15vw] ml-10 px-4 py-6 border h-full text-center duration-500 ${isTimeVisible ? 'translate-x-0' : 'translate-x-full'} ${availableTimeSlots.length === 0 ? 'bg-yellow-200' : 'bg-gray-100'}`}>
+          <h1 className='text-3xl'>Choose Time Slot</h1>
+          {availableTimeSlots.length === 0 ? (
+            <div className='p-4'>No slots available for this date.</div>
+          ) : (
+            renderTimeSlots(availableTimeSlots, appointmentsdateTimePairs)
+          )}
         </div>
       )}
-
-      {isEmailVisible && <Email selectedDate={selectedDate} selectedTimeSlot={selectedTimeSlot} locat={Adminlocation} Username={Username} userId={userId} />}
+      {isEmailVisible && <Email timeSlot={selectedTimeSlot} date={selectedDate} userName={Username} location={Adminlocation} adminId={userId} onAppointmentConfirmed={onAppointmentConfirmed} />}
     </div>
   );
 }

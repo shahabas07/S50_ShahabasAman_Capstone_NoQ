@@ -196,6 +196,7 @@ const Profile = () => {
     // Add your logout logic here, such as redirecting to the login page
     window.location.reload();
   };
+  // console.log("profile:",profileData)
 
   
 
@@ -429,7 +430,7 @@ const Profile = () => {
                     <h2 className="text-2xl mt-4 font-bold text-center">
                       Book your slots
                     </h2>
-                    <Calendar sectionId={profileData.section} Adminlocation={profileData.location} Username={profileData.name} userId={profileData._id} />
+                    <Calendar sectionId={profileData.section} Adminlocation={profileData.location} Username={profileData.username} userId={profileData._id} />
 
                   </>
                 )}
