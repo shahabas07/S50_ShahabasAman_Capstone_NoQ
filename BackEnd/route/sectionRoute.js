@@ -48,18 +48,15 @@ router.put('/:id', async (req, res) => {
     return res.status(400).json({ message: 'Invalid data format' });
   }
 
+  // Validate availability structure (ensure start and end are present)
   if (availability) {
     for (const [day, slots] of Object.entries(availability)) {
-      if (!slots.timeSlots || !Array.isArray(slots.timeSlots)) {
-        return res.status(400).json({ message: `Missing timeSlots for ${day}` });
+      if (!slots.start || !slots.end) {
+        return res.status(400).json({ message: `Missing start or end time for ${day}` });
       }
 
-      for (const slot of slots.timeSlots) {
-        if (!slot.time) {
-          return res.status(400).json({ message: `Missing time field in slot for ${day}` });
-        }
-        // Optional: You can validate the time format here as well
-      }
+      // Optional: Validate time format for start and end
+      // You can use regex or any other time validation logic
     }
   }
 
@@ -69,9 +66,9 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Section not found' });
     }
 
-    // Update section with new data
+    // Update the section with new data
     section.daysOfWeek = daysOfWeek;
-    section.availability = availability;
+    section.availability = availability;  // This will now store the start and end times
 
     const updatedSection = await section.save();
     res.json(updatedSection);
@@ -84,6 +81,7 @@ router.put('/:id', async (req, res) => {
     }
   }
 });
+
 
 
 

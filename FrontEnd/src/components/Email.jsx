@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const MailComponent = ({ selectedDate, selectedTimeSlot, locat, Username, userId }) => {
+const MailComponent = ({ date, timeSlot, location, userName, adminId, onAppointmentConfirmed }) => {
   const [showOTP, setShowOTP] = useState(false);
   const [otpEntered, setOtpEntered] = useState(false);
   const [name, setName] = useState('');
@@ -33,19 +33,18 @@ const MailComponent = ({ selectedDate, selectedTimeSlot, locat, Username, userId
         const response = await axios.post('http://localhost:2024/mail/verify-otp', { email, otp });
   
         if (response.status === 200) {
-          // Create appointment
           const appointmentResponse = await axios.post('http://localhost:2024/appointment/create', {
-            appointmentDate: selectedDate,
-            location: locat,
-            time: selectedTimeSlot,
+            appointmentDate: date,
+            location: location,
+            time: timeSlot,
             email,
             customerName: name,
-            adminName: Username,
-            adminId: userId
+            adminName: userName,
+            adminId: adminId
           });
   
           if (appointmentResponse.status === 201) {
-            const appointment = appointmentResponse.data.appointment; // Updated to get the full appointment object
+            const appointment = appointmentResponse.data.appointment;
   
             // Send confirmation email with full appointment object
             const confirmResponse = await axios.post('http://localhost:2024/mail/confirm-email', {
@@ -54,6 +53,12 @@ const MailComponent = ({ selectedDate, selectedTimeSlot, locat, Username, userId
   
             if (confirmResponse.status === 200) {
               setOtpEntered(true);
+              // Pass appointment details to parent for processing
+              onAppointmentConfirmed(true, {
+                date,
+                timeSlot,
+                appointmentId: appointment._id,
+              });
               setTimeout(() => {
                 window.location.reload();
               }, 5000);
@@ -73,9 +78,6 @@ const MailComponent = ({ selectedDate, selectedTimeSlot, locat, Username, userId
       alert('Please enter the OTP');
     }
   };
-  
-  
-  
   
 
   return (
@@ -97,7 +99,7 @@ const MailComponent = ({ selectedDate, selectedTimeSlot, locat, Username, userId
               d="M8 7V3m8 4V3m-9 4h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V9a2 2 0 012-2h1z"
             />
           </svg>
-          <span>Calendar Date: {selectedDate || "Not selected"}</span>
+          <span>Calendar Date: {date || "Not selected"}</span>
         </div>
         <div className="mb-5 flex items-center">
           <svg
@@ -114,7 +116,7 @@ const MailComponent = ({ selectedDate, selectedTimeSlot, locat, Username, userId
               d="M12 10c2.21 0 4-1.79 4-4S14.21 2 12 2 8 3.79 8 6s1.79 4 4 4z"
             />
           </svg>
-          <span>Location: {locat || "location not shared"}</span>
+          <span>Location: {location || "Location not shared"}</span>
         </div>
         <div className="mb-5 flex items-center">
           <svg
@@ -131,7 +133,7 @@ const MailComponent = ({ selectedDate, selectedTimeSlot, locat, Username, userId
               d="M12 8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2z"
             />
           </svg>
-          <span>Time Slot: {selectedTimeSlot || "Not selected"}</span>
+          <span>Time Slot: {timeSlot || "Not selected"}</span>
         </div>
       </div>
 
@@ -159,7 +161,9 @@ const MailComponent = ({ selectedDate, selectedTimeSlot, locat, Username, userId
             >
               Confirm
             </button>
-            <button className="w-full bg-red-500 text-white p-2">Cancel</button>
+            <button className="w-full bg-red-500 text-white p-2" onClick={() => window.location.reload()}>
+              Cancel
+            </button>
           </>
         ) : !otpEntered ? (
           <>

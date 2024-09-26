@@ -9,20 +9,18 @@ const sectionSchema = new mongoose.Schema({
   daysOfWeek: {
     type: Map,
     of: Boolean,
-    required: true
+    // required: true
   },
   availability: {
     type: Map,
-    of: {
-      timeSlots: [timeSlotSchema]
-    },
-    required: false
-  },
-  serviceProfiles: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Profile'
-  }]
+    of: new mongoose.Schema({
+      start: { type: String, required: true },
+      end: { type: String, required: true },
+    }),
+    // required: true
+  }
 });
+
 
 
 // Check if the model already exists before defining it

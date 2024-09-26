@@ -25,24 +25,30 @@
     --fc-neutral-bg-color: hsla(0, 55%, 31%, 0);
     --fc-neutral-text-color: rgba(124, 29, 233, 0);
     --fc-border-color: #a9414100;
-    --fc-hover-bg-color: #dbdfd5d7 ; 
-    --fc-today-bg-color: rgba(189, 246, 195, 0.705); 
-    --fc-today-bg-color1: rgba(172, 243, 178, 0.712); 
+    --fc-hover-bg-color: #dbdfd5d7;
+    --fc-today-bg-color: rgba(189, 246, 195, 0.705);
+    --fc-today-bg-color1: rgba(172, 243, 178, 0.712);
 }
-.fc-col-header-cell-cushion{
+
+.fc-col-header-cell-cushion {
     margin-bottom: 6px;
 }
+
 [role="columnheader"] {
-    background-color: #e3f4ffd7 !important ; /* Set constant background color */
-    color: #000000 !important; /* Ensure text color is readable */
+    background-color: #e3f4ffd7 !important;
+    /* Set constant background color */
+    color: #000000 !important;
+    /* Ensure text color is readable */
 }
 
 /* Ensure no hover effect changes the background color */
 [role="columnheader"]:hover {
-    background-color: #e3f4ffd7 !important; /* Ensure background color remains constant on hover */
+    background-color: #e3f4ffd7 !important;
+    /* Ensure background color remains constant on hover */
 }
 
-.fc-theme-standard td, .fc-theme-standard th {
+.fc-theme-standard td,
+.fc-theme-standard th {
     border: 0px solid var(--fc-border-color);
 }
 
@@ -54,28 +60,33 @@
     display: none;
 }
 
-.fc-day-other {  
+.fc-day-other {
     visibility: hidden;
 }
 
 .fc-day {
     background-color: #e0e4e95e;
-    color:gray;
+    color: gray;
     border-radius: 10px;
-    border: 14px rgb(255, 255, 255) solid !important; 
+    border: 14px rgb(255, 255, 255) solid !important;
 }
 
 .fc-day.enabled-day {
-    background-color: #dce4e9; /* Color for enabled days */
-    color: #000; /* Text color for enabled days */
+    background-color: #dce4e9;
+    /* Color for enabled days */
+    color: #000;
+    /* Text color for enabled days */
     cursor: pointer;
     pointer-events: auto;
 }
 
 .fc-day.enabled-day:hover {
-    background-color: var(--fc-hover-bg-color); /* Use variable for hover effect */
-    color: #000; /* Text color on hover */
-    border: 14px solid #ffffff; /* Border on hover */
+    background-color: var(--fc-hover-bg-color);
+    /* Use variable for hover effect */
+    color: #000;
+    /* Text color on hover */
+    border: 14px solid #ffffff;
+    /* Border on hover */
 }
 
 .fc-daygrid-day-frame {
@@ -102,11 +113,12 @@
 
 .fc-day-today {
     font-weight: bold;
-    background-color: var(--fc-today-bg-color) !important; 
+    background-color: var(--fc-today-bg-color) !important;
 }
 
 .fc-day-today:hover {
-    background-color: var(--fc-hover-bg-color) !important; /* Hover effect for today */
+    background-color: var(--fc-hover-bg-color) !important;
+    /* Hover effect for today */
 }
 
 
@@ -124,17 +136,19 @@
     transform: translateX(100%);
     display: hidden;
 }
-  
-  
+
+
 .fc-day-today:hover {
-    background-color: var(--fc-today-bg-color1) !important; /* Hover effect for today */
+    background-color: var(--fc-today-bg-color1) !important;
+    /* Hover effect for today */
 }
 
-.fc-day-past{
-     pointer-events: none !important;
-     cursor: default !important;
-     background-color: #e0e4e95e !important;
-    color:gray !important;
+.fc-day-past {
+    pointer-events: none !important;
+    cursor: default !important;
+    background-color: #e0e4e95e !important;
+    color: gray !important;
     border-radius: 10px;
 
 }
+

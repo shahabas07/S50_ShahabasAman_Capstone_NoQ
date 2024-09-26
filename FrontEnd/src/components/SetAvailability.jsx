@@ -117,6 +117,7 @@ function SetAvailability({ sectionId }) {
       daysOfWeek: daysOfWeekData,
       availability: availabilityData
     };
+    console.log(payload)
   
     axios
       .put(`http://localhost:2024/section/${sectionId}`, payload)

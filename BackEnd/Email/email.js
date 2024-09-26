@@ -15,7 +15,9 @@ app.post('/send-otp', async (req, res) => {
   const { email } = req.body;
 
   // Generate OTP
-  const otp = crypto.randomInt(1000, 9999).toString();
+  // const otp = crypto.randomInt(1000, 9999).toString();
+  const otp = "1000";
+
 
   // Store OTP with expiration (5 minutes)
   otpStore[email] = {

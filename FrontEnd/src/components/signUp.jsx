@@ -26,7 +26,7 @@ function SignUp() {
         }
       })
       .catch(error => {
-        console.error('Error signing up:', error);
+        console.error('Error signing up:', error,error.response);
         setError('Error signing up. Please try again.');
       });
   };

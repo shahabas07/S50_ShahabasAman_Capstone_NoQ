@@ -16,6 +16,7 @@
     "@fullcalendar/react": "^6.1.11",
     "@mui/material": "^5.15.17",
     "axios": "^1.6.8",
+    "date-fns": "^3.6.0",
     "html2canvas": "^1.4.1",
     "js-cookie": "^3.0.5",
     "jspdf": "^2.5.1",
