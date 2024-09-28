@@ -237,7 +237,7 @@ function homePage() {
           <a href="https://www.facebook.com/">
           <img class="w-10 h-10" src={facebook} alt="facebook" />
           </a>
-          <a href="https://github.com/shahabas07">
+          <a href="https://github.com/kalviumcommunity/S50_ShahabasAman_Capstone_NoQ">
           <img class="w-10 h-10" src={github} alt="github" />
           </a>
           <a href="https://www.instagram.com/">

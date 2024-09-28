@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const MailComponent = ({ date, timeSlot, location, userName, adminId, onAppointmentConfirmed }) => {
+const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot, day, startTime, endTime }) => {
   const [showOTP, setShowOTP] = useState(false);
   const [otpEntered, setOtpEntered] = useState(false);
   const [name, setName] = useState('');
@@ -47,24 +47,39 @@ const MailComponent = ({ date, timeSlot, location, userName, adminId, onAppointm
             const appointment = appointmentResponse.data.appointment;
   
             // Send confirmation email with full appointment object
-            const confirmResponse = await axios.post('http://localhost:2024/mail/confirm-email', {
+            await axios.post('http://localhost:2024/mail/confirm-email', {
               appointment,
             });
   
-            if (confirmResponse.status === 200) {
-              setOtpEntered(true);
-              // Pass appointment details to parent for processing
-              onAppointmentConfirmed(true, {
-                date,
-                timeSlot,
-                appointmentId: appointment._id,
-              });
-              setTimeout(() => {
-                window.location.reload();
-              }, 5000);
-            } else {
-              alert('Failed to send confirmation email');
+            // Check if this is the last slot and disable the date
+            if (isLastSlot) {
+              try {
+                const disableDateResponse = await axios.post('http://localhost:2024/disabled-dates', {
+                  DisabledDate: date,
+                  adminId,
+                  startTime,
+                  endTime,
+                  DisabledDay: day // Ensure this key matches the backend
+                });
+  
+                console.log(disableDateResponse); // Log the response for debugging
+                if (disableDateResponse.status !== 201) {
+                  alert('Failed to disable the date');
+                }
+              } catch (error) {
+                console.error('Error disabling the date:', error.response.data); // Log specific error
+                alert('Error disabling the date. Check console for details.');
+              }
             }
+  
+            setOtpEntered(true);
+            // Pass appointment details to parent for processing
+            
+  
+            // Set a timeout to reload the page after a successful appointment
+            setTimeout(() => {
+              window.location.reload();
+            }, 4000);
           } else {
             alert('Failed to create appointment');
           }
@@ -72,13 +87,15 @@ const MailComponent = ({ date, timeSlot, location, userName, adminId, onAppointm
           alert('Invalid OTP');
         }
       } catch (error) {
-        alert('Error verifying OTP or sending confirmation email');
+        console.error('Error verifying OTP or sending confirmation email:', error); // Log the error
+        alert('Error verifying OTP or sending confirmation email. Check console for details.');
       }
     } else {
       alert('Please enter the OTP');
     }
   };
   
+
 
   return (
     <div className="flex w-full">
