@@ -35,7 +35,7 @@ app.post('/send-otp', async (req, res) => {
   });
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"NoQ" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: 'Your OTP Code',
     html: `
@@ -112,7 +112,7 @@ app.post('/confirm-email', async (req, res) => {
     
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"NoQ" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: 'Appointment Confirmation',
 
