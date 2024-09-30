@@ -20,11 +20,11 @@ const generateTimeSlots = (startTime, endTime) => {
   return timeSlots;
 };
 
-export default function Calendar({ sectionId, Adminlocation, Username, userId }) {
+export default function Calendar({ sectionId, Adminlocation, Username, userId, email }) {
   const [enabledDays, setEnabledDays] = useState([]);
   const [isTimeVisible, setIsTimeVisible] = useState(false);
   const [isEmailVisible, setIsEmailVisible] = useState(false);
-  const [renderTrigger, setRenderTrigger] = useState(false);
+  // const [renderTrigger, setRenderTrigger] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDay, setSelectedDay] = useState('');
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
@@ -145,7 +145,7 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId })
         calendarApi.removeEventListener('datesSet', handleDatesSet);
       }
     };
-  }, [enabledDays, disabledDates, renderTrigger]);
+  }, [enabledDays, disabledDates]);
 
   // Handle date click to show available time slots
   const handleDateClick = async (el, day) => {
@@ -154,7 +154,7 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId })
     setSelectedDay(day);
     setIsTimeVisible(true);
     setIsEmailVisible(false);
-    setRenderTrigger(prev => !prev);
+    // setRenderTrigger(prev => !prev);
 
     const timeRange = availability[day]; // Get the time range for the selected day
     if (timeRange) {
@@ -204,7 +204,7 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId })
         <div className='flex-grow w-auto'>
           <FullCalendar
             ref={calendarRef}
-            key={renderTrigger}
+            // key={renderTrigger}
             plugins={[dayGridPlugin]}
             headerToolbar={{
               end: 'prev,next'
@@ -245,6 +245,7 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId })
           adminId={userId} 
           startTime={availability[selectedDay]?.start} 
           endTime={availability[selectedDay]?.end} 
+          providerEmail = {email}
         />
       )}
     </div>

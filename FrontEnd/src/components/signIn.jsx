@@ -8,8 +8,14 @@ function SignIn() {
   const { register, handleSubmit } = useForm();
   const [error, setError] = useState(null);
 
+  const GoogleLogin=(event)=>{
+    // event.preventDefault();
+    window.location.href = "http://localhost:2024/auth/google"
+  }
+
   const onSubmit = (data) => {
     const { username, password } = data;
+    console.log("about tio");
   
     // axios.post(`${API_URI}/service/sign-in`, { username, password })
     axios.post('http://localhost:2024/service/sign-in', data)
@@ -17,6 +23,7 @@ function SignIn() {
       .then(response => {
         console.log(response);
         const token = response.data.token;
+        console.log("token",token);
         Cookies.set('token', token, { expires: 7 });
         const usernameFromResponse = response.data.username;
         window.location.href = `/profile/${usernameFromResponse}`; 
@@ -39,6 +46,8 @@ function SignIn() {
         <p className="text-gray-600">
           Minimize wait times, maximize efficiency. Join us on this journey
         </p>
+        <button className="blue" onClick={(event) => GoogleLogin(event)}>G</button>
+
         <form onSubmit={handleSubmit(onSubmit)} className="mt-12  lg:w-1/3 bg-violet-950 text-gray-50 rounded-[24px] px-10 py-6 shadow-md ">
           <div className="mb-6">
             <label htmlFor="username" className="ml-2 text-yellow-100">Username:</label> <br />

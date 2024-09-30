@@ -81,9 +81,20 @@ router.get('/:adminId', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params; // Get the ID from the request parameters
+    const deletedDate = await DisabledDate.findByIdAndDelete(id); // Delete the document by ID
+
+    if (!deletedDate) {
+      return res.status(404).json({ error: 'Disabled date not found' });
+    }
+
+    res.status(200).json({ message: 'Disabled date deleted successfully', deletedDate });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete disabled date', details: error.message });
+  }
+});
 
 
-// Optional: DELETE or PUT routes could also be added if needed.
-
-// Export the router
 module.exports = router;

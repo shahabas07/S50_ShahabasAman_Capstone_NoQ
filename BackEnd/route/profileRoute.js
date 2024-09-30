@@ -103,4 +103,34 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+router.put("/username/:username", upload.fields([{ name: 'avatar' }, { name: 'picture' }]), async (req, res) => {
+    try {
+        const username = req.params.username;
+        const updateFields = { ...req.body };
+
+        if (req.files['avatar']) {
+            updateFields.avatar = req.files['avatar'][0].buffer;
+        }
+        if (req.files['picture']) {
+            updateFields.picture = req.files['picture'][0].buffer;
+        }
+
+        // Find the service profile by username
+        const updatedService = await serviceProfile.findOneAndUpdate(
+            { username: username }, // Query by username
+            updateFields,
+            { new: true }
+        );
+
+        if (!updatedService) {
+            return res.status(404).json({ message: "Service not found" });
+        }
+
+        res.json(updatedService);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
 module.exports = router;

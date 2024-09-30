@@ -81,7 +81,22 @@ router.get('/admin/:adminId/:appointmentDate', async (req, res) => {
   }
 });
 
+router.get('/admin/:adminId', async (req, res) => {
+  const { adminId } = req.params;
 
+  try {
+    // Fetch all appointments for the given adminId
+    const appointments = await Appointment.find({ adminId: adminId });
+
+    if (!appointments || appointments.length === 0) {
+      return res.status(404).json({ message: 'No appointments found' });
+    }
+
+    res.status(200).json(appointments);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch appointments', error: err.message });
+  }
+});
   
 
 module.exports = router;

@@ -7,6 +7,9 @@ import Docs from "./components/Docs";
 import Categories from "./components/Categories";
 import Sort from "./components/sort"
 import Profile from "./components/Profile"
+import AppointmentData from "./components/AppointmentData"
+import ReviewPage from "./components/ReviewPage"
+import DonationPage from "./components/Donation"
 import "./App.css";
 
 function App() {
@@ -20,6 +23,9 @@ function App() {
         <Route path="/Categories" element={<Categories/>}/>
         <Route path="/Categories/:category" element={<Sort/>}/>
         <Route path="/Profile/:User" element={<Profile/>} />
+        <Route path="/Profile/AppointmentData" element={<AppointmentData/>} />
+        <Route path="/Profile/Reviews/:id" element={<ReviewPage/>} />
+        <Route path="/DonationPage" element={<DonationPage/>} />
       </Routes>
     </>
   );
