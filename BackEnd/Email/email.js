@@ -86,21 +86,26 @@ app.post('/verify-otp', (req, res) => {
 // Send confirmation email
 
 app.post('/confirm-email', async (req, res) => {
-  const { appointment } = req.body;
+  const { appointment, providerEmail } = req.body;
+
+  // if (!providerEmail) {
+  //   return res.status(400).json({ message: 'Provider email is required' });
+  // }
 
   try {
-    // Ensure that the appointment object is provided
-    if (!appointment) {
-      return res.status(400).json({ message: 'Appointment data is required' });
+    // Ensure that the appointment and providerEmail are provided
+    if (!appointment || !providerEmail) {
+      return res.status(400).json({ message: 'Appointment and provider email data are required' });
     }
 
     // Extract necessary details from the appointment object
     const { customerName, appointmentDate, time, location, adminName, email } = appointment;
 
     if (!email) {
-      return res.status(400).json({ message: 'Email address is missing' });
+      return res.status(400).json({ message: 'Customer email address is missing' });
     }
 
+    // Nodemailer transporter
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
@@ -109,43 +114,74 @@ app.post('/confirm-email', async (req, res) => {
       },
     });
 
-    
+    // Email template HTML
+    const emailHTML = `
+      <p>Dear ${customerName},</p>
+      <p>Your appointment has been confirmed successfully!</p>
+      <p>Appointment Details:</p>
+      <ul>
+        <li>Appointment ID: ${appointment._id}</li>
+        <li>Date: ${appointmentDate}</li>
+        <li>Time: ${time}</li>
+        <li>Location: ${location}</li>
+        <li>Booked with: ${adminName}</li>
+      </ul>
+      <p>Please keep this information for future reference.</p>
+      <p>Thank you for booking through NoQ!</p>
+      <img src="cid:image1@company.com" alt="Example Image" style="width: 100%; max-width: 300px;">
+    `;
 
-    const mailOptions = {
+    // Mail options for customer
+    const customerMailOptions = {
       from: `"NoQ" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: 'Appointment Confirmation',
-
-      html: `<p>Dear ${customerName},</p>
-             <p>Your appointment has been confirmed successfully!</p>
-             <p>Appointment Details:</p>
-             <ul>
-               <li>Appointment ID: ${appointment._id}</li>
-               <li>Date: ${appointmentDate}</li>
-               <li>Time: ${time}</li>
-               <li>Location: ${location}</li>
-               <li>Booked with: ${adminName}</li>
-             </ul>
-             <p>Please keep this information for future reference.</p>
-             <p>Thank you for booking through NoQ!</p>
-             <img src="cid:image1@company.com" alt="Example Image" style="width: 100%; max-width: 300px;">` ,
-
+      html: emailHTML,
       attachments: [
         {
           filename: 'NoQ.png',
-          path: path.join('Email', 'NoQ.png'), // Corrected path
-          cid: 'image1@company.com'
+          path: path.join('Email', 'NoQ.png'),  // Corrected path
+          cid: 'image1@company.com',
         },
       ],
-      
     };
 
-    await transporter.sendMail(mailOptions);
-    res.status(200).send('Confirmation email sent');
+    // Mail options for provider
+    const providerMailOptions = {
+      from: `"NoQ" <${process.env.EMAIL_USER}>`,
+      to: providerEmail,
+      subject: 'New Appointment Booked',
+      html: `
+        <p>Dear ${adminName},</p>
+        <p>A new appointment has been booked by ${customerName}.</p>
+        <p>Appointment Details:</p>
+        <ul>
+          <li>Appointment ID: ${appointment._id}</li>
+          <li>Date: ${appointmentDate}</li>
+          <li>Time: ${time}</li>
+          <li>Location: ${location}</li>
+        </ul>
+        <p>Please confirm the appointment from your dashboard.</p>
+      `,
+      attachments: [
+        {
+          filename: 'NoQ.png',
+          path: path.join('Email', 'NoQ.png'),
+          cid: 'image1@company.com',
+        },
+      ],
+    };
+
+    // Send emails to both customer and provider
+    await transporter.sendMail(customerMailOptions);
+    await transporter.sendMail(providerMailOptions);
+
+    res.status(200).send('Confirmation email sent to both customer and provider');
   } catch (error) {
     console.error('Error sending confirmation email:', error);
     res.status(500).send('Error sending confirmation email');
   }
 });
+
 
 module.exports = app;

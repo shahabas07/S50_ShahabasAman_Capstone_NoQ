@@ -3,12 +3,15 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Calendar from "./Calendar";
 import SetAvailability from "./SetAvailability";
+import AppointmentData from "./AppointmentData"
 import DeleteModal from "./DeleteModal";
 import EditProfile from "./EditProfile";
 import QR from "./QR";
 import NoQ from "../assets/NoQ.png";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
+import ReviewPage from "./ReviewPage";
+import { Link } from 'react-router-dom';
 // import API_URI from "../../Env";
 
 const Profile = () => {
@@ -41,10 +44,11 @@ const Profile = () => {
         const userProfile = profiles.find(
           (profile) => profile.username === User
         );
-        
+
         if (userProfile) {
           setProfileData(userProfile);
           const jwt = getCookies("token");
+          console.log("JWT Token:", jwt);
           if (jwt) {
             const decodedToken = jwt.split(".")[1];
             const decodedString = atob(decodedToken);
@@ -63,7 +67,7 @@ const Profile = () => {
       });
   }, [User]);
 
-  
+
 
   useEffect(() => {
     if (profileData) {
@@ -198,7 +202,6 @@ const Profile = () => {
   };
   // console.log("profile:",profileData)
 
-  
 
 
   return (
@@ -232,16 +235,16 @@ const Profile = () => {
               <div className="flex justify-between mr-12">
                 <div className="flex">
                   <a href="/">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="w-8 h-8 mt-2 ml-5" 
-                  >
-                    <path
-                      d="M12 3l10 9h-3v9H5v-9H2l10-9zm0-2L1 10v13h6v-7h6v7h6V10l-11-9z"
-                    />
-                  </svg></a>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-8 h-8 mt-2 ml-5"
+                    >
+                      <path
+                        d="M12 3l10 9h-3v9H5v-9H2l10-9zm0-2L1 10v13h6v-7h6v7h6V10l-11-9z"
+                      />
+                    </svg></a>
 
                   <h2 className="text-xl font-bold mt-2 ml-5">
                     {profileData.username}
@@ -344,22 +347,22 @@ const Profile = () => {
               <div className="flex justify-between mr-12">
                 <div className="flex">
                   <a href="/">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="w-8 h-8 mt-2 ml-5" 
-                  >
-                    <path
-                      d="M12 3l10 9h-3v9H5v-9H2l10-9zm0-2L1 10v13h6v-7h6v7h6V10l-11-9z"
-                    />
-                  </svg></a>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-8 h-8 mt-2 ml-5"
+                    >
+                      <path
+                        d="M12 3l10 9h-3v9H5v-9H2l10-9zm0-2L1 10v13h6v-7h6v7h6V10l-11-9z"
+                      />
+                    </svg></a>
 
                   <h2 className="text-xl font-bold mt-2 ml-5">
                     {profileData.username}
                   </h2>
                 </div>
-                
+
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="25"
@@ -412,7 +415,9 @@ const Profile = () => {
                   </div>
                 </div>
                 <p className="mb-2 mt-4 w-2/3">{profileData.bio}</p>
-                <p className="text-xl font-semibold mb-2">4.9/5 Reviews</p>
+                <Link to={`/profile/reviews/${profileData._id}`} className="text-blue-500 hover:underline">
+  View Reviews
+</Link>
               </div>
               <div className="mr-9">
                 <div className="mr-9">
@@ -424,13 +429,22 @@ const Profile = () => {
             <div className="flex justify-center">
               <div className="mt-14 mb-6 border border-transparent  w-full mx-14  rounded-md">
                 {jwtUsername === profileData.username ? (
-                  <SetAvailability sectionId={profileData.section} />
+                  <div className="flex">
+                  <div className="flex-1">
+                    <SetAvailability sectionId={profileData.section} adminId={profileData._id} />
+                  </div>
+                  <div className="flex-1">
+                    <AppointmentData adminId={profileData._id} />
+                  </div>
+                </div>
+                
+
                 ) : (
                   <>
                     <h2 className="text-2xl mt-4 font-bold text-center">
                       Book your slots
                     </h2>
-                    <Calendar sectionId={profileData.section} Adminlocation={profileData.location} Username={profileData.username} userId={profileData._id} />
+                    <Calendar sectionId={profileData.section} Adminlocation={profileData.location} Username={profileData.username} userId={profileData._id} email={profileData.email} />
 
                   </>
                 )}

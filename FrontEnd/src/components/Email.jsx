@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot, day, startTime, endTime }) => {
+const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot, day, startTime, endTime, providerEmail }) => {
   const [showOTP, setShowOTP] = useState(false);
   const [otpEntered, setOtpEntered] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
+  console.log(providerEmail)
 
   const handleConfirmClick = async () => {
     if (name && email) {
@@ -49,7 +50,9 @@ const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot
             // Send confirmation email with full appointment object
             await axios.post('http://localhost:2024/mail/confirm-email', {
               appointment,
+              providerEmail,  // Add provider's email here
             });
+            
   
             // Check if this is the last slot and disable the date
             if (isLastSlot) {
