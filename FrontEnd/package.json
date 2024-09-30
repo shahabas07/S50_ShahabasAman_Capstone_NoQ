@@ -17,6 +17,7 @@
     "@mui/material": "^5.15.17",
     "axios": "^1.6.8",
     "date-fns": "^3.6.0",
+    "firebase": "^10.13.2",
     "html2canvas": "^1.4.1",
     "js-cookie": "^3.0.5",
     "jspdf": "^2.5.1",
@@ -25,7 +26,8 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.2",
     "react-modal": "^3.16.1",
-    "react-router-dom": "^6.23.1"
+    "react-router-dom": "^6.23.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

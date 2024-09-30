@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { imDB } from "./Firebase/firebase";
+import { v4 } from "uuid";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 function EditProfile({ profileData, onClose }) {
   const [userData, setUserData] = useState({
@@ -13,6 +16,8 @@ function EditProfile({ profileData, onClose }) {
     email: "",
     timezone: "",
     review: 0,
+    avatar: null, // Initialize for avatar
+    picture: null, // Initialize for picture
   });
 
   useEffect(() => {
@@ -30,6 +35,8 @@ function EditProfile({ profileData, onClose }) {
         email: "",
         timezone: "",
         review: 0,
+        avatar: null,
+        picture: null,
       });
     }
   }, [profileData]);
@@ -68,14 +75,35 @@ function EditProfile({ profileData, onClose }) {
     e.preventDefault();
     try {
       const formData = new FormData();
+
+      // Handle avatar image upload if exists
+      if (userData.avatar) {
+        const avatarRef = ref(imDB, `images/avatar/${v4()}`);
+        const uploadAvatar = await uploadBytes(avatarRef, userData.avatar);
+        const avatarUrl = await getDownloadURL(uploadAvatar.ref);
+        formData.append("avatar", avatarUrl);
+      } else {
+        formData.append("avatar", profileData.avatar); // Use existing avatar URL if no new file is provided
+      }
+
+      // Handle picture image upload if exists
+      if (userData.picture) {
+        const pictureRef = ref(imDB, `images/picture/${v4()}`);
+        const uploadPicture = await uploadBytes(pictureRef, userData.picture);
+        const pictureUrl = await getDownloadURL(uploadPicture.ref);
+        formData.append("picture", pictureUrl);
+      } else {
+        formData.append("picture", profileData.picture); // Use existing picture URL if no new file is provided
+      }
+
+      // Append other user data to formData
       Object.keys(userData).forEach((key) => {
-        if (userData[key] instanceof File) {
-          formData.append(key, userData[key]);
-        } else {
+        if (key !== "avatar" && key !== "picture") {
           formData.append(key, userData[key]);
         }
       });
 
+      // Uncomment to send the request
       const response = await axios.put(
         `http://localhost:2024/profile/${profileData._id}`,
         formData,
@@ -85,9 +113,10 @@ function EditProfile({ profileData, onClose }) {
           },
         }
       );
+
       console.log("Updated user data:", response.data);
-      
-      onClose();
+      onClose(); // Close the modal or perform any action after updating
+      // Optionally reload or redirect
       window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -101,7 +130,6 @@ function EditProfile({ profileData, onClose }) {
           type="button"
           className="absolute top-2 right-2 text-2xl text-gray-700 hover:text-gray-900"
           onClick={onClose}
-          onKeyDown={(e)=>onclose}
         >
           ✕
         </button>
