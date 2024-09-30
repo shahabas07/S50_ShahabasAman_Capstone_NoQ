@@ -28,13 +28,13 @@ const Profile = () => {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [profilePictureUrl, setProfilePictureUrl] = useState("");
 
-  const bufferToBase64 = (buffer) => {
-    const binary = new Uint8Array(buffer).reduce(
-      (data, byte) => data + String.fromCharCode(byte),
-      ""
-    );
-    return btoa(binary);
-  };
+  // const bufferToBase64 = (buffer) => {
+  //   const binary = new Uint8Array(buffer).reduce(
+  //     (data, byte) => data + String.fromCharCode(byte),
+  //     ""
+  //   );
+  //   return btoa(binary);
+  // };
 
   useEffect(() => {
     axios
@@ -69,27 +69,27 @@ const Profile = () => {
 
 
 
-  useEffect(() => {
-    if (profileData) {
-      if (profileData.avatar) {
-        const base64String = bufferToBase64(profileData.avatar.data);
-        setAvatarUrl(`data:image/jpeg;base64,${base64String}`);
-      } else {
-        setAvatarUrl(
-          "https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"
-        );
-      }
+  // useEffect(() => {
+  //   if (profileData) {
+  //     if (profileData.avatar) {
+  //       const base64String = bufferToBase64(profileData.avatar.data);
+  //       setAvatarUrl(`data:image/jpeg;base64,${base64String}`);
+  //     } else {
+  //       setAvatarUrl(
+  //         "https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"
+  //       );
+  //     }
 
-      if (profileData.picture) {
-        const base64String_2 = bufferToBase64(profileData.picture.data);
-        setProfilePictureUrl(`data:image/jpeg;base64,${base64String_2}`);
-      } else {
-        setProfilePictureUrl(
-          "https://static.vecteezy.com/system/resources/thumbnails/012/251/644/small/honeycomb-line-art-background-simple-beehive-seamless-pattern-illustration-of-flat-geometric-texture-symbol-hexagon-hexagonal-sign-or-cell-icon-honey-bee-hive-black-and-white-color-vector.jpg"
-        );
-      }
-    }
-  }, [profileData]);
+  //     if (profileData.picture) {
+  //       const base64String_2 = bufferToBase64(profileData.picture.data);
+  //       setProfilePictureUrl(`data:image/jpeg;base64,${base64String_2}`);
+  //     } else {
+  //       setProfilePictureUrl(
+  //         "https://static.vecteezy.com/system/resources/thumbnails/012/251/644/small/honeycomb-line-art-background-simple-beehive-seamless-pattern-illustration-of-flat-geometric-texture-symbol-hexagon-hexagonal-sign-or-cell-icon-honey-bee-hive-black-and-white-color-vector.jpg"
+  //       );
+  //     }
+  //   }
+  // }, [profileData]);
 
   const getCookies = (name) => {
     const cookies = document.cookie.split("; ");
@@ -395,7 +395,7 @@ const Profile = () => {
                   <div>
                     <img
                       className="border border-gray-500 w-36 h-36 rounded-full"
-                      src={avatarUrl} // Use avatarUrl here
+                      src={profileData.avatar} // Use avatarUrl here
                     />
                   </div>
                   <div className="ml-6 flex-1">
@@ -421,7 +421,7 @@ const Profile = () => {
               </div>
               <div className="mr-9">
                 <div className="mr-9">
-                  <img src={profilePictureUrl} alt="" className="h-44 w-60" />
+                  <img src={profileData.picture} alt="" className="h-44 w-60" />
                 </div>
               </div>
             </div>

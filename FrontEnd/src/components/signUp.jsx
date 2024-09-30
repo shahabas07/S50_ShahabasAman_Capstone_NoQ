@@ -3,6 +3,10 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from 'js-cookie';
 
+import { imDB } from "./Firebase/firebase";
+import { v4 } from "uuid";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+
 function SignUp() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const [error, setError] = useState(null); // State to store sign-up error
@@ -29,14 +33,25 @@ function SignUp() {
       });
   };
 
-  const handleProfileUpdate = (data) => {
+  const handleProfileUpdate = async (data) => {
     console.log('Profile update data:', data);
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('bio', data.bio);
     formData.append('location', data.location);
-    if (data.avatar[0]) formData.append('avatar', data.avatar[0]);
-    if (data.picture[0]) formData.append('picture', data.picture[0]);
+    
+    const imgS = ref(imDB, `images${v4()}`);
+    const uploadDataofAvatar = await uploadBytes(imgS, data.avatar[0]);
+    const imageUrlofAvatar = await getDownloadURL(uploadDataofAvatar.ref);
+    
+    const uploadDataofPicture = await uploadBytes(imgS, data.picture[0]);
+    const imageUrlofPicture = await getDownloadURL(uploadDataofPicture.ref);
+    
+    if (data.avatar[0]) formData.append('avatar', imageUrlofAvatar);
+    if (data.picture[0]) formData.append('picture', imageUrlofPicture);
+
+    console.log("IMAGE URL OF AVATAR", imageUrlofAvatar);
+    console.log("IMAGE URL OF PICTURE", imageUrlofPicture);
 
     // Use username directly from the input field
     const username = data.username;

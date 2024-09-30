@@ -58,18 +58,11 @@ router.get("/:id", async (req, res) => {
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-router.put("/:id", upload.fields([{ name: 'avatar' }, { name: 'picture' }]), async (req, res) => {
+router.put("/:id",upload.fields([{ name: 'avatar' }, { name: 'picture' }]), async (req, res) => {
     try {
       const id = req.params.id;
       const updateFields = { ...req.body };
-  
-      if (req.files['avatar']) {
-        updateFields.avatar = req.files['avatar'][0].buffer;
-      }
-      if (req.files['picture']) {
-        updateFields.picture = req.files['picture'][0].buffer;
-      }
-  
+     console.log(updateFields)
       const updatedService = await serviceProfile.findByIdAndUpdate(
         id,
         updateFields,
@@ -107,13 +100,7 @@ router.put("/username/:username", upload.fields([{ name: 'avatar' }, { name: 'pi
     try {
         const username = req.params.username;
         const updateFields = { ...req.body };
-
-        if (req.files['avatar']) {
-            updateFields.avatar = req.files['avatar'][0].buffer;
-        }
-        if (req.files['picture']) {
-            updateFields.picture = req.files['picture'][0].buffer;
-        }
+        console.log(updateFields)
 
         // Find the service profile by username
         const updatedService = await serviceProfile.findOneAndUpdate(
