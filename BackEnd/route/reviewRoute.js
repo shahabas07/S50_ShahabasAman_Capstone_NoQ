@@ -15,11 +15,12 @@ router.post('/:serviceProviderId', async (req, res) => {
       return res.status(404).json({ error: 'Service provider not found' });
     }
 
-    // Create a new review
+    // Create a new review with adminId (serviceProviderId)
     const newReview = new Review({
       reviewerName,
       rating,
-      comment
+      comment,
+      adminId: serviceProviderId // Set adminId as the serviceProviderId
     });
 
     // Save the review
@@ -32,7 +33,7 @@ router.post('/:serviceProviderId', async (req, res) => {
   }
 });
 
-// Route to get all reviews
+// Route to get all reviews for a specific service provider
 router.get('/:serviceProviderId', async (req, res) => {
   try {
     const { serviceProviderId } = req.params;
@@ -43,8 +44,8 @@ router.get('/:serviceProviderId', async (req, res) => {
       return res.status(404).json({ error: 'Service provider not found' });
     }
 
-    // Find all reviews
-    const reviews = await Review.find();
+    // Find all reviews where adminId matches the serviceProviderId
+    const reviews = await Review.find({ adminId: serviceProviderId });
 
     res.status(200).json(reviews);
   } catch (error) {

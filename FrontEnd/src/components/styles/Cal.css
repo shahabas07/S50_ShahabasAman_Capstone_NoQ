@@ -30,6 +30,8 @@
     --fc-today-bg-color1: rgba(172, 243, 178, 0.712);
 }
 
+
+
 .fc-col-header-cell-cushion {
     margin-bottom: 6px;
 }
@@ -68,10 +70,8 @@
     background-color: #e0e4e95e;
     color: gray;
     border-radius: 10px;
-    border: 14px rgb(255, 255, 255) solid !important;
+    border: 14px rgb(240, 233, 252) solid !important;
 }
-
-
 
 .fc-daygrid-day-frame {
     display: flex;

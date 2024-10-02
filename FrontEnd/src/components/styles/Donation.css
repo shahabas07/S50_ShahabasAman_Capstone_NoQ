@@ -1,51 +1,96 @@
-/* src/DonationPage.css */
+/* General container styles */
+.dotbg{
+  background-image: url(https://media.istockphoto.com/id/1392788958/vector/light-grey-circeled-halftone-monochrome-pattern-with-dots-minimalism-vector-background-for.jpg?s=612x612&w=0&k=20&c=D67oXL4dOH1Y2w0uZpeyN4KmfEeKb-N1Ngea15-ndrE=);
+}
 .donation-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f7f9fc;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #fff3c1;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Title and description */
+.donation-title {
+  font-size: 36px;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.donation-description {
+  font-size: 18px;
+  color: #34495e;
+  margin-bottom: 20px;
+  text-align: center;
+  max-width: 600px;
+}
+
+/* Input container */
+.donation-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%; 
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Input field */
+.donation-input {
+  padding: 10px;
+  width: 80%;
+  max-width: 300px;
+  margin-bottom: 20px;
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Button styles */
+.donate-button {
+  padding: 10px 20px;
+  background-color: #6b2292;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.donate-button:hover {
+  background-color: #692196;
+  transform: scale(1.05); /* Slight enlargement on hover */
+}
+
+/* QR code animation */
+.qr-code-animation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.qr-code-animation h2, .qr-code-animation p {
+  margin: 10px 0;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: scale(0.5); /* Start from a smaller size */
   }
-  
-  .donation-title {
-    font-size: 36px;
-    color: #2c3e50;
-    margin-bottom: 10px;
+  to {
+      opacity: 1;
+      transform: scale(1); /* End at normal size */
   }
-  
-  .donation-description {
-    font-size: 18px;
-    color: #34495e;
-    margin-bottom: 20px;
-    text-align: center;
-    max-width: 600px;
-  }
-  
-  .donation-input {
-    padding: 10px;
-    width: 250px;
-    border: 1px solid #bdc3c7;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    font-size: 16px;
-  }
-  
-  .donate-button {
-    padding: 10px 20px;
-    background-color: #27ae60;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .donate-button:hover {
-    background-color: #219653;
-  }
-      
+}

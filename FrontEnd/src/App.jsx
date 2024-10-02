@@ -24,7 +24,7 @@ function App() {
         <Route path="/Categories/:category" element={<Sort/>}/>
         <Route path="/Profile/:User" element={<Profile/>} />
         <Route path="/Profile/AppointmentData" element={<AppointmentData/>} />
-        <Route path="/Profile/Reviews/:id" element={<ReviewPage/>} />
+        <Route path="/Profile/Reviews/*" element={<ReviewPage/>} />
         <Route path="/DonationPage" element={<DonationPage/>} />
       </Routes>
     </>

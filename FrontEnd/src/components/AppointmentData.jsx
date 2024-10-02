@@ -10,7 +10,7 @@ const AppointmentData = ({ adminId }) => {
   const [appointments, setAppointments] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [showAppointments, setShowAppointments] = useState(false); // State to toggle appointments visibility
+  const [loading, setLoading] = useState(true); // State to manage loading
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -22,10 +22,19 @@ const AppointmentData = ({ adminId }) => {
         setAppointments(data);
       } catch (error) {
         console.error("Error fetching appointments:", error);
+      } finally {
+        setLoading(false); // Set loading to false after data fetch
       }
     };
 
+    // Initial fetch
     fetchAppointments();
+
+    // Set up interval to refetch every 30 seconds
+    const interval = setInterval(fetchAppointments, 30000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);
   }, [adminId]);
 
   const openModal = (appointment) => {
@@ -40,37 +49,33 @@ const AppointmentData = ({ adminId }) => {
 
   return (
     <div className="container p-4 mx-auto">
-      {/* Toggle Button with animation */}
-      <button
-        onClick={() => setShowAppointments(!showAppointments)}
-        className="bg-violet-700 text-white px-4 py-2 rounded focus:outline-none mb-4"
-      >
-        {showAppointments ? "Hide Appointments" : "Show Appointments"}
-      </button>
-
-      {/* CSSTransition for appointment list animations */}
-      <CSSTransition
-        in={showAppointments}
-        timeout={300}
-        classNames="appointment-list"
-        unmountOnExit
-      >
-        <div>
-          <h1 className="mb-6 text-2xl font-bold text-center">Appointments</h1>
-          <div className="grid grid-cols-1 gap-4">
-            {appointments.map((appointment) => (
-              <div
-                key={appointment._id}
-                className="p-4 transition-transform transform bg-white rounded-lg shadow-lg cursor-pointer hover:scale-105"
-                onClick={() => openModal(appointment)}
-              >
-                <h2 className="text-lg font-semibold">{`${new Date(appointment.appointmentDate).toLocaleDateString()} at ${appointment.time}`}</h2>
-                <p className="text-gray-600">{`Customer: ${appointment.customerName}`}</p>
-              </div>
-            ))}
+      {/* Loading animation */}
+      {loading ? (
+        <div className="loader mx-auto my-4" />
+      ) : (
+        <CSSTransition
+          in={!loading} // Animation triggers when loading is false
+          timeout={300}
+          classNames="appointment-list"
+          unmountOnExit
+        >
+          <div className="overflow-y-auto max-h-[600px]"> {/* Adjust max height as needed */}
+            <div className="grid grid-cols-1 gap-4">
+              {appointments.map((appointment) => (
+                <div
+                  key={appointment._id}
+                  className="p-4 transition-transform transform bg-white rounded-lg shadow-lg cursor-pointer hover:scale-105"
+                  onClick={() => openModal(appointment)}
+                >
+                  <h2 className="text-lg font-semibold">{`${new Date(appointment.appointmentDate).toLocaleDateString()} at ${appointment.time}`}</h2>
+                  <p className="text-gray-600">{`Customer: ${appointment.customerName}`}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </CSSTransition>
+
+        </CSSTransition>
+      )}
 
       {/* Modal for detailed information */}
       <CSSTransition
@@ -82,7 +87,7 @@ const AppointmentData = ({ adminId }) => {
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={closeModal}
-          className="relative w-1/4 mx-auto mt-16 text-center transition-transform transform border-8 border-gray-800 rounded-lg shadow-lg p-6 bg-gradient-to-r from-blue-200 to-purple-100"
+          className="relative w-1/4 mx-auto mt-6 text-center transition-transform transform  rounded-lg shadow-lg p-10 bg-gradient-to-r from-violet-50 to-orange-100"
           overlayClassName="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center"
         >
           {selectedAppointment && (
@@ -103,7 +108,7 @@ const AppointmentData = ({ adminId }) => {
               </svg>
 
               <h2 className="mb-6 text-xl font-bold">Appointment Details</h2>
-              
+
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <strong className="text-left">Date:</strong>

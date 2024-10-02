@@ -20,6 +20,13 @@ const generateTimeSlots = (startTime, endTime) => {
   return timeSlots;
 };
 
+const formatTo12Hour = (time) => {
+  const [hours, minutes] = time.split(':').map(Number);
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+  return `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+};
+
 export default function Calendar({ sectionId, Adminlocation, Username, userId, email }) {
   const [enabledDays, setEnabledDays] = useState([]);
   const [isTimeVisible, setIsTimeVisible] = useState(false);
@@ -35,6 +42,12 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
   const [isLastSlot, setIsLastSlot] = useState(false);
   const [disabledDates, setDisabledDates] = useState([]);
   const timeSlotDivRef = useRef(null); // Create a ref for the time slot div
+  const [is24Hour, setIs24Hour] = useState(false);
+
+  // Toggle between 12-hour and 24-hour formats
+  const toggleTimeFormat = () => {
+    setIs24Hour(!is24Hour);
+  };
 
   // Function to handle clicks outside the time slot div
   const handleClickOutside = (event) => {
@@ -198,13 +211,50 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
     };
   }, []);
 
+  
+
   return (
-    <div className='flex w-2/3 mx-auto'>
+    <div className='relative w-2/3 mx-auto '>
+      {/* Time Slot Div */}
+      {isTimeVisible && (
+        <div
+          ref={timeSlotDivRef}
+          className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-transform w-[15vw] max-h-[50vh] px-6 py-8 border text-center rounded-lg shadow-lg duration-500 
+     ${availableTimeSlots.length === 0 ? 'bg-yellow-200' : 'bg-white'}
+     z-10 overflow-y-auto`}
+        >
+          <div className='flex justify-between items-center'>
+            <h1 className='mt-5 text-lg font-semibold mb-4'>On <span className='text-green-700'>{selectedDate}</span> @</h1>
+
+            {/* Toggle Button for 12hr/24hr Format in top-right corner */}
+            <button
+              className='mb-6 px-2 py-1 border rounded-lg stroke-blue-500 text-gray-600 hover:bg-gray-200 transition duration-200 text-sm'
+              onClick={toggleTimeFormat}
+            >
+              {is24Hour ? '24HR' : '12HR'}
+            </button>
+          </div>
+
+          {availableTimeSlots.map((slot) => (
+            <div
+              key={slot}
+              className={`border border-gray-300 p-2 rounded-lg mb-4 transition-colors duration-200 
+         ${appointmentsdateTimePairs.includes(slot) ? 'bg-gray-200 opacity-50 cursor-not-allowed' : 'bg-gray-100 hover:bg-gray-300 cursor-pointer'}`}
+              onClick={() => !appointmentsdateTimePairs.includes(slot) && handleTimeClick(slot)} // Prevent click if slot is booked
+            >
+              <span className="text-sm font-small">
+                {is24Hour ? slot : formatTo12Hour(slot)}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* FullCalendar */}
       {!isEmailVisible && (
         <div className='flex-grow w-auto'>
           <FullCalendar
             ref={calendarRef}
-            // key={renderTrigger}
             plugins={[dayGridPlugin]}
             headerToolbar={{
               end: 'prev,next'
@@ -213,39 +263,18 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
           />
         </div>
       )}
-      {!isEmailVisible && isTimeVisible && (
-        <div 
-          ref={timeSlotDivRef} // Attach the ref to the div
-          className={`transition-transform w-[15vw] ml-10 px-4 py-6 border h-full text-center duration-500 ${isTimeVisible ? 'translate-x-0' : 'translate-x-full'} ${availableTimeSlots.length === 0 ? 'bg-yellow-200' : 'bg-gray-100'}`}
-        >
-          <h1 className='text-3xl'>Choose Time Slot</h1>
-          {availableTimeSlots.length === 0 ? (
-            <div className='p-4'>No slots available for this date.</div>
-          ) : (
-            availableTimeSlots.map((slot) => (
-              <div
-                key={slot}
-                className={`border p-3 rounded mb-4 hover:bg-gray-300 ${appointmentsdateTimePairs.includes(slot) ? 'bg-gray-200 opacity-50 cursor-not-allowed' : 'bg-gray-200'}`}
-                onClick={() => !appointmentsdateTimePairs.includes(slot) && handleTimeClick(slot)} // Prevent click if slot is booked
-              >
-                {slot}
-              </div>
-            ))
-          )}
-        </div>
-      )}
       {isEmailVisible && (
-        <Email 
-          timeSlot={selectedTimeSlot} 
-          date={selectedDate} 
-          day={selectedDay} 
-          isLastSlot={isLastSlot} 
-          userName={Username} 
-          location={Adminlocation} 
-          adminId={userId} 
-          startTime={availability[selectedDay]?.start} 
-          endTime={availability[selectedDay]?.end} 
-          providerEmail = {email}
+        <Email
+          timeSlot={selectedTimeSlot}
+          date={selectedDate}
+          day={selectedDay}
+          isLastSlot={isLastSlot}
+          userName={Username}
+          location={Adminlocation}
+          adminId={userId}
+          startTime={availability[selectedDay]?.start}
+          endTime={availability[selectedDay]?.end}
+          providerEmail={email}
         />
       )}
     </div>

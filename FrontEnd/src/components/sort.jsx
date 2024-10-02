@@ -12,14 +12,16 @@ function Sort() {
   const [ratingFilter, setRatingFilter] = useState("");
 
   useEffect(() => {
-    // axios.get(`${API_URI}/profile?category=${category}`)
-    axios.get(`http://localhost:2024/profile?category=${category}`)
-      .then(response => {
-        const filteredServices = response.data.filter(service => service.category === category);
+    axios
+      .get(`http://localhost:2024/profile?category=${category}`)
+      .then((response) => {
+        const filteredServices = response.data.filter(
+          (service) => service.category === category
+        );
         setFilteredItems(filteredServices);
       })
-      .catch(error => {
-        console.error('Error fetching services:', error);
+      .catch((error) => {
+        console.error("Error fetching services:", error);
       });
   }, [category]);
 
@@ -44,44 +46,60 @@ function Sort() {
 
       setFilteredItems(newFilteredItems);
     } else {
-      axios.get(`${API_URI}/profile?category=${category}`)
-        .then(response => {
-          const filteredServices = response.data.filter(service => service.category === category);
+      axios
+        .get(`http://localhost:2024/profile?category=${category}`)
+        .then((response) => {
+          const filteredServices = response.data.filter(
+            (service) => service.category === category
+          );
           setFilteredItems(filteredServices);
         })
-        .catch(error => {
-          console.error('Error fetching services:', error);
+        .catch((error) => {
+          console.error("Error fetching services:", error);
         });
     }
   };
 
   const renderServices = () => {
     if (!filteredItems || filteredItems.length === 0) {
-      return <p className="text-center text-gray-500 mt-8">No services available for this category.</p>;
+      return (
+        <p className="text-center text-gray-400 mt-8">
+          No services available for this category.
+        </p>
+      );
     }
 
     return filteredItems.map((service) => (
-      <div key={service._id} className="flex mx-10 my-3 bg-slate-300 rounded shadow-md">
-        <img
-          src="https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"
-          className="p-3 w-32 h-32 rounded-full"
-          alt=""
-        />
-
-        <div className="p-3">
-          <h2 className="text-lg font-semibold mt-2">{service.name}</h2>
-          <p className="text-sm">@{service.username}</p>
-          <span className="flex items-end mt-2">
-            <img src={gps} className="w-6" alt="" />
-            <p className="align-bottom"> {service.location}</p>
-          </span>
+      <div
+        key={service._id}
+        className="flex items-center justify-between mx-10 my-4 bg-gray-100 shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+      >
+        <div className="flex items-center">
+          <img
+            src="https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"
+            className="p-4 w-24 h-24 rounded-full object-cover"
+            alt="Service"
+          />
+          <div className="p-4">
+            <h2 className="text-lg font-semibold text-gray-800">
+              {service.name}
+            </h2>
+            <p className="text-gray-500">@{service.username}</p>
+            <span className="flex items-center mt-2 text-gray-600">
+              <img src={gps} className="w-5 h-5 mr-2" alt="Location" />
+              <p>{service.location}</p>
+            </span>
+          </div>
         </div>
-        <div className="ml-auto p-5 mr-8">
-          <span className="flex justify-end mr-3 mb-5">
-            <p className="text-right">-</p>
-            <p className="text-sm text-right ">{service.rating}/5</p>
-          </span>
-          <Link to={`/profile/${service.username}`} className="bg-yellow-900 hover:bg-yellow-800 text-white font-bold py-2 px-6 rounded">
+        <div className="flex flex-col items-end p-4">
+          <div className="flex items-center text-yellow-500">
+            <p className="mr-1 text-lg font-semibold">{service.rating}</p>
+            <p className="text-sm">/5</p>
+          </div>
+          <Link
+            to={`/profile/${service.username}`}
+            className="mt-4 bg-yellow-500 text-white py-2 px-6 rounded-md hover:bg-yellow-600 transition-colors duration-300"
+          >
             Check Availability
           </Link>
         </div>
@@ -90,35 +108,34 @@ function Sort() {
   };
 
   return (
-    <div className="min-h-screen bg-violet-950">
-      
-        
-      
+    <div className="dotbg min-h-screen bg-gray-100">
+      <div className="bg-violet-950 ">
       <div className="bg-violet-950 text-white pt-5">
-      <a href="/" className="logo text-black pl-6 ">
+        <a href="/" className="logo text-white pl-6 ">
           NoQ
         </a>
-        <p className="text-gray-200 text-2xl pb-5 text-center font-bold">
-          {category}
-        </p>
-        <span className="flex justify-around pb-6 mx-20">
-          <div className="align-middle">
-            <label className="pr-4" htmlFor="">
-              City
-            </label>
+        </div>
+        <div className="mt-6 text-center pb-6">
+          <h2 className="text-4xl font-bold text-gray-200">{category}</h2>
+        </div>
+      </div>
+
+      <div className="mt-8 mx-10 p-6 bg-gray-300 rounded-lg shadow-md">
+        <div className="flex justify-end gap-20 mb-6">
+          <div>
+            <label className="block text-gray-700 mb-2">City</label>
             <input
               type="text"
-              className="rounded text-black py-1"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-violet-500 focus:border-violet-500"
               value={cityFilter}
               onChange={handleCityChange}
+              placeholder="Enter city"
             />
           </div>
           <div>
-            <label className="pr-4" htmlFor="">
-              Rating
-            </label>
+            <label className="block text-gray-700 mb-2">Rating</label>
             <select
-              className="rounded border border-gray-400 text-black py-1 px-4 appearance-none"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-violet-500 focus:border-violet-500"
               value={ratingFilter}
               onChange={handleRatingChange}
             >
@@ -131,14 +148,15 @@ function Sort() {
             </select>
           </div>
           <button
-            className="bg-yellow-400 hover:bg-yellow-400 text-black font-semibold py-1 px-5 rounded"
+            className="bg-yellow-500 hover:bg-yellow-600 mr-20 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-300 mt-6"
             onClick={handleSort}
           >
             Sort
           </button>
-        </span>
+        </div>
       </div>
-      {renderServices()}
+
+      <div className="mt-6 mx-10">{renderServices()}</div>
     </div>
   );
 }
