@@ -27,7 +27,7 @@ const ServicesCategories = () => {
     : categories.filter(Boolean); 
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50">
       <a href="/" className="logo text-black">
       <img className="w-24 mt-1 ml-3" src={NoQ} alt="" />
       </a>
@@ -38,7 +38,7 @@ const ServicesCategories = () => {
 
         <center>
           <input
-            className="mb-8 w-4/5 border outline-none border-gray-800 rounded-lg py-3 px-7"
+            className="mb-8 w-4/5 border outline-none border-gray-800 rounded-lg py-3 px-7 "
             type="search"
             placeholder="Search your service"
             style={{
@@ -48,11 +48,11 @@ const ServicesCategories = () => {
           />
         </center>
         
-        <div className="mt-14 min-h-screen categories grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 bg-violet-900  pt-7 pr-7 pl-7">
+        <div className="mt-14 min-h-screen categories grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 bg-violet-900  pt-7 pr-7 pl-7 shadow-lg">
           {filteredCategories.map((category, index) => (
             <div className="p-4" key={index}>
               <Link to={`/Categories/${category}`} className="block">
-                <div className="bg-white shadow-lg rounded-lg p-3 text-center hover:bg-orange-400 hover:text-white">
+                <div className="bg-white shadow-lg rounded-lg p-3 text-center hover:scale-105 transition-all duration-200 transform  hover:bg-orange-400 hover:text-white">
                   <h2 className="text-sm font-semibold">{category}</h2>
                 </div>
               </Link>

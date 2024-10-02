@@ -1,6 +1,12 @@
-.categories{
+.categories {
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
 }
 
+html {
+    scroll-behavior: smooth;
+}
 
+section {
+    padding-top: 80px;
+}

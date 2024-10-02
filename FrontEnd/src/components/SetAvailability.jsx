@@ -22,7 +22,6 @@ function SetAvailability({ sectionId, adminId }) {
       {}
     )
   );
-  const [show, setShow] = useState(false);
 
   useEffect(() => {
     axios
@@ -161,21 +160,10 @@ function SetAvailability({ sectionId, adminId }) {
         console.error("There was an error updating the availability!", error);
         alert("Failed to update availability.");
       });
-
   };
 
   return (
-    <div
-      className={`transition-transform transform -mt-10 ${show ? "" : "translate-y-full"
-        } duration-500 ease-in-out`}
-    >
-      <button
-        onClick={() => setShow(!show)}
-        className="bg-violet-700 text-white px-4 py-2 rounded focus:outline-none"
-      >
-        {show ? "Hide Availability" : "Set Availability"}
-      </button>
-      {show && (
+    <div >
         <div className="flex flex-col items-start p-4 bg-white shadow-lg rounded-lg">
           {daysOfWeek.map((item) => (
             <div
@@ -231,12 +219,12 @@ function SetAvailability({ sectionId, adminId }) {
           ))}
           <button
             onClick={handleSubmit}
-            className="bg-yellow-400 text-gray-800 px-4 py-2 rounded focus:outline-none mt-4"
+            className="SaveAvailability bg-yellow-400 text-gray-800 px-4 py-2 rounded focus:outline-none mt-4"
           >
             Save Availability
           </button>
         </div>
-      )}
+     
     </div>
   );
 }

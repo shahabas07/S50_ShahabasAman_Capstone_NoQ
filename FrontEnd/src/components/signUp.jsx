@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import Cookies from 'js-cookie';
-
+import Cookies from "js-cookie";
+import "../App.css"
 import { imDB } from "./Firebase/firebase";
 import { v4 } from "uuid";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -18,195 +18,212 @@ function SignUp() {
   };
 
   const onSubmit = (data) => {
-    console.log('Form data:', data);
     axios.post('http://localhost:2024/service', data)
       .then(response => {
         const token = response.data.token;
         Cookies.set('token', token, { expires: 7 });
 
-        // Show the profile update form
         setIsUpdatingProfile(true);
       })
       .catch(error => {
-        console.error('Error signing up:', error, error.response);
         setError('Error signing up. Please try again.');
       });
   };
 
   const handleProfileUpdate = async (data) => {
-    console.log('Profile update data:', data);
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('bio', data.bio);
     formData.append('location', data.location);
-    
+    formData.append('category', data.category);  // Ensure category is appended
+    formData.append('website', data.website);    // Ensure website is appended
+    formData.append('zip', data.zip);            // Ensure zip is appended
+  
     const imgS = ref(imDB, `images${v4()}`);
     const uploadDataofAvatar = await uploadBytes(imgS, data.avatar[0]);
     const imageUrlofAvatar = await getDownloadURL(uploadDataofAvatar.ref);
-    
-    const uploadDataofPicture = await uploadBytes(imgS, data.picture[0]);
-    const imageUrlofPicture = await getDownloadURL(uploadDataofPicture.ref);
-    
+  
+    // const uploadDataofPicture = await uploadBytes(imgS, data.picture[0]);
+    // const imageUrlofPicture = await getDownloadURL(uploadDataofPicture.ref);
+  
     if (data.avatar[0]) formData.append('avatar', imageUrlofAvatar);
-    if (data.picture[0]) formData.append('picture', imageUrlofPicture);
-
-    console.log("IMAGE URL OF AVATAR", imageUrlofAvatar);
-    console.log("IMAGE URL OF PICTURE", imageUrlofPicture);
-
-    // Use username directly from the input field
+    // if (data.picture[0]) formData.append('picture', imageUrlofPicture);
+  
     const username = data.username;
-
-    axios.put(`http://localhost:2024/profile/username/${username}`, formData) // Use username for updating
+  
+    axios.put(`http://localhost:2024/profile/username/${username}`, formData)
       .then(response => {
-        console.log('Profile updated successfully:', response.data);
-        // Redirect to the profile page or show success message
         window.location.href = `/profile/${username}`;
       })
       .catch(error => {
-        console.error('Error updating profile:', error);
         setError('Error updating profile. Please try again.');
       });
   };
-
-  // Watch the username input value for use in the skip button
+  
   const usernameInput = watch("username");
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="flex justify-center align-middle bg-violet-950 pt-2">
-        <a href="/" className="logo text-white">NoQ</a>
-      </div>
-      <div className="flex flex-col items-center py-10">
-        <h2 className="text-3xl font-bold mb-4">Welcome!!</h2>
-        <p className="text-gray-600">
-          Minimize wait times, maximize efficiency. Join us on this journey
-        </p>
-
-        {/* Google Login Button */}
-        <button className="blue" onClick={GoogleLogin}>G</button>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 lg:w-1/3 bg-violet-950 text-gray-50 rounded-[24px] px-10 py-6 shadow-md">
-          <div className="mb-6">
-            <label htmlFor="username" className="ml-2 text-yellow-100">Username:</label> <br />
-            <input
-              {...register("username", { required: true })}
-              className="border mb-4 p-2 w-full text-black rounded-full shadow-sm focus:outline-none focus:shadow-outline"
-              type="text"
-            /> <br/>
-            {errors.username && <p className="text-red-500">Username is required</p>}
-            <label htmlFor="email" className="ml-2 text-yellow-100">Email:</label> <br />
-            <input
-              {...register("email", { required: true })}
-              className="border mb-4 p-2 w-full text-black rounded-full shadow-sm focus:outline-none focus:shadow-outline"
-              type="email"
-            /> <br/>
-            {errors.email && <p className="text-red-500">Email is required</p>}
-            <label htmlFor="password" className="ml-2 text-yellow-100">Password:</label> <br />
-            <input
-              {...register("password", { required: true })}
-              className="border p-2 w-full rounded-full text-black shadow-sm focus:outline-none focus:shadow-outline"
-              type="password"
-            />
-            {errors.password && <p className="text-red-500">Password is required</p>}
-          </div>
-          <div className="flex justify-center">
-            <button
-              className="bg-gray-800 hover:bg-gray-900 text-white font-medium py-1 px-6 rounded-lg focus:outline-none focus:shadow-outline mt-2"
-              type="submit" 
-            >
-              Sign Up&nbsp;  &#x2B62;
-            </button>
-          </div>
-          {error && (
-            <div className="text-center mt-2 text-red-600">
-              {error}
-            </div>
-          )}
-          <div className="text-center mt-6 text-gray-300">
-            <div className="flex justify-center">
-              <p>Already have an account?</p> &nbsp;
-              <a
-                href="/sign-in"
-                className="text-blue-500 hover:underline "
-              >
-                Sign In
-              </a>
-            </div>
-          </div>
-        </form>
-
-        {isUpdatingProfile && (
-          <div className="mt-8 lg:w-1/3 bg-violet-950 text-gray-50 rounded-[24px] px-10 py-6 shadow-md">
-            <h3 className="text-xl font-bold mb-4">Update Profile Details</h3>
-            <form onSubmit={handleSubmit(handleProfileUpdate)}>
-              <label htmlFor="username" className="ml-2 text-yellow-100">Username:</label> <br />
-              <input
-                {...register("username", { required: true })}
-                className="border mb-4 p-2 w-full text-black rounded-full shadow-sm focus:outline-none focus:shadow-outline"
-                type="text"
-              /> <br/>
-              {errors.username && <p className="text-red-500">Username is required</p>}
-              
-              <label htmlFor="name" className="ml-2 text-yellow-100">Name:</label> <br />
-              <input
-                {...register("name")}
-                className="border mb-4 p-2 w-full text-black rounded-full shadow-sm focus:outline-none focus:shadow-outline"
-                type="text"
-              /> <br/>
-
-              <label htmlFor="bio" className="ml-2 text-yellow-100">Bio:</label> <br />
-              <textarea
-                {...register("bio")}
-                className="border mb-4 p-2 w-full text-black rounded-lg shadow-sm focus:outline-none focus:shadow-outline"
-                rows="3"
-              ></textarea> <br/>
-
-              <label htmlFor="location" className="ml-2 text-yellow-100">Location:</label> <br />
-              <input
-                {...register("location")}
-                className="border mb-4 p-2 w-full text-black rounded-full shadow-sm focus:outline-none focus:shadow-outline"
-                type="text"
-              /> <br/>
-
-              <label htmlFor="avatar" className="ml-2 text-yellow-100">Upload Avatar:</label> <br />
-              <input
-                {...register("avatar")}
-                className="border mb-4 p-2 w-full text-black rounded-full shadow-sm focus:outline-none focus:shadow-outline"
-                type="file"
-              /> <br/>
-
-              <label htmlFor="picture" className="ml-2 text-yellow-100">Upload Picture:</label> <br />
-              <input
-                {...register("picture")}
-                className="border mb-4 p-2 w-full text-black rounded-full shadow-sm focus:outline-none focus:shadow-outline"
-                type="file"
-              /> <br/>
-
-              <div className="flex justify-center">
-                <button
-                  className="bg-gray-800 hover:bg-gray-900 text-white font-medium py-1 px-6 rounded-lg focus:outline-none focus:shadow-outline mt-2"
-                  type="submit" 
-                >
-                  Update Profile
-                </button>
-                <button
-                  className="bg-gray-600 hover:bg-gray-700 text-white font-medium py-1 px-6 rounded-lg focus:outline-none focus:shadow-outline mt-2 ml-2"
-                  type="button"
-                  onClick={() => window.location.href = `/profile/${usernameInput}`} // Redirect using the current username input value
-                >
-                  Skip
-                </button>
-              </div>
-              {error && (
-                <div className="text-center mt-2 text-red-600">
-                  {error}
-                </div>
-              )}
-            </form>
-          </div>
-        )}
-      </div>
+    <><div className=" flex  justify-center align-middle bg-violet-950 pt-2 ">
+      <a href="/" className="logo text-white">NoQ</a>
     </div>
+      <div className="bg-gray-100 min-h-screen flex justify-center">
+
+        <div className="flex flex-col items-center  py-10 w-full max-w-xl">
+
+          <h2 className="text-3xl font-bold mt-8 mb-4">Welcome!!</h2>
+          <p className="text-gray-600 text-lg mb-6 text-center">
+            Minimize wait times, maximize efficiency. Join us on this journey.
+          </p>
+          {!isUpdatingProfile && (
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full bg-violet-950 text-gray-50 rounded-2xl px-8 py-6 shadow-lg">
+            <div className="flex justify-center mb-6">
+              <button
+                type="button"
+                className="login-with-google-btn bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center justify-center space-x-2 hover:shadow-lg focus:outline-none"
+                onClick={GoogleLogin}
+              >
+                <span>SignUn with Google</span>
+                <img
+                  src="https://w7.pngwing.com/pngs/344/344/png-transparent-google-logo-google-logo-g-suite-google-text-logo-symbol.png"
+                  alt="Google logo"
+                  className="w-5 h-5"
+                />
+              </button>
+
+
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="username" className="block text-yellow-200">Username</label>
+                <input
+                  {...register("username", { required: true })}
+                  className="w-full p-2 rounded-full text-black focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                  type="text"
+                />
+                {errors.username && <p className="text-red-500">Username is required</p>}
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-yellow-200">Email</label>
+                <input
+                  {...register("email", { required: true })}
+                  className="w-full p-2 rounded-full text-black focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                  type="email"
+                />
+                {errors.email && <p className="text-red-500">Email is required</p>}
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-yellow-200">Password</label>
+                <input
+                  {...register("password", { required: true })}
+                  className="w-full p-2 rounded-full text-black focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                  type="password"
+                />
+                {errors.password && <p className="text-red-500">Password is required</p>}
+              </div>
+            </div>
+            <div className="flex justify-center mt-6">
+              <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-6 rounded-full">
+                Sign Up
+              </button>
+            </div>
+            {error && <div className="text-center mt-4 text-red-600">{error}</div>}
+            <div className="text-center mt-6 text-gray-300">
+              <p>Already have an account? <a href="/sign-in" className="text-yellow-300 hover:underline">Sign In</a></p>
+            </div>
+          </form>
+        )}
+        
+        {isUpdatingProfile && (
+    <form onSubmit={handleSubmit(handleProfileUpdate)} className="mt-8 w-full bg-violet-950 text-gray-50 rounded-2xl px-8 py-6 shadow-lg">
+      <h3 className="text-xl font-bold mb-4">Update Profile Details</h3>
+      <div className="space-y-4">
+        <div>
+          <label htmlFor="username" className="block text-yellow-200">Username</label>
+          <input
+            {...register("username", { required: true })}
+            className="w-full p-2 rounded-full text-black focus:outline-none focus:ring-2"
+            type="text"
+            readOnly
+          />
+          {errors.username && <p className="text-red-500">Username is required</p>}
+        </div>
+        <div>
+          <label htmlFor="name" className="block text-yellow-200">Name</label>
+          <input
+            {...register("name")}
+            className="w-full p-2 rounded-full text-black focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            type="text"
+          />
+        </div>
+        <div>
+          <label htmlFor="bio" className="block text-yellow-200">Bio</label>
+          <textarea
+            {...register("bio")}
+            className="w-full p-2 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            rows="3"
+          />
+        </div>
+        <div>
+          <label htmlFor="location" className="block text-yellow-200">Location</label>
+          <input
+            {...register("location")}
+            className="w-full p-2 rounded-full text-black focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            type="text"
+          />
+        </div>
+        <div>
+          <label htmlFor="category" className="block text-yellow-200">category</label>
+          <input
+            {...register("category")}
+            className="w-full p-2 rounded-full text-black focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            type="text"
+          />
+        </div>
+        <div>
+          <label htmlFor="website" className="block text-yellow-200">website</label>
+          <input
+            {...register("website")}
+            className="w-full p-2 rounded-full text-black focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            type="text"
+          />
+        </div>
+        <div>
+          <label htmlFor="zip" className="block text-yellow-200">zip</label>
+          <input
+            {...register("zip")}
+            className="w-full p-2 rounded-full text-black focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            type="text"
+          />
+        </div>
+        <div className="flex justify-between space-x-4">
+          <div>
+            <label htmlFor="avatar" className="block text-yellow-200">Upload Avatar</label>
+            <input
+              {...register("avatar")}
+              className="w-full p-2 rounded-full text-black focus:outline-none focus:ring-2 focus:ring-yellow-300"
+              type="file"
+            />
+          </div>
+        </div>
+        <div className="flex justify-center mt-4 space-x-4">
+          <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-6 rounded-full">
+            Update Profile
+          </button>
+          <button
+            type="button"
+            className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-full"
+            onClick={() => window.location.href = `/profile/${usernameInput}`}
+          >
+            Skip
+          </button>
+        </div>
+      </div>
+    </form>
+)}
+
+        </div>
+      </div>
+    </>
   );
 }
 

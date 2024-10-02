@@ -48,7 +48,6 @@ const Profile = () => {
         if (userProfile) {
           setProfileData(userProfile);
           const jwt = getCookies("token");
-          console.log("JWT Token:", jwt);
           if (jwt) {
             const decodedToken = jwt.split(".")[1];
             const decodedString = atob(decodedToken);
@@ -139,8 +138,9 @@ const Profile = () => {
   };
 
   const handleClose = () => {
-    window.location.reload();
+    setPopupVisible(false); // Hide the popup by setting the state to false
   };
+
 
   const openEditProfilePopup = () => {
     console.log("Opening Edit Profile Popup");
@@ -156,17 +156,18 @@ const Profile = () => {
   function LogoutModal({ onCancel, onConfirm }) {
     return (
       <div className="fixed inset-0 flex items-center justify-center z-[1100]">
-        <div className="bg-white p-2 rounded-lg shadow-lg dark:bg-surface-dark">
+        <div className="bg-white p-2 rounded-lg shadow-lg dark:bg-surface-dark ">
           <h2 className="text-md font-semibold m-6 text-white dark:text-black">
             Are you sure you want to log out?
           </h2>
           <div className=" flex justify-between px-8 mb-4">
             <button
               onClick={onCancel}
-              className="px-4 py-2 bg-gray-300 rounded-lg mr-2 dark:bg-gray-700 dark:text-white"
+              className="px-4 py-2 rounded-lg mr-2 border border-gray-800  text-gray-800  hover:bg-gray-200 transition duration-200"
             >
               Cancel
             </button>
+
             <button
               onClick={onConfirm}
               className="px-4 py-2 bg-red-500 text-white rounded-lg"
@@ -200,270 +201,270 @@ const Profile = () => {
     // Add your logout logic here, such as redirecting to the login page
     window.location.reload();
   };
-  // console.log("profile:",profileData)
+  // console.log("profile:",profileData.avatar)
 
 
 
   return (
-    <div>
+    <div className="bg-gray-300 min-h-screen p-6">
+      <a href="/" className="logo text-black pl-6 ">
+        NoQ
+      </a>
       {loading ? (
-        <div className="my-12">
-          <p className="text-center mb-5 font-bold">Loading...</p>
-          <div className="flex justify-center items-center h-2/3">
-            <Box sx={{ width: "30%" }}>
-              <LinearProgress />
-            </Box>
+        <div className="flex flex-col justify-center items-center space-y-5 my-12">
+          <p className="text-center mb-5 text-2xl font-semibold text-gray-700">Loading...</p>
+          <div className="flex justify-center items-center w-1/4">
+            <LinearProgress className="w-full" />
           </div>
-          <div className="flex justify-center align-middle">
-            <img src={NoQ} alt="" />
-          </div>
+          <img src={NoQ} alt="" className="mt-5 w-1/4" />
         </div>
       ) : error ? (
         <div className="text-center">
-          <p className="font-bold text-xl p-10">User doesn't exist.</p>
+          <p className="font-bold text-xl p-10 text-red-600">User doesn't exist.</p>
           <a
             href="/"
-            className="bg-violet-800 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-violet-800 hover:bg-violet-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-300"
           >
             Navigate to Homepage
           </a>
         </div>
       ) : (
         profileData && (
-          <div>
+          <div className="max-w-4xl mx-auto">
             {jwtUsername === profileData.username ? (
-              <div className="flex justify-between mr-12">
-                <div className="flex">
-                  <a href="/">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  {/* <a href="/">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="currentColor"
-                      className="w-8 h-8 mt-2 ml-5"
-                    >
-                      <path
-                        d="M12 3l10 9h-3v9H5v-9H2l10-9zm0-2L1 10v13h6v-7h6v7h6V10l-11-9z"
-                      />
-                    </svg></a>
+                      className="w-8 h-8 text-gray-600 hover:text-black transition duration-200"
 
-                  <h2 className="text-xl font-bold mt-2 ml-5">
-                    {profileData.username}
-                  </h2>
+                    >
+                      <path d="M12 3l10 9h-3v9H5v-9H2l10-9zm0-2L1 10v13h6v-7h6v7h6V10l-11-9z" />
+                    </svg>
+                  </a> */}
+                  <h2 className="text-2xl font-bold ml-5">{profileData.username}</h2>
                 </div>
-                <div className="flex">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="30"
-                    height="30"
-                    viewBox="0 0 10 10"
-                    id="share"
-                    className="mt-5 mr-5"
-                    onClick={QRPopup}
+
+                <div className="relative">
+                  <button
+                    className="flex items-center p-3 rounded bg-orange-50  focus:outline-none transition-all"
+                    onClick={toggleDropdown}
                   >
-                    <path d="M5 0v2C1 2 0 4.05 0 7c.52-1.98 2-3 4-3h1v2l3-3.16L5 0z"></path>
-                  </svg>
-                  {popupVisible && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-                      <div className="transform translate-x-full bg-white p-4 rounded-lg shadow-lg transition-transform ease-in-out duration-300">
-                        <button
-                          onClick={handleClose}
-                          className="absolute text-2xl top-2 right-2 m-2 text-white bg-black font-bold py-0 px-2 rounded focus:outline-none focus:shadow-outline"
-                        >
-                          X
-                        </button>
-                        <QR />
-                      </div>
-                    </div>
-                  )}
-                  <div>
-                    <button
-                      className="flex items-center whitespace-nowrap rounded bg-primary pb-2 pe-6 ps-4 pt-2.5 text-xs font-medium uppercase leading-normal text-black shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
-                      type="button"
-                      onClick={toggleDropdown}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="25"
+                      height="25"
+                      viewBox="0 0 50 50"
+                      className="text-gray-600"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        x="0px"
-                        y="0px"
-                        width="25"
-                        height="25"
-                        viewBox="0 0 50 50"
-                        className="mt-2 mr-10"
+                      <path d="M 3 8 A 2.0002 2.0002 0 1 0 3 12 L 47 12 A 2.0002 2.0002 0 1 0 47 8 L 3 8 z M 3 23 A 2.0002 2.0002 0 1 0 3 27 L 47 27 A 2.0002 2.0002 0 1 0 47 23 L 3 23 z M 3 38 A 2.0002 2.0002 0 1 0 3 42 L 47 42 A 2.0002 2.0002 0 1 0 47 38 L 3 38 z"></path>
+                    </svg>
+                  </button>
+                  <ul
+                    className={`z-10 absolute top-full mt-2 right-0 w-40 bg-white rounded-lg shadow-lg overflow-hidden transition-all ${isOpen ? 'block' : 'hidden'}`}
+                  >
+                    <li className="border-b">
+                      <a
+                        href="#"
+                        className="block py-2 px-4 hover:bg-gray-200 transition duration-200"
+                        onClick={openEditProfilePopup}
                       >
-                        <path d="M 3 8 A 2.0002 2.0002 0 1 0 3 12 L 47 12 A 2.0002 2.0002 0 1 0 47 8 L 3 8 z M 3 23 A 2.0002 2.0002 0 1 0 3 27 L 47 27 A 2.0002 2.0002 0 1 0 47 23 L 3 23 z M 3 38 A 2.0002 2.0002 0 1 0 3 42 L 47 42 A 2.0002 2.0002 0 1 0 47 38 L 3 38 z"></path>
-                      </svg>
-                    </button>
-                    <ul
-                      className={`absolute z-[1000] float-left m-0 ${isOpen ? "block" : "hidden"
-                        } min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-base shadow-lg dark:bg-surface-dark`}
-                      aria-labelledby="dropdownMenuButton1s"
-                    >
-                      <li>
-                        <a
-                          className="block w-full whitespace-nowrap hover:bg-gray-800 bg-black px-4 py-2 text-sm font-normal text-neutral-700 focus:outline-none dark:text-white"
-                          href="#"
-                        >
-                          <button onClick={openEditProfilePopup}>
-                            Edit Profile
-                          </button>
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="block w-full whitespace-nowrap bg-black px-4 py-2 text-sm font-normal dark:bg-surface-dark text-white hover:bg-gray-800"
-                          href="#"
-                        >
-                          <button onClick={handleDeleteClick}>
-                            Delete Acc
-                          </button>
-                          {showDeleteModal && (
-                            <DeleteModal
-                              onCancel={handleCancel}
-                              onConfirm={() =>
-                                handleConfirm(
-                                  profileData._id,
-                                  profileData.username
-                                )
-                              }
-                            />
-                          )}
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="block w-full whitespace-nowrap bg-black px-4 py-2 text-sm font-normal dark:bg-surface-dark text-white hover:bg-gray-800"
-                          href="#"
-                        >
-                          <button onClick={handleLogoutClick}>Log-Out</button>{showLogoutModal && (
-                            <LogoutModal onCancel={handleLogoutCancel} onConfirm={handleLogoutConfirm} />
-                          )}
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+                        Edit Profile
+                      </a>
+                    </li>
+                    <li className="border-b">
+                      <a
+                        href="#"
+                        className="block py-2 px-4 hover:bg-gray-200 transition duration-200"
+                        onClick={handleDeleteClick}
+                      >
+                        Delete Account
+                      </a>
+                      {showDeleteModal && (
+                        <DeleteModal
+                          onCancel={handleCancel}
+                          onConfirm={() => handleConfirm(profileData._id, profileData.username)}
+                        />
+                      )}
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        className="block py-2 px-4 hover:bg-gray-200 transition duration-200"
+                        onClick={handleLogoutClick}
+                      >
+                        Log-Out
+                      </a>
+                      {showLogoutModal && (
+                        <LogoutModal onCancel={handleLogoutCancel} onConfirm={handleLogoutConfirm} />
+                      )}
+                    </li>
+                  </ul>
                 </div>
               </div>
             ) : (
-              <div className="flex justify-between mr-12">
-                <div className="flex">
-                  <a href="/">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  {/* <a href="/">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="currentColor"
-                      className="w-8 h-8 mt-2 ml-5"
+                      className="w-8 h-8 text-gray-600 hover:text-black transition duration-200"
                     >
-                      <path
-                        d="M12 3l10 9h-3v9H5v-9H2l10-9zm0-2L1 10v13h6v-7h6v7h6V10l-11-9z"
-                      />
-                    </svg></a>
-
-                  <h2 className="text-xl font-bold mt-2 ml-5">
-                    {profileData.username}
-                  </h2>
+                      <path d="M12 3l10 9h-3v9H5v-9H2l10-9zm0-2L1 10v13h6v-7h6v7h6V10l-11-9z" />
+                    </svg>
+                  </a> */}
+                  <h2 className="text-2xl font-bold ml-5">{profileData.username}</h2>
                 </div>
+              </div>
+            )}
 
+            <div className="relative flex flex-col lg:flex-row p-6 bg-gradient-to-r from-violet-100 to-yellow-50 shadow-lg rounded-lg mt-8">
+              {/* Profile Sharing SVG */}
+              <div className="absolute top-4 right-4  ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="25"
-                  height="25"
-                  viewBox="0 0 8 8"
-                  id="share"
-                  className="mt-2 mr-14"
-                  onClick={QRPopup}
+                  fill="currentColor"
+                  className="w-8 h-8 text-gray-500 hover:text-gray-800"
+                  viewBox="0 0 24 24"
+                  onClick={QRPopup} // Function to show QR/Share popup
                 >
-                  <path d="M5 0v2C1 2 0 4.05 0 7c.52-1.98 2-3 4-3h1v2l3-3.16L5 0z"></path>
+                  <path d="M13 7h-2v6h6v-2h-4zM12 0C5.373 0 0 5.373 0 12c0 5.084 3.162 9.404 7.633 11.124v-1.775C4.021 19.708 2 16.105 2 12c0-5.523 4.477-10 10-10s10 4.477 10 10c0 4.103-2.019 7.707-5.633 9.349v1.775C20.838 21.405 24 17.085 24 12 24 5.373 18.627 0 12 0zm-1 17v-6h2v6h-2zm0 4v-2h2v2h-2z"></path>
                 </svg>
                 {popupVisible && (
-                  <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-                    <div className="transform translate-x-full bg-white p-4 rounded-lg shadow-lg transition-transform ease-in-out duration-300">
+                  <div className="fixed inset-0 flex items-center justify-center bg-opacity-60 z-50">
+                    <div className="relative bg-gradient-to-tl from-violet-100 to-yellow-50 p-4 rounded-lg shadow-lg transform transition-transform ease-in-out duration-300">
                       <button
                         onClick={handleClose}
                         className="absolute text-2xl top-2 right-2 m-2 text-white bg-black font-bold py-0 px-2 rounded focus:outline-none focus:shadow-outline"
                       >
                         X
                       </button>
-                      <QR />
+                      <QR serviceCategory={profileData.category} serviceName={profileData.username} />
                     </div>
                   </div>
                 )}
               </div>
-            )}
-            <div className="flex p-4 rounded-md shadow-md mx-4 justify-between">
-              <div>
-                <div className="flex">
-                  <div>
-                    <img
-                      className="border border-gray-500 w-36 h-36 rounded-full"
-                      src={profileData.avatar} // Use avatarUrl here
-                    />
-                  </div>
-                  <div className="ml-6 flex-1">
-                    <h1 className="text-3xl font-semibold mb-4">
-                      {profileData.name}
-                    </h1>
-                    <address className="mb-4">
-                      {profileData.location}
-                      <br />
-                      India. Zip: {profileData.zip}
-                    </address>
-                    <p className="text-blue-500">
-                      <a href={profileData.website} className="mb-4">
-                        {profileData.website}
-                      </a>
-                    </p>
-                  </div>
-                </div>
-                <p className="mb-2 mt-4 w-2/3">{profileData.bio}</p>
-                <Link to={`/profile/reviews/${profileData._id}`} className="text-blue-500 hover:underline">
-  View Reviews
-</Link>
+
+              {/* Profile Picture Section */}
+              <div className="lg:w-1/3 flex items-center justify-center">
+                <img
+                  src={profileData.avatar || "https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"}
+                  className="w-40 h-40 rounded-full border-4 border-gray-200 shadow-lg object-cover"
+                />
               </div>
-              <div className="mr-9">
-                <div className="mr-9">
-                  <img src={profileData.picture} alt="" className="h-44 w-60" />
+
+              {/* Profile Information Section */}
+              <div className="lg:w-2/3 mt-6 lg:mt-0 lg:ml-6">
+                {/* Name and Bio */}
+                <h1 className="text-3xl font-semibold mb-3">{profileData.name}</h1>
+                <p className="text-gray-700 mb-4">{profileData.bio}</p>
+
+                {/* Location and Contact Information */}
+                <div className="mb-4 text-gray-600">
+                  <address>
+                    {profileData.location}, India. Zip: {profileData.zip}
+                  </address>
+                  <p className="text-blue-500 mt-2">
+                    <a
+                      href={profileData.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline"
+                    >
+                      {profileData.website}
+                    </a>
+                  </p>
+                  <p>Email: {profileData.email}</p>
+                </div>
+
+                {/* Additional Profile Details */}
+                <div className="mt-6 grid grid-cols-2 gap-4">
+                  <div>
+                    <h3 className=" font-semibold">Category</h3>
+                    <p className="text-gray-700">{profileData.category}</p>
+                  </div>
+
+                  <div>
+                    <img src={profileData.picture}/>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-center">
-              <div className="mt-14 mb-6 border border-transparent  w-full mx-14  rounded-md">
-                {jwtUsername === profileData.username ? (
-                  <div className="flex">
-                  <div className="flex-1">
+            <div className="mt-10 p-6 bg-gradient-to-tr from-violet-100 to-yellow-50 shadow-lg rounded-lg">
+              {jwtUsername === profileData.username ? (
+                <div className="flex flex-wrap ">
+                  <div className="w-full lg:w-1/2 mt-5 gap-9">
                     <SetAvailability sectionId={profileData.section} adminId={profileData._id} />
                   </div>
-                  <div className="flex-1">
+                  <div className="w-full lg:w-1/2">
                     <AppointmentData adminId={profileData._id} />
                   </div>
                 </div>
-                
-
-                ) : (
-                  <>
-                    <h2 className="text-2xl mt-4 font-bold text-center">
-                      Book your slots
-                    </h2>
-                    <Calendar sectionId={profileData.section} Adminlocation={profileData.location} Username={profileData.username} userId={profileData._id} email={profileData.email} />
-
-                  </>
-                )}
-              </div>
-            </div>
-            {editProfileVisible && (
-              <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-                <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
-                  <EditProfile
-                    profileData={profileData}
-                    onClose={closeEditProfilePopup}
+              ) : (
+                <div>
+                  <h2 className="text-2xl font-bold text-center">Book your slots</h2>
+                  <Calendar
+                    sectionId={profileData.section}
+                    Adminlocation={profileData.location}
+                    Username={profileData.username}
+                    userId={profileData._id}
+                    email={profileData.email}
                   />
                 </div>
+
+              )}
+            </div>
+            <div className="mt-10 p-6 bg-gradient-to-b from-violet-100 to-green-50 shadow-lg rounded-lg">
+              {jwtUsername !== profileData.username ? (
+                <div className="text-center">
+                  <a
+                    href={`/Profile/Reviews/${profileData.username}/${profileData._id}`}
+                    className="inline-block text-blue-800 p-2 hover:text-blue-950 "
+                  >
+                    Go to Reviews Page
+                  </a>
+                  <p className="text-gray-600 mt-2">
+                    Share your experience and help others make informed decisions by posting reviews and ratings about our services. Your feedback is valuable!
+                  </p>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <p className="text-gray-600 mt-2">
+                    Check customer reviews and ratings to improve your services and see what clients appreciate about your offerings!
+                  </p>
+                  <a
+                    href={`/Profile/Reviews/${profileData.username}/${profileData._id}`}
+                    className="inline-block text-blue-800 p-2 hover:text-blue-950 "
+                  >
+                    Reviews Page
+                  </a>
+                </div>
+              )}
+            </div>
+
+
+            {editProfileVisible && (
+              <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+
+                <EditProfile
+                  profileData={profileData}
+                  onClose={closeEditProfilePopup}
+                />
+
               </div>
             )}
           </div>
+
         )
       )}
     </div>
+
   );
 };
 
