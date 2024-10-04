@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+const API_URI = import.meta.env.VITE_API_URI;
 
 const ReviewPage = () => {
-  const { '*': params } = useParams(); // Access all params as a wildcard
-  const paramArray = params ? params.split('/') : []; // Split the parameters into an array
+  const { '*': params } = useParams();
+  const paramArray = params ? params.split('/') : []; 
   
-  // Get the last param as serviceProviderId and the second-to-last as serviceProviderName
-  const serviceProviderId = paramArray.length > 0 ? paramArray[paramArray.length - 1] : null; // Last param is the ID
-  const serviceProviderName = paramArray.length > 1 ? paramArray[paramArray.length - 2] : null; // Second-to-last param is the Name
-
-  console.log('Service Provider Name:', serviceProviderName); // Should log "shahabas"
-  console.log('Service Provider ID:', serviceProviderId); // Should log "66fb6eb53e41a4c11285b1d6"
+  const serviceProviderId = paramArray.length > 0 ? paramArray[paramArray.length - 1] : null; 
+  const serviceProviderName = paramArray.length > 1 ? paramArray[paramArray.length - 2] : null; 
 
   const [reviews, setReviews] = useState([]);
   const [reviewerName, setReviewerName] = useState('');
@@ -37,7 +34,6 @@ const ReviewPage = () => {
       return null;
     }
   };
-  
 
   useEffect(() => {
     const token = getCookie('token');
@@ -49,11 +45,10 @@ const ReviewPage = () => {
     }
   }, []);
 
-  // Fetch reviews from API
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await axios.get(`http://localhost:2024/review/${serviceProviderId}`);
+        const response = await axios.get(`${API_URI}/review/${serviceProviderId}`);
         setReviews(response.data);
       } catch (error) {
         console.error('Error fetching reviews:', error);
@@ -65,7 +60,6 @@ const ReviewPage = () => {
     }
   }, [serviceProviderId]);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!reviewerName || rating === 0 || !comment) {
@@ -76,7 +70,7 @@ const ReviewPage = () => {
     try {
       setIsLoading(true);
       const newReview = { reviewerName, rating, comment };
-      await axios.post(`http://localhost:2024/review/${serviceProviderId}`, newReview);
+      await axios.post(`${API_URI}/review/${serviceProviderId}`, newReview);
       setReviews([...reviews, newReview]);
       setReviewerName('');
       setRating(0);
@@ -90,14 +84,13 @@ const ReviewPage = () => {
   };
 
   return (
-    <div className='dotbg'>
+    <div className='dotbg h-screen'>
       <a href="/" className="logo text-black pl-6">
         NoQ
       </a>
       <div className="w-2/3 mx-auto p-6 bg-gray-50 border border-violet-950 rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold mb-4">Rating & Reviews</h1>
 
-        {/* Conditionally render the button based on username match */}
         {username != serviceProviderName && (
           <button
             onClick={() => setIsModalOpen(true)}
@@ -124,7 +117,6 @@ const ReviewPage = () => {
           ))}
         </div>
 
-        {/* Modal for submitting a review */}
         {isModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">

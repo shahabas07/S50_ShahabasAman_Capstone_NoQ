@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+const API_URI = import.meta.env.VITE_API_URI;
 
 const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot, day, startTime, endTime, providerEmail }) => {
   const [showOTP, setShowOTP] = useState(false);
@@ -12,9 +13,9 @@ const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot
 
   const handleConfirmClick = async () => {
     if (name && email) {
-      setLoading(true); // Start loading
+      setLoading(true); 
       try {
-        const response = await axios.post('http://localhost:2024/mail/send-otp', { email });
+        const response = await axios.post(`${API_URI}/mail/send-otp`, { email });
 
         if (response.status === 200) {
           setShowOTP(true);
@@ -24,7 +25,7 @@ const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot
       } catch (error) {
         alert('Error sending OTP');
       } finally {
-        setLoading(false); // Stop loading after response
+        setLoading(false); 
       }
     } else {
       alert('Please enter both name and email');
@@ -33,12 +34,12 @@ const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot
 
   const handleOTPSubmit = async () => {
     if (otp) {
-      setOtpLoading(true); // Start OTP verification loading
+      setOtpLoading(true); 
       try {
-        const response = await axios.post('http://localhost:2024/mail/verify-otp', { email, otp });
+        const response = await axios.post(`${API_URI}/mail/verify-otp`, { email, otp });
 
         if (response.status === 200) {
-          const appointmentResponse = await axios.post('http://localhost:2024/appointment/create', {
+          const appointmentResponse = await axios.post(`${API_URI}/appointment/create`, {
             appointmentDate: date,
             location: location,
             time: timeSlot,
@@ -51,16 +52,14 @@ const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot
           if (appointmentResponse.status === 201) {
             const appointment = appointmentResponse.data.appointment;
 
-            // Send confirmation email with full appointment object
-            await axios.post('http://localhost:2024/mail/confirm-email', {
+            await axios.post(`${API_URI}/mail/confirm-email`, {
               appointment,
-              providerEmail,  // Add provider's email here
+              providerEmail,  
             });
 
-            // Disable date if it's the last slot
             if (isLastSlot) {
               try {
-                const disableDateResponse = await axios.post('http://localhost:2024/disabled-dates', {
+                const disableDateResponse = await axios.post(`${API_URI}/disabled-dates`, {
                   DisabledDate: date,
                   adminId,
                   startTime,
@@ -91,7 +90,7 @@ const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot
       } catch (error) {
         alert('Error verifying OTP or sending confirmation email. Check console for details.');
       } finally {
-        setOtpLoading(false); // Stop OTP verification loading
+        setOtpLoading(false); 
       }
     } else {
       alert('Please enter the OTP');
@@ -113,7 +112,6 @@ const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot
         </div>
       </div>
 
-      {/* Right Section */}
       <div className="w-2/3 bg-white p-6 rounded-lg shadow-lg">
         {!showOTP && !otpEntered ? (
           <>
@@ -134,7 +132,7 @@ const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot
             <button
               className="w-full bg-violet-600 text-white p-3 rounded-lg hover:bg-violet-700 transition duration-200"
               onClick={handleConfirmClick}
-              disabled={loading} // Disable button while loading
+              disabled={loading} 
             >
               {loading ? 'Sending OTP...' : 'Confirm'}
             </button>
@@ -160,7 +158,7 @@ const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot
             <button
               className="w-full bg-violet-600 text-white p-3 rounded-lg hover:bg-violet-700 transition duration-200"
               onClick={handleOTPSubmit}
-              disabled={otpLoading} // Disable button while loading
+              disabled={otpLoading} 
             >
               {otpLoading ? 'Verifying OTP...' : 'Submit OTP'}
             </button>

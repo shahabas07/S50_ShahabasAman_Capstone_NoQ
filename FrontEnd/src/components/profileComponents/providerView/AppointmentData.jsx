@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { CSSTransition } from 'react-transition-group';
-import './styles/AppointmentData.css'; // For custom animations
+import '../../styles/AppointmentData.css'; 
+const API_URI = import.meta.env.VITE_API_URI;
 
-// Set the app element for accessibility
 Modal.setAppElement('#root');
 
 const AppointmentData = ({ adminId }) => {
@@ -15,25 +15,21 @@ const AppointmentData = ({ adminId }) => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await fetch(`http://localhost:2024/appointment/admin/${adminId}`);
+        const response = await fetch(`${API_URI}/appointment/admin/${adminId}`);
         const data = await response.json();
-        // Sort by appointment date and time
         data.sort((a, b) => new Date(a.appointmentDate) - new Date(b.appointmentDate));
         setAppointments(data);
       } catch (error) {
         console.error("Error fetching appointments:", error);
       } finally {
-        setLoading(false); // Set loading to false after data fetch
+        setLoading(false); 
       }
     };
 
-    // Initial fetch
     fetchAppointments();
 
-    // Set up interval to refetch every 30 seconds
     const interval = setInterval(fetchAppointments, 30000);
 
-    // Clean up the interval on component unmount
     return () => clearInterval(interval);
   }, [adminId]);
 
@@ -49,17 +45,16 @@ const AppointmentData = ({ adminId }) => {
 
   return (
     <div className="container p-4 mx-auto">
-      {/* Loading animation */}
       {loading ? (
   <div className="loader mx-auto my-4" />
 ) : (
   <CSSTransition
-    in={!loading} // Animation triggers when loading is false
+    in={!loading} 
     timeout={300}
     classNames="appointment-list"
     unmountOnExit
   >
-    <div className="overflow-y-auto max-h-[600px]"> {/* Adjust max height as needed */}
+    <div className="overflow-y-auto max-h-[600px]"> 
       <div className="grid grid-cols-1 gap-4">
         {appointments.length > 0 ? (
           appointments.map((appointment) => (
@@ -82,8 +77,6 @@ const AppointmentData = ({ adminId }) => {
   </CSSTransition>
 )}
 
-
-      {/* Modal for detailed information */}
       <CSSTransition
         in={modalIsOpen}
         timeout={300}

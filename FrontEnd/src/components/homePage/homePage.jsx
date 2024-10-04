@@ -1,30 +1,27 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import "./styles/home.css";
-import calu from "../assets/calu.jpg";
-import feature from "../assets/feature.png";
-import email from "../assets/email.png";
-import person from "../assets/person.png";
-import profile from "../assets/login.png";
-import profilecus from "../assets/profileCus.png";
-import time from "../assets/real-time.png";
-import pp from "../assets/profile.png";
-import facebook from "../assets/facebook.png";
-import instagram from "../assets/instagram.png";
-import github from "../assets/github-sign.png";
-import NoQ from "../assets/NoQ.png";
+import "../styles/home.css";
+import calu from "../../assets/calu.jpg";
+import feature from "../../assets/feature.png";
+import email from "../../assets/email.png";
+import person from "../../assets/person.png";
+import profile from "../../assets/login.png";
+import profilecus from "../../assets/profileCus.png";
+import time from "../../assets/real-time.png";
+import facebook from "../../assets/facebook.png";
+import instagram from "../../assets/instagram.png";
+import github from "../../assets/github-sign.png";
+import NoQ from "../../assets/NoQ.png";
 
 const HomePage = () => {
   const [username, setUsername] = useState(null);
 
-  // Function to get the value of a cookie by name
   const getCookie = (name) => {
     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
     if (match) return match[2];
     return null;
   };
 
-  // Function to decode JWT without any external library
   const parseJwt = (token) => {
     try {
       const base64Url = token.split('.')[1];

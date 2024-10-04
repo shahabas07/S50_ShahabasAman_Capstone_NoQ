@@ -9,12 +9,6 @@
     height: 100vh;
 }
 
-/* Navigation background - Uncomment to use */
-/* 
-nav {
-    background: linear-gradient(to right, rgb(199, 178, 226), #400988);
-} */
-
 .logo {
     font-family: "League Spartan", sans-serif;
     font-weight: bolder;
@@ -23,18 +17,17 @@ nav {
 
 h2 {
     font-family: "Fredoka", sans-serif;
-    font-weight: normal; /* Changed from 'weight' to 'normal' */
+    font-weight: normal;
     font-style: normal;
     font-variation-settings: "wdth" 100;
 }
 
 p {
     font-family: "Montserrat", sans-serif;
-    font-weight: normal; /* Changed from 'weight' to 'normal' */
+    font-weight: normal;
     font-style: normal;
 }
 
-/* Scroll Animation */
 .scroll-animation {
     background: linear-gradient(to right, #d4bef0, #eecea5, #d4bef0);
     overflow: hidden;
@@ -48,13 +41,13 @@ p {
 
 @keyframes scroll {
     0%, 100% {
-        transform: translateX(0); /* Start and end at the left edge */
+        transform: translateX(0); 
     }
     10% {
-        transform: translateX(calc(-100% + 100vw)); /* Move to the right edge */
+        transform: translateX(calc(-100% + 100vw));
     }
     90% {
-        transform: translateX(calc(105% - 100vw)); /* Move to double the container's width */
+        transform: translateX(calc(105% - 100vw));
     }
 }
 
@@ -64,40 +57,37 @@ p {
 }
 
 .scroll-list li::before {
-    content: "\2022"; /* Bullet point */
+    content: "\2022"; 
     position: absolute;
     left: -10px;
 }
 
-/* Slogan */
 .left .signup {
     background-color: #713FBF;
 }
 
-/* Footer */
 .footer {
     font-family: 'Roboto', sans-serif;
 }
 
-/* Review Styles */
 .review-container {
     overflow: hidden;
     position: relative;
-    width: 100%; /* Ensure it takes the full width */
+    width: 100%; 
 }
 
 .review-inner {
     display: flex;
-    transition: transform 0.7s ease; /* Smooth transition */
+    transition: transform 0.7s ease; 
 }
 
 .review-card {
-    flex: 0 0 100%; /* Each card takes full width */
-    padding: 1rem; /* Adjust padding as needed */
-    border: 1px solid #ccc; /* Border for visual separation */
+    flex: 0 0 100%;
+    padding: 1rem; 
+    border: 1px solid #ccc; 
     border-radius: 8px;
-    background: #fff; /* Background for review cards */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    background: #fff; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./styles/Availability.css"; // Ensure you have this file for custom styling
+import "../../styles/Availability.css";
+const API_URI = import.meta.env.VITE_API_URI;
 
 const daysOfWeek = [
   { day: "Sunday", key: "Sunday" },
@@ -32,14 +33,13 @@ function SetAvailability({ sectionId, adminId }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:2024/section/${sectionId}`)
+      .get(`${API_URI}/section/${sectionId}`)
       .then((response) => {
         const section = response.data;
         const newAvailability = {};
         setFromMonth(section.fromMonth || "");
         setToMonth(section.toMonth || "");
 
-        // Initialize daysOfWeek
         daysOfWeek.forEach((day) => {
           newAvailability[day.key] = {
             active: section.daysOfWeek[day.key] || false,
@@ -65,7 +65,7 @@ function SetAvailability({ sectionId, adminId }) {
 
     while (start < end) {
       slots.push(start.toTimeString().substring(0, 5));
-      start.setMinutes(start.getMinutes() + 30); // Add 30-minute slots
+      start.setMinutes(start.getMinutes() + 30);
     }
 
     return slots;
@@ -77,7 +77,7 @@ function SetAvailability({ sectionId, adminId }) {
       [key]: {
         ...availability[key],
         active: !availability[key].active,
-        timeRange: { start: "", end: "" } // Reset timeRange when toggling
+        timeRange: { start: "", end: "" } 
       }
     };
 
@@ -103,22 +103,20 @@ function SetAvailability({ sectionId, adminId }) {
     if (!startTime) return [];
 
     const start = new Date(`1970-01-01T${startTime}`);
-    const endTime = "24:00"; // Set maximum end time to 24:00
+    const endTime = "24:00"; 
     const endTimeOptions = [];
 
-    // Start from 30 minutes after the selected start time
     start.setMinutes(start.getMinutes() + 30);
 
     while (start < new Date(`1970-01-01T${endTime}`)) {
       endTimeOptions.push(start.toTimeString().substring(0, 5));
-      start.setMinutes(start.getMinutes() + 30); // Add 30-minute slots
+      start.setMinutes(start.getMinutes() + 30);
     }
 
     return endTimeOptions;
   };
 
   const handleSubmit = () => {
-    // Prepare data to match backend expectations
     const daysOfWeekData = {};
     const availabilityData = {};
 
@@ -128,7 +126,6 @@ function SetAvailability({ sectionId, adminId }) {
         availabilityData[day] = {
           start: availability[day].timeRange.start,
           end: availability[day].timeRange.end,
-          // timeSlots: [] // Removed mapping from here, we will create it after submission
         };
       }
     });
@@ -143,14 +140,13 @@ function SetAvailability({ sectionId, adminId }) {
     console.log(payload);
 
     axios
-      .put(`http://localhost:2024/section/${sectionId}`, payload)
+      .put(`${API_URI}/section/${sectionId}`, payload)
       .then((response) => {
         console.log("Availability updated:", response.data);
         alert("Availability updated successfully!");
 
-        // Fetch the disabled dates after successful update
         axios
-          .get(`http://localhost:2024/disabled-dates/${adminId}`)
+          .get(`${API_URI}/disabled-dates/${adminId}`)
           .then((disabledDatesResponse) => {
             console.log("Disabled dates fetched:", disabledDatesResponse.data);
 
@@ -159,20 +155,16 @@ function SetAvailability({ sectionId, adminId }) {
             const disabledDates = disabledDatesResponse.data;
             console.log("Disabled Dates:", disabledDates);
 
-            // Iterate over the days in availability
             for (const [day, time] of Object.entries(availability)) {
-              // Check if the day is disabled
               const disabledDate = disabledDates.find(date => date.DisabledDay === day);
               if (disabledDate) {
                 const { _id: disabledId, startTime, endTime } = disabledDate;
 
-                // Check conditions: availability start < disabled start OR availability end > disabled end
                 if (time.start < startTime || time.end > endTime) {
                   console.log(`Deleting disabled date with ID ${disabledId} due to conditions being met.`);
 
-                  // Delete the disabled date by ID
                   axios
-                    .delete(`http://localhost:2024/disabled-dates/${disabledId}`)
+                    .delete(`${API_URI}/disabled-dates/${disabledId}`)
                     .then(() => {
                       console.log(`Disabled date with ID ${disabledId} deleted successfully.`);
                     })
@@ -197,7 +189,7 @@ function SetAvailability({ sectionId, adminId }) {
 
   const getToMonthOptions = (from) => {
     const startIndex = monthNames.indexOf(from) + 1;
-    return monthNames.slice(startIndex, 12); // Return months till December
+    return monthNames.slice(startIndex, 12);
   };
 
   return (
@@ -213,7 +205,7 @@ function SetAvailability({ sectionId, adminId }) {
               value={fromMonth}
               onChange={(e) => {
                 setFromMonth(e.target.value);
-                setToMonth(""); // Reset To Month when From Month changes
+                setToMonth("");
               }}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             >
@@ -227,7 +219,7 @@ function SetAvailability({ sectionId, adminId }) {
             <select
               value={toMonth}
               onChange={(e) => setToMonth(e.target.value)}
-              disabled={!fromMonth} // Disable if From Month is not selected
+              disabled={!fromMonth}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             >
               <option value="">To</option>
