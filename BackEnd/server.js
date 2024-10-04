@@ -49,7 +49,7 @@ app.get('/auth/google',
 );
 
 app.get(
-  "auth/google/callback",
+  "/auth/google/callback",
   passport.authenticate('google', { failureRedirect: 'http://localhost:5173/sign-up' }),
   (req, res) => {
     console.log(req);
