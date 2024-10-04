@@ -1,7 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const jwt = require("jsonwebtoken");
-const bcrypt = require('bcrypt'); // Ensure you have bcrypt for password comparison if needed
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 const ServiceProfile = require('./Schemas/profileSchema'); 
 const sectionModal = require('./Schemas/availabilitySchema'); 
@@ -10,13 +10,13 @@ const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
 const generateToken = (user) => {
-    return jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: "5h" }); // Adjusted to include username
+    return jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: "5h" });
 }
 
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:2024/auth/google/callback",
+    callbackURL: `${API_URI}/auth/google/callback`,
     passReqToCallback: true
 },
 async function (request, accessToken, refreshToken, profile, done) {
@@ -28,10 +28,10 @@ async function (request, accessToken, refreshToken, profile, done) {
             newSection = new sectionModal();
             await newSection.save();
 
-            console.log("---", newSection)
+            // console.log("---", newSection)
 
             userDoc = new ServiceProfile({
-                username: profile.displayName.replace(/\s+/g, '').toLowerCase(), // Create a username based on the display name
+                username: profile.displayName.replace(/\s+/g, '').toLowerCase(), 
                 name: profile.displayName,
                 email: profile.email,
                 avatar: profile._json.picture,
@@ -43,19 +43,15 @@ async function (request, accessToken, refreshToken, profile, done) {
             profileDoc = await ServiceProfile.findOne({ email: profile.email });
         }
 
-        console.log("success")
+        // console.log("success")
 
-        // Generate token with the username
         const token = generateToken(profileDoc);
 
-        // Set the cookie with the token
-        console.log(request.res.cookie)
         request.res.cookie("token", token, {
             httpOnly: false,
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
-        // Respond with token and username instead of the user document
         return done(null, { token, username: profileDoc.username });
     } catch (err) {
         return done(err);

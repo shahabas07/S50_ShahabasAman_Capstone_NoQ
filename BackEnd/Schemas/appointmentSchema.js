@@ -13,13 +13,3 @@ const appointmentSchema = new mongoose.Schema({
 const Appointment = mongoose.model('Appointment', appointmentSchema);
 
 module.exports = Appointment;
-
-
-
-// for all booked slots on a particular time then u will create this doc
-// {
-//   id
-//   date
-//   time to live /expires
-
-// }

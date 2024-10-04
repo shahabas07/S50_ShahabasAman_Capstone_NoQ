@@ -1,6 +1,6 @@
 ##### Project Name:
 ## NoQ *- Your Seamless Appointment Manager.*
-#### [FrontEnd Deployed](https://s50-shahabas-aman-capstone-no-q.vercel.app/)
+#### [webpage](https://s50-shahabas-aman-capstone-no-q.vercel.app/)
 ##### Description:
 
 NoQ is a comprehensive platform designed to optimize the scheduling process for service appointments across various industries. By providing a centralized hub for service providers and customers, NoQ revolutionizes the way appointments are booked and managed, ultimately minimizing wait times and enhancing efficiency.
@@ -24,7 +24,6 @@ NoQ offers a solution to the prevalent problem of time inefficiency by streamlin
 ##### Tech Stack:
 - Frontend: React.js, TailwindCSS
 - Backend: Node.js, Express.js, MongoDB
-- Image Upload: Multer (Node.js middleware for handling multipart/form-data)
-- Libraries: Mongoose, bcrypt.js, Axios, React Router
+- Libraries: Mongoose, bcrypt.js, Axios, React Router etc..
 - Authentication: JsonWebToken(JWT)
-- Deployment: Render (for Backend) and Netlify(for Frontend)
+- Deployment: Render (for Backend) and Vercel(for Frontend)

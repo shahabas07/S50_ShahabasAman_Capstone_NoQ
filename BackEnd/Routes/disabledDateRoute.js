@@ -2,29 +2,20 @@ const express = require('express');
 const router = express.Router();
 const DisabledDate = require('../Schemas/disabledDateSchema'); 
 
-// POST - Create a new disabled date
-// POST - Create a new disabled date
 router.post('/', async (req, res) => {
   try {
     const { DisabledDate: date, adminId, startTime, endTime, DisabledDay } = req.body;
 
-    // Log incoming data
-    console.log("Incoming data:", req.body);
-
-    // Check if the date is provided and valid
     if (!date) {
       return res.status(400).json({ error: 'DisabledDate is required' });
     }
 
-    // Convert the DisabledDate string to a Date object
     const disabledDate = new Date(date);
     
-    // Validate the date
     if (isNaN(disabledDate.getTime())) {
       return res.status(400).json({ error: 'Invalid DisabledDate' });
     }
 
-    // Create a new DisabledDate document
     const newDisabledDate = new DisabledDate({
       DisabledDate: disabledDate,
       adminId,
@@ -33,7 +24,6 @@ router.post('/', async (req, res) => {
       DisabledDay
     });
 
-    // Save the document to the database
     const savedDisabledDate = await newDisabledDate.save();
     res.status(201).json(savedDisabledDate);
   } catch (error) {
@@ -43,7 +33,6 @@ router.post('/', async (req, res) => {
 });
 
 
-// GET - Get all disabled dates
 router.get('/', async (req, res) => {
   try {
     const disabledDates = await DisabledDate.find();
@@ -53,22 +42,14 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET by ID - Get a disabled date by its ID
-// GET - Get a disabled date by adminId and DisabledDate
-// GET - Get disabled dates by adminId
 router.get('/:adminId', async (req, res) => {
   try {
-    const { adminId } = req.params; // Extract adminId from the URL parameters
+    const { adminId } = req.params; 
 
-    // Log incoming data
-    console.log("Fetching disabled dates for adminId:", adminId);
-
-    // Validate the input
     if (!adminId) {
       return res.status(400).json({ error: 'adminId is required' });
     }
 
-    // Find all disabled dates for the given adminId
     const disabledDates = await DisabledDate.find({ adminId });
 
     if (!disabledDates || disabledDates.length === 0) {
@@ -83,8 +64,8 @@ router.get('/:adminId', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    const { id } = req.params; // Get the ID from the request parameters
-    const deletedDate = await DisabledDate.findByIdAndDelete(id); // Delete the document by ID
+    const { id } = req.params; 
+    const deletedDate = await DisabledDate.findByIdAndDelete(id); 
 
     if (!deletedDate) {
       return res.status(404).json({ error: 'Disabled date not found' });
