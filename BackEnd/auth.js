@@ -1,11 +1,10 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const jwt = require("jsonwebtoken");
-const bcrypt = require('bcrypt');
 require('dotenv').config();
 const ServiceProfile = require('./Schemas/profileSchema'); 
 const sectionModal = require('./Schemas/availabilitySchema'); 
-
+const API_URI = process.env.VITE_API_URI;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
