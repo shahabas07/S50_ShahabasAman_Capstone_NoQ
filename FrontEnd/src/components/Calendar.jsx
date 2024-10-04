@@ -43,6 +43,10 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
   const [disabledDates, setDisabledDates] = useState([]);
   const timeSlotDivRef = useRef(null); // Create a ref for the time slot div
   const [is24Hour, setIs24Hour] = useState(false);
+  const [FromMonth, setFromMonth] = useState();
+  const [ToMonth, setToMonth] = useState();
+  
+
 
   // Toggle between 12-hour and 24-hour formats
   const toggleTimeFormat = () => {
@@ -82,7 +86,7 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
         const sectionData = await sectionResponse.json();
 
         if (sectionData) {
-          const { daysOfWeek, availability } = sectionData;
+          const { daysOfWeek, availability, fromMonth, toMonth } = sectionData;
           const dayMap = {
             Sunday: 'fc-day-sun',
             Monday: 'fc-day-mon',
@@ -95,8 +99,11 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
 
           const enabledDays = Object.keys(daysOfWeek).filter(day => daysOfWeek[day]);
           const enabledDayClasses = enabledDays.map(day => dayMap[day]);
-          setEnabledDays(enabledDayClasses);
-          setAvailability(availability);
+
+          setEnabledDays(enabledDayClasses);  // Setting the enabled day classes
+          setAvailability(availability);     // Setting the time slot availability
+          setFromMonth(fromMonth);           // Setting the start month
+          setToMonth(toMonth);               // Setting the end month
         } else {
           console.error('No section found with the given sectionId');
         }
@@ -108,38 +115,63 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
     fetchAvailability();
   }, [sectionId]);
 
+  const getMonthRange = (monthName) => {
+    const year = new Date().getFullYear(); // Assuming the current year, adjust if needed.
+    const monthIndex = new Date(`${monthName} 1, ${year}`).getMonth(); // Get month index from name
+    const startDate = new Date(year, monthIndex, 1); // First day of the month
+    const endDate = new Date(year, monthIndex + 1, 0); // Last day of the month
+    return { startDate, endDate };
+  };
+
+
+
   // Apply styles for enabled and disabled days
   const applyDayStyles = () => {
-    const dayMap = {
-      Sunday: 'fc-day-sun',
-      Monday: 'fc-day-mon',
-      Tuesday: 'fc-day-tue',
-      Wednesday: 'fc-day-wed',
-      Thursday: 'fc-day-thu',
-      Friday: 'fc-day-fri',
-      Saturday: 'fc-day-sat'
-    };
-
-    Object.keys(dayMap).forEach(day => {
-      const dayClass = dayMap[day];
-      const elements = document.querySelectorAll(`.${dayClass}`);
-      elements.forEach(el => {
-        const date = el.getAttribute('data-date');
-        // Disable date if it exists in disabledDates
-        if (disabledDates.includes(date)) {
-          el.classList.add('disabled-day');
-          el.classList.remove('enabled-day');
-          el.style.pointerEvents = 'none'; // Prevent interactions with disabled dates
-          el.style.cursor = 'default'; // Change cursor to indicate disabled state
-        } else if (enabledDays.includes(dayClass)) {
-          el.classList.add('enabled-day');
-          el.addEventListener('click', () => handleDateClick(el, day));
-        } else {
-          el.classList.add('disabled-day');
-        }
-      });
-    });
+  const dayMap = {
+    Sunday: 'fc-day-sun',
+    Monday: 'fc-day-mon',
+    Tuesday: 'fc-day-tue',
+    Wednesday: 'fc-day-wed',
+    Thursday: 'fc-day-thu',
+    Friday: 'fc-day-fri',
+    Saturday: 'fc-day-sat',
   };
+
+  // Convert FromMonth and ToMonth to date ranges
+  const { startDate: fromStartDate } = getMonthRange(FromMonth); // First day of FromMonth
+  const { endDate: toEndDate } = getMonthRange(ToMonth); // Last day of ToMonth
+
+  Object.keys(dayMap).forEach(day => {
+    const dayClass = dayMap[day];
+    const elements = document.querySelectorAll(`.${dayClass}`);
+
+    elements.forEach(el => {
+      const dateStr = el.getAttribute('data-date');
+      const date = new Date(dateStr); // Convert data-date to a Date object
+
+      if (date < fromStartDate || date > toEndDate) {
+        // Disable dates outside the FromMonth and ToMonth range
+        el.classList.add('disabled-day');
+        el.classList.remove('enabled-day');
+        el.style.pointerEvents = 'none';
+        el.style.cursor = 'default';
+      } else if (enabledDays.includes(dayClass)) {
+        // Enable days that fall within the date range and match enabled days
+        el.classList.add('enabled-day');
+        el.classList.remove('disabled-day');
+        el.style.pointerEvents = 'auto';
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', () => handleDateClick(el, day));
+      } else {
+        el.classList.add('disabled-day');
+        el.style.pointerEvents = 'none';
+        el.style.cursor = 'default';
+      }
+    });
+  });
+};
+
+
 
   // Reapply day styles when enabledDays, disabledDates, or renderTrigger changes
   useEffect(() => {
@@ -211,7 +243,7 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
     };
   }, []);
 
-  
+
 
   return (
     <div className='relative w-2/3 mx-auto '>

@@ -11,30 +11,38 @@ function Docs() {
           </a>
         </div>
         <nav className="space-y-6 text-lg">
-          <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
-            <a href="#about">About</a>
-          </div>
-          <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
-            <a href="#services">Services</a>
-          </div>
-          <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
-            <a href="#pricing">Pricing</a>
-          </div>
-          <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
-            <a href="#testimonials">Testimonials</a>
-          </div>
-          <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
-            <a href="#faq">FAQ</a>
-          </div>
-          <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
-            <a href="#support">Support</a>
-          </div>
-          <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
-            <a href="#contacts">Contacts</a>
-          </div>
-          <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
-            <a href="#feedback">Feedback</a>
-          </div>
+          <a href="Docs#about">
+            <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
+              About
+            </div>
+          </a>
+          <a href="#services">
+            <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
+              Services
+            </div>
+          </a>
+
+          
+          <a href="#faq">
+            <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
+              FAQ
+            </div>
+          </a>
+          <a href="#support">
+            <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
+              Support
+            </div>
+          </a>
+          <a href="#contacts">
+            <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
+              Contacts
+            </div>
+          </a>
+          <a href="#feedback">
+            <div className="hover:bg-violet-700 transition-all duration-200 rounded-lg p-3">
+              Feedback
+            </div>
+          </a>
         </nav>
       </div>
 
@@ -43,23 +51,25 @@ function Docs() {
         <div className="flex justify-between items-start">
           <div>
             {/* About Section */}
-            <div id="about" className="py-16 pt-24"> {/* Add pt-24 for top padding */}
+            <div id="about" className=" pt-24 "> {/* Add pt-24 for top padding */}
               <h2 className="text-4xl font-bold mb-5 text-violet-900">About NoQ</h2>
               <p className="text-lg leading-relaxed">
-                NoQ is a comprehensive platform...
+                NoQ is a comprehensive platform designed to optimize the scheduling process for service appointments across various industries. By providing a centralized hub for service providers and customers, NoQ revolutionizes the way appointments are booked and managed, ultimately minimizing wait times and enhancing efficiency.
               </p>
             </div>
 
             {/* Services Section */}
-            <div id="services" className="py-16 pt-24">
+            <div id="services" className="py-2 pt-24">
               <h2 className="text-4xl font-bold mb-5 text-violet-900">Our Services</h2>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Appointment scheduling...</li>
+                <li>Appointment scheduling.</li>
+                <li>Appointment Managing.</li>
+
               </ul>
             </div>
           </div>
 
-          <div className="w-1/3 mt-10">
+          <div className="w-full mt-10">
             <img
               src="https://img.freepik.com/premium-vector/child-character-engaged-learning-seated-desk-focused-typing-laptop-little-boy-exploring-technology_1016-17114.jpg?w=826"
               alt="Contact Illustration"
@@ -69,26 +79,6 @@ function Docs() {
         </div>
 
 
-
-        {/* Testimonials Section */}
-        <div id="testimonials" className="py-16">
-          <h2 className="text-4xl font-bold mb-5 text-violet-900">What Our Clients Say</h2>
-          <div className="space-y-6">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <p className="text-lg leading-relaxed">
-                "NoQ has completely transformed the way we handle bookings. Our clients love the ease of scheduling,
-                and it has reduced our wait times significantly!" – John D., Salon Owner
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <p className="text-lg leading-relaxed">
-                "Thanks to NoQ, managing our appointments has never been easier. The interface is intuitive, and the
-                customer support is excellent." – Sarah K., Automotive Services
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* FAQ Section */}
         <div id="faq" className="py-16">
           <h2 className="text-4xl font-bold mb-5 text-violet-900">Frequently Asked Questions</h2>
@@ -96,13 +86,13 @@ function Docs() {
             <div>
               <h3 className="text-2xl font-bold">How do I sign up?</h3>
               <p className="text-lg leading-relaxed">
-                You can sign up by visiting our website and clicking on the "Sign Up" button in the top-right corner.
+                You can sign up by visiting our website and clicking on the "Get Started" button in the bottom-left corner.
               </p>
             </div>
             <div>
               <h3 className="text-2xl font-bold">What payment methods do you accept?</h3>
               <p className="text-lg leading-relaxed">
-                We accept all major credit cards, as well as PayPal and Stripe.
+                We accept UPI payments only.
               </p>
             </div>
           </div>

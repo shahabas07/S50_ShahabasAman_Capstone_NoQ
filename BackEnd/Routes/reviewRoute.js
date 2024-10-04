@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Review = require('../schema/reviewSchema');
-const Profile = require('../schema/serviceProfile');
+const Review = require('../Schemas/reviewSchema');
+const Profile = require('../Schemas/profileSchema');
 
 // Route to create a new review
 router.post('/:serviceProviderId', async (req, res) => {

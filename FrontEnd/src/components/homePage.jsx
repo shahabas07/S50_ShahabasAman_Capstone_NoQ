@@ -130,12 +130,14 @@ const HomePage = () => {
                 <h3>Hey {username}👋</h3>
                 <p>It’s good to see you again.</p>
                 <a href={`/profile/${username}`}>
-                <svg className='mt-5' xmlns="http://www.w3.org/2000/svg" width="150" height="40" fill="none" viewBox="0 0 150 40">
-                  <rect x="1" y="1" width="148" height="38" rx="8" fill="#4B0082" />
-                  <path d="M30 20h60m0 0l-10-10m10 10l-10 10" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="120" cy="20" r="8" fill="#fff" />
-                  <path d="M120 14a6 6 0 100 12 6 6 0 000-12zm0 1a5 5 0 110 10 5 5 0 010-10zM116 20v3a10 10 0 0020 0v-3" stroke="#4B0082" strokeWidth="1.5" />
-                </svg></a>
+                <button className="inline-flex h-12 animate-shimmer items-center justify-center rounded-xl 
+              bg-[linear-gradient(110deg,#4B0082,45%,#1e2631,55%,#4B0082)] bg-[length:200%_100%] 
+              text-xl text-white font-medium px-12 py-4 mt-8 transition-all duration-200 transform 
+              focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 
+              hover:bg-[linear-gradient(110deg,#3D0A5C,45%,#1e2631,55%,#3D0A5C)] hover:scale-105">
+                    <strong>Go to Profile</strong>
+                  </button>
+                </a>
 
               </div>
             ) : (

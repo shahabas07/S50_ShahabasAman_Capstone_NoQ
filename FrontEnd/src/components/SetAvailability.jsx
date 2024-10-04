@@ -22,6 +22,13 @@ function SetAvailability({ sectionId, adminId }) {
       {}
     )
   );
+  const [fromMonth, setFromMonth] = useState("");
+  const [toMonth, setToMonth] = useState("");
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
 
   useEffect(() => {
     axios
@@ -29,6 +36,8 @@ function SetAvailability({ sectionId, adminId }) {
       .then((response) => {
         const section = response.data;
         const newAvailability = {};
+        setFromMonth(section.fromMonth || "");
+        setToMonth(section.toMonth || "");
 
         // Initialize daysOfWeek
         daysOfWeek.forEach((day) => {
@@ -46,6 +55,8 @@ function SetAvailability({ sectionId, adminId }) {
         console.error("There was an error fetching the availability data!", error);
       });
   }, [sectionId]);
+
+
 
   const generateTimeSlots = (startTime, endTime) => {
     const slots = [];
@@ -65,7 +76,8 @@ function SetAvailability({ sectionId, adminId }) {
       ...availability,
       [key]: {
         ...availability[key],
-        active: !availability[key].active
+        active: !availability[key].active,
+        timeRange: { start: "", end: "" } // Reset timeRange when toggling
       }
     };
 
@@ -87,6 +99,24 @@ function SetAvailability({ sectionId, adminId }) {
     setAvailability(newAvailability);
   };
 
+  const getEndTimeOptions = (startTime) => {
+    if (!startTime) return [];
+
+    const start = new Date(`1970-01-01T${startTime}`);
+    const endTime = "24:00"; // Set maximum end time to 24:00
+    const endTimeOptions = [];
+
+    // Start from 30 minutes after the selected start time
+    start.setMinutes(start.getMinutes() + 30);
+
+    while (start < new Date(`1970-01-01T${endTime}`)) {
+      endTimeOptions.push(start.toTimeString().substring(0, 5));
+      start.setMinutes(start.getMinutes() + 30); // Add 30-minute slots
+    }
+
+    return endTimeOptions;
+  };
+
   const handleSubmit = () => {
     // Prepare data to match backend expectations
     const daysOfWeekData = {};
@@ -98,15 +128,18 @@ function SetAvailability({ sectionId, adminId }) {
         availabilityData[day] = {
           start: availability[day].timeRange.start,
           end: availability[day].timeRange.end,
-          timeSlots: [] // Removed mapping from here, we will create it after submission
+          // timeSlots: [] // Removed mapping from here, we will create it after submission
         };
       }
     });
 
     const payload = {
       daysOfWeek: daysOfWeekData,
-      availability: availabilityData
+      availability: availabilityData,
+      fromMonth: fromMonth,
+      toMonth: toMonth
     };
+
     console.log(payload);
 
     axios
@@ -162,69 +195,105 @@ function SetAvailability({ sectionId, adminId }) {
       });
   };
 
+  const getToMonthOptions = (from) => {
+    const startIndex = monthNames.indexOf(from) + 1;
+    return monthNames.slice(startIndex, 12); // Return months till December
+  };
+
   return (
-    <div >
-        <div className="flex flex-col items-start p-4 bg-white shadow-lg rounded-lg">
-          {daysOfWeek.map((item) => (
-            <div
-              key={item.key}
-              className="flex flex-col w-full mb-4 border-b pb-2"
+    <div>
+
+
+
+      <div className="flex flex-col items-start p-4 bg-white shadow-lg rounded-lg">
+        <div className="flex space-x-4 mb-4">
+          
+            <label className="block text-sm mt-2 font-medium text-gray-700">From</label>
+            <select
+              value={fromMonth}
+              onChange={(e) => {
+                setFromMonth(e.target.value);
+                setToMonth(""); // Reset To Month when From Month changes
+              }}
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             >
-              <div className="flex items-center justify-between w-full">
-                <span className="font-bold text-lg">{item.day}</span>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    checked={availability[item.key].active}
-                    onChange={() => handleToggle(item.key)}
-                  />
-                  <span className={`slider round`} />
-                </label>
-              </div>
-              {availability[item.key].active && (
-                <div className="flex mt-2 space-x-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Start Time
-                    </label>
-                    <select
-                      value={availability[item.key].timeRange.start}
-                      onChange={(e) => handleTimeChange(item.key, "start", e.target.value)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    >
-                      <option value="">Select Start Time</option>
-                      {generateTimeSlots("00:00", "24:00").map(slot => (
-                        <option key={slot} value={slot}>{slot}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      End Time
-                    </label>
-                    <select
-                      value={availability[item.key].timeRange.end}
-                      onChange={(e) => handleTimeChange(item.key, "end", e.target.value)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    >
-                      <option value="">Select End Time</option>
-                      {generateTimeSlots("00:00", "24:00").map(slot => (
-                        <option key={slot} value={slot}>{slot}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-          <button
-            onClick={handleSubmit}
-            className="SaveAvailability bg-yellow-400 text-gray-800 px-4 py-2 rounded focus:outline-none mt-4"
-          >
-            Save Availability
-          </button>
+              <option value="">From</option>
+              {monthNames.map((month) => (
+                <option key={month} value={month}>{month}</option>
+              ))}
+            </select>
+          
+            <label className="block text-sm mt-2 font-medium text-gray-700">To</label>
+            <select
+              value={toMonth}
+              onChange={(e) => setToMonth(e.target.value)}
+              disabled={!fromMonth} // Disable if From Month is not selected
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            >
+              <option value="">To</option>
+              {fromMonth && getToMonthOptions(fromMonth).map((month) => (
+                <option key={month} value={month}>{month}</option>
+              ))}
+            </select>
+         
         </div>
-     
+        {daysOfWeek.map((item) => (
+          <div key={item.key} className="flex flex-col w-full mb-4 border-b pb-2">
+            <div className="flex items-center justify-between w-full">
+              <span className="font-bold text-lg">{item.day}</span>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={availability[item.key].active}
+                  onChange={() => handleToggle(item.key)}
+                />
+                <span className={`slider round`} />
+              </label>
+            </div>
+            {availability[item.key].active && (
+              <div className="flex mt-2 space-x-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Start Time
+                  </label>
+                  <select
+                    value={availability[item.key].timeRange.start}
+                    onChange={(e) => handleTimeChange(item.key, "start", e.target.value)}
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  >
+                    <option value="">Select Start Time</option>
+                    {generateTimeSlots("00:00", "24:00").map(slot => (
+                      <option key={slot} value={slot}>{slot}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    End Time
+                  </label>
+                  <select
+                    value={availability[item.key].timeRange.end}
+                    onChange={(e) => handleTimeChange(item.key, "end", e.target.value)}
+                    disabled={!availability[item.key].timeRange.start} // Disable if start time is not selected
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  >
+                    <option value="">Select End Time</option>
+                    {getEndTimeOptions(availability[item.key].timeRange.start).map(slot => (
+                      <option key={slot} value={slot}>{slot}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+        <button
+          onClick={handleSubmit}
+          className="SaveAvailability bg-yellow-400 text-gray-800 px-4 py-2 rounded focus:outline-none mt-4"
+        >
+          Save Availability
+        </button>
+      </div>
     </div>
   );
 }

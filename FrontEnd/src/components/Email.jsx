@@ -147,9 +147,12 @@ const MailComponent = ({ date, timeSlot, location, userName, adminId, isLastSlot
           </>
         ) : !otpEntered ? (
           <>
+          <p>
+          Enter the OTP received on <strong>{email}</strong>
+          </p>
             <input
               type="text"
-              className="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 p-3 rounded-lg mb-4 mt-2 focus:outline-none focus:ring-2 focus:ring-violet-500"
               placeholder="Enter OTP"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}

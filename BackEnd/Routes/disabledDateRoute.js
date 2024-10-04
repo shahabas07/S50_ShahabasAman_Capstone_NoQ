@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const DisabledDate = require('../schema/disabledDateSchema'); 
+const DisabledDate = require('../Schemas/disabledDateSchema'); 
 
 // POST - Create a new disabled date
 // POST - Create a new disabled date

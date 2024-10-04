@@ -5,13 +5,13 @@ const session = require("express-session");
 const cors = require("cors");
 const port = process.env.PORT || 2024;
 const connect = require("./config/connect");
-const serviceRoute = require("./route/serviceRoute");
-const profileRoute = require("./route/profileRoute");
-const appointmentRoute = require("./route/appointmentRoute");
-const sectionRoute = require("./route/sectionRoute");
-const reviewRoute = require("./route/reviewRoute");
+const serviceRoute = require("./Routes/userRoute");
+const profileRoute = require("./Routes/profileRoute");
+const appointmentRoute = require("./Routes/appointmentRoute");
+const sectionRoute = require("./Routes/availabilityRoute");
+const reviewRoute = require("./Routes/reviewRoute");
 const Email = require("./Email/email");
-const disabledDateRoutes = require('./route/disabledDateRoute');
+const disabledDateRoutes = require('./Routes/disabledDateRoute');
 const passport = require("passport");
 require('./auth');
 
@@ -49,24 +49,18 @@ app.get("/ping", (req, res) => {
 });
 
 // Google OAuth routes
-app.get('/auth/google', 
+app.get('/auth/google',
   passport.authenticate('google', { scope: ['email', 'profile'] })
 );
 
-// app.get('/auth/google/callback',
-//   passport.authenticate('google', {
-//     successRedirect: `http://localhost:5173/${req.name}`,
-//     failureRedirect: 'http://localhost:5173/signin'
-//   })
-// );
-
-app.get('/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: 'http://localhost:5173/sign-in' }),
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: 'http://localhost:5173/sign-up' }),
   (req, res) => {
     // Assuming req.user contains the authenticated user's information
-    const userName = req.user.username; // Change this according to how the user information is stored
+    const userName = req.user.username;
     console.log(req.user)
-    res.redirect(`http://localhost:5173/profile/${userName}`);
+    // res.redirect(`http://localhost:5173/profile/${userName}`);
+    res.redirect(`http://localhost:5173/sign-up?isUpdatingProfile=true&username=${encodeURIComponent(userName)}`);
   }
 );
 
