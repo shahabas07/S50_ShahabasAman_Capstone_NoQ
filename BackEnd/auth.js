@@ -15,7 +15,7 @@ const generateToken = (user) => {
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: `${API_URI}/auth/google/callback`,
+    callbackURL: `https://s50-shahabasaman-capstone-noq.onrender.com/auth/google/callback`,
     passReqToCallback: true
 },
 async function (request, accessToken, refreshToken, profile, done) {
