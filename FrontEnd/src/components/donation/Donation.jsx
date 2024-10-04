@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import QRCode from 'qrcode.react';
-import './styles/Donation.css'; // Import the CSS file
+import '../styles/Donation.css'; 
 
 const DonationPage = () => {
     const [amount, setAmount] = useState('');
     const [showQRCode, setShowQRCode] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
-    const [payUrl, setPayUrl] = useState(''); // State to hold the generated pay URL
-
+    const [payUrl, setPayUrl] = useState(''); 
     useEffect(() => {
         setIsMobile(/Mobi|Android/i.test(navigator.userAgent));
     }, []);
@@ -18,19 +17,15 @@ const DonationPage = () => {
             return;
         }
 
-        // Create a UPI link with your UPI ID and the amount
-        const upiId = 'shezilaman@oksbi'; // Your UPI ID
+        const upiId = 'shezilaman@oksbi'; 
         const newPayUrl = `upi://pay?pa=${upiId}&pn=NoQ&tn=Donation&am=${amount}&cu=INR`;
 
-        setPayUrl(newPayUrl); // Set the generated pay URL
-        console.log(newPayUrl)
+        setPayUrl(newPayUrl); 
 
-        // Show the QR code with a small delay for animation
         setTimeout(() => {
             setShowQRCode(true);
-        }, 300); // Delay before showing the QR code
+        }, 300); 
 
-        // If on mobile, open the UPI app
         if (isMobile) {
             window.open(newPayUrl, '_blank');
         }
@@ -65,7 +60,7 @@ const DonationPage = () => {
                     ) : (
                         <div className="qr-code-animation">
                             <h2>Scan to Donate</h2>
-                            <QRCode value={payUrl} size={256} /> {/* Set QR code size */}
+                            <QRCode value={payUrl} size={256} /> 
                             <p>Open your UPI app and scan the QR code to complete your donation.</p>
                         </div>
                     )}

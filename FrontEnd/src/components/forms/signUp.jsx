@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from "js-cookie";
-import "../App.css";
-import { imDB } from "./firebase/firebase";
+import "../../App.css";
+import { imDB } from "../firebase/firebase";
 import { v4 } from "uuid";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useLocation } from 'react-router-dom';
+const API_URI = import.meta.env.VITE_API_URI;
 
 function SignUp() {
   const location = useLocation();
@@ -16,21 +17,19 @@ function SignUp() {
   const [error, setError] = useState(null);
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(isUpdatingProfileQueryParam);
   
-  // Get username from URL or fallback to existingUsername
   const usernameFromURL = query.get('username');
-  const [username, setUsername] = useState(usernameFromURL || ''); // Set initial state to empty or URL username
+  const [username, setUsername] = useState(usernameFromURL || ''); 
 
   const GoogleLogin = () => {
-    window.location.href = "http://localhost:2024/auth/google";
+    window.location.href = `${API_URI}/auth/google`;
   };
 
   const onSubmit = (data) => {
-    // If username is provided in the form, update the username state
     if (data.username) {
       setUsername(data.username);
     }
 
-    axios.post('http://localhost:2024/service', data)
+    axios.post(`${API_URI}/service`, data)
       .then(response => {
         const token = response.data.token;
         Cookies.set('token', token, { expires: 7 });
@@ -57,7 +56,7 @@ function SignUp() {
     if (data.avatar[0]) formData.append('avatar', imageUrlofAvatar);
 
     // Use the current username from state
-    axios.put(`http://localhost:2024/profile/username/${username}`, formData)
+    axios.put(`${API_URI}/profile/username/${username}`, formData)
       .then(response => {
         window.location.href = `/profile/${username}`;
       })
@@ -146,8 +145,8 @@ function SignUp() {
                     {...register("username", { required: true })}
                     className="w-full p-2 rounded-full text-black focus:outline-none focus:ring-2"
                     type="text"
-                    value={username} // Set the value to the username state
-                    readOnly // Keep it read-only if you don't want it to be editable
+                    value={username} 
+                    readOnly 
                   />
                   {errors.username && <p className="text-red-500">Username is required</p>}
                 </div>

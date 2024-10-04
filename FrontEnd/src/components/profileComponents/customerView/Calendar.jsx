@@ -1,20 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import './styles/Cal.css';
+import '../../styles/Cal.css';
 import Email from './Email';
-import { format } from 'date-fns';
 import axios from 'axios';
+const API_URI = import.meta.env.VITE_API_URI;
 
-// Utility function to generate 30-minute interval time slots
 const generateTimeSlots = (startTime, endTime) => {
   const timeSlots = [];
   const start = new Date(`2024-01-01T${startTime}:00`);
   const end = new Date(`2024-01-01T${endTime}:00`);
 
   while (start <= end) {
-    timeSlots.push(start.toTimeString().slice(0, 5)); // Get time in "HH:MM" format
-    start.setMinutes(start.getMinutes() + 30); // Add 30 minutes
+    timeSlots.push(start.toTimeString().slice(0, 5)); 
+    start.setMinutes(start.getMinutes() + 30); 
   }
 
   return timeSlots;
@@ -41,34 +40,30 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
   const calendarRef = useRef(null);
   const [isLastSlot, setIsLastSlot] = useState(false);
   const [disabledDates, setDisabledDates] = useState([]);
-  const timeSlotDivRef = useRef(null); // Create a ref for the time slot div
+  const timeSlotDivRef = useRef(null); 
   const [is24Hour, setIs24Hour] = useState(false);
   const [FromMonth, setFromMonth] = useState();
   const [ToMonth, setToMonth] = useState();
   
 
 
-  // Toggle between 12-hour and 24-hour formats
   const toggleTimeFormat = () => {
     setIs24Hour(!is24Hour);
   };
 
-  // Function to handle clicks outside the time slot div
   const handleClickOutside = (event) => {
     if (timeSlotDivRef.current && !timeSlotDivRef.current.contains(event.target)) {
-      setIsTimeVisible(false); // Close the time slot div if clicked outside
+      setIsTimeVisible(false);
     }
   };
 
-  // Fetch disabled dates for the user on component mount or userId change
   useEffect(() => {
     const fetchDisabledDates = async () => {
       try {
-        const response = await axios.get(`http://localhost:2024/disabled-dates/${userId}`);
+        const response = await axios.get(`${API_URI}/disabled-dates/${userId}`);
         if (response.data) {
-          // Extract DisabledDate from each response object
-          const dates = response.data.map(item => item.DisabledDate.split('T')[0]); // Extracting the date part
-          setDisabledDates(dates); // Update the state with the extracted dates
+          const dates = response.data.map(item => item.DisabledDate.split('T')[0]); 
+          setDisabledDates(dates);
         }
       } catch (error) {
         console.error('Error fetching disabled dates:', error);
@@ -78,11 +73,10 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
     fetchDisabledDates();
   }, [userId]);
 
-  // Fetch availability for the section on component mount or sectionId change
   useEffect(() => {
     const fetchAvailability = async () => {
       try {
-        const sectionResponse = await fetch(`http://localhost:2024/section/${sectionId}`);
+        const sectionResponse = await fetch(`${API_URI}/section/${sectionId}`);
         const sectionData = await sectionResponse.json();
 
         if (sectionData) {
@@ -100,10 +94,10 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
           const enabledDays = Object.keys(daysOfWeek).filter(day => daysOfWeek[day]);
           const enabledDayClasses = enabledDays.map(day => dayMap[day]);
 
-          setEnabledDays(enabledDayClasses);  // Setting the enabled day classes
-          setAvailability(availability);     // Setting the time slot availability
-          setFromMonth(fromMonth);           // Setting the start month
-          setToMonth(toMonth);               // Setting the end month
+          setEnabledDays(enabledDayClasses); 
+          setAvailability(availability);     
+          setFromMonth(fromMonth);           
+          setToMonth(toMonth);               
         } else {
           console.error('No section found with the given sectionId');
         }
@@ -116,16 +110,13 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
   }, [sectionId]);
 
   const getMonthRange = (monthName) => {
-    const year = new Date().getFullYear(); // Assuming the current year, adjust if needed.
-    const monthIndex = new Date(`${monthName} 1, ${year}`).getMonth(); // Get month index from name
-    const startDate = new Date(year, monthIndex, 1); // First day of the month
-    const endDate = new Date(year, monthIndex + 1, 0); // Last day of the month
+    const year = new Date().getFullYear(); 
+    const monthIndex = new Date(`${monthName} 1, ${year}`).getMonth();
+    const startDate = new Date(year, monthIndex, 1); 
+    const endDate = new Date(year, monthIndex + 1, 0); 
     return { startDate, endDate };
   };
 
-
-
-  // Apply styles for enabled and disabled days
   const applyDayStyles = () => {
   const dayMap = {
     Sunday: 'fc-day-sun',
@@ -137,9 +128,8 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
     Saturday: 'fc-day-sat',
   };
 
-  // Convert FromMonth and ToMonth to date ranges
-  const { startDate: fromStartDate } = getMonthRange(FromMonth); // First day of FromMonth
-  const { endDate: toEndDate } = getMonthRange(ToMonth); // Last day of ToMonth
+  const { startDate: fromStartDate } = getMonthRange(FromMonth); 
+  const { endDate: toEndDate } = getMonthRange(ToMonth); 
 
   Object.keys(dayMap).forEach(day => {
     const dayClass = dayMap[day];
@@ -147,16 +137,14 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
 
     elements.forEach(el => {
       const dateStr = el.getAttribute('data-date');
-      const date = new Date(dateStr); // Convert data-date to a Date object
+      const date = new Date(dateStr); 
 
       if (date < fromStartDate || date > toEndDate) {
-        // Disable dates outside the FromMonth and ToMonth range
         el.classList.add('disabled-day');
         el.classList.remove('enabled-day');
         el.style.pointerEvents = 'none';
         el.style.cursor = 'default';
       } else if (enabledDays.includes(dayClass)) {
-        // Enable days that fall within the date range and match enabled days
         el.classList.add('enabled-day');
         el.classList.remove('disabled-day');
         el.style.pointerEvents = 'auto';
@@ -171,9 +159,6 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
   });
 };
 
-
-
-  // Reapply day styles when enabledDays, disabledDates, or renderTrigger changes
   useEffect(() => {
     applyDayStyles();
     const handleDatesSet = () => {
@@ -192,26 +177,24 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
     };
   }, [enabledDays, disabledDates]);
 
-  // Handle date click to show available time slots
   const handleDateClick = async (el, day) => {
     const date = el.getAttribute('data-date');
     setSelectedDate(date);
     setSelectedDay(day);
     setIsTimeVisible(true);
     setIsEmailVisible(false);
-    // setRenderTrigger(prev => !prev);
 
-    const timeRange = availability[day]; // Get the time range for the selected day
+    const timeRange = availability[day];
     if (timeRange) {
       const slots = generateTimeSlots(timeRange.start, timeRange.end);
       setAvailableTimeSlots(slots);
 
       try {
         const formattedDate = new Date(date).toISOString();
-        const response = await fetch(`http://localhost:2024/appointment/admin/${userId}/${formattedDate}`);
+        const response = await fetch(`${API_URI}/appointment/admin/${userId}/${formattedDate}`);
 
         if (response.status === 404) {
-          setAppointmentsdateTimePairs([]); // Set booked slots to an empty array
+          setAppointmentsdateTimePairs([]);
         } else if (response.ok) {
           const appointments = await response.json();
           const bookedSlots = appointments.map(appointment => appointment.time);
@@ -226,14 +209,13 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
     }
   };
 
-  // Handle time slot selection and check if it's the last available slot
   const handleTimeClick = (time) => {
     setSelectedTimeSlot(time);
     setIsEmailVisible(true);
     setIsTimeVisible(false);
 
     const lastAvailableCount = availableTimeSlots.length - appointmentsdateTimePairs.length;
-    setIsLastSlot(lastAvailableCount === 1); // Set state to true if it's the last slot
+    setIsLastSlot(lastAvailableCount === 1);
   };
 
   useEffect(() => {
@@ -247,7 +229,6 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
 
   return (
     <div className='relative w-2/3 mx-auto '>
-      {/* Time Slot Div */}
       {isTimeVisible && (
         <div
           ref={timeSlotDivRef}
@@ -258,7 +239,6 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
           <div className='flex justify-between items-center'>
             <h1 className='mt-5 text-lg font-semibold mb-4'>On <span className='text-green-700'>{selectedDate}</span> @</h1>
 
-            {/* Toggle Button for 12hr/24hr Format in top-right corner */}
             <button
               className='mb-6 px-2 py-1 border rounded-lg stroke-blue-500 text-gray-600 hover:bg-gray-200 transition duration-200 text-sm'
               onClick={toggleTimeFormat}
@@ -282,7 +262,6 @@ export default function Calendar({ sectionId, Adminlocation, Username, userId, e
         </div>
       )}
 
-      {/* FullCalendar */}
       {!isEmailVisible && (
         <div className='flex-grow w-auto'>
           <FullCalendar

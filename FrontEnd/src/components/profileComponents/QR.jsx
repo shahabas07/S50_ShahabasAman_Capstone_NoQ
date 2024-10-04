@@ -18,29 +18,23 @@ function QR({ serviceCategory, serviceName }) {
       const imageData = canvas.toDataURL("image/png");
       const pdf = new jsPDF();
 
-      // Add service name and category, centered
       pdf.setFontSize(18);
       const pageWidth = pdf.internal.pageSize.getWidth();
 
       const serviceNameText = `Service Provider: ${typeof serviceName === 'object' ? JSON.stringify(serviceName) : serviceName}`;
       const serviceCategoryText = `Service Category: ${typeof serviceCategory === 'object' ? JSON.stringify(serviceCategory) : serviceCategory}`;
 
-      // Center text based on page width
       pdf.text(serviceNameText, pageWidth / 2, 30, { align: "center" });
       pdf.text(serviceCategoryText, pageWidth / 2, 40, { align: "center" });
 
-      // Add the QR code
       pdf.addImage(imageData, "PNG", 60, 50, 90, 90);
 
-      // Add instructions for users, centered
       pdf.setFontSize(12);
       pdf.text("Scan the QR code to book your slot", pageWidth / 2, 160, { align: "center" });
       pdf.text("Thank you for choosing our service!", pageWidth / 2, 180, { align: "center" });
 
-      // Save the PDF
       pdf.save("SlotBookingQRCode.pdf");
 
-      // Show the success message in the UI
       setPdfGenerated(true);
     });
   };

@@ -1,15 +1,15 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from "./components/homePage";
-import SignIn from "./components/signIn";
-import SignUp from "./components/signUp";
-import Docs from "./components/Docs";
-import Categories from "./components/Categories";
-import Sort from "./components/sort"
-import Profile from "./components/Profile"
-import AppointmentData from "./components/AppointmentData"
-import ReviewPage from "./components/ReviewPage"
-import DonationPage from "./components/Donation"
+import HomePage from "./components/homePage/homePage";
+import SignIn from "./components/forms/signIn";
+import SignUp from "./components/forms/signUp";
+import Docs from "./components/aboutPage/Docs";
+import Categories from "./components/serviceFinder/Categories";
+import Sort from "./components/serviceFinder/sort"
+import Profile from "./components/profileComponents/Profile"
+import AppointmentData from "./components/profileComponents/providerView/AppointmentData"
+import ReviewPage from "./components/profileComponents/ReviewPage"
+import DonationPage from "./components/donation/Donation"
 import "./App.css";
 
 function App() {

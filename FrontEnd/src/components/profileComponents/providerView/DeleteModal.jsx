@@ -2,7 +2,6 @@ import React from "react";
 
 const DeleteModal = ({ onCancel, onConfirm }) => {
   const handleConfirm = () => {
-    // Clear all cookies
     const cookies = document.cookie.split("; ");
     for (const cookie of cookies) {
       const eqPos = cookie.indexOf("=");
@@ -10,12 +9,10 @@ const DeleteModal = ({ onCancel, onConfirm }) => {
       document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/"; // Set the cookie expiration to the past
     }
 
-    // Call the onConfirm function passed as a prop (if needed for deletion logic)
     if (onConfirm) {
       onConfirm();
     }
 
-    // Redirect to the root path
     window.location.href = "/";
   };
 

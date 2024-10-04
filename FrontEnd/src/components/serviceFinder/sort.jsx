@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import pic from "../assets/carservice.png";
-import gps from "../assets/gps.png";
+import gps from "../../assets/gps.png";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
+const API_URI = import.meta.env.VITE_API_URI;
 
 function Sort() {
   const { category } = useParams();
@@ -14,13 +14,13 @@ function Sort() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:2024/profile?category=${category}`)
+      .get(`${API_URI}/profile?category=${category}`)
       .then((response) => {
         const filteredServices = response.data.filter(
           (service) => service.category === category
         );
         setFilteredItems(filteredServices);
-        setAllServices(filteredServices); // Keep a copy of all services
+        setAllServices(filteredServices); 
         fetchAllAverageRatings(filteredServices);
       })
       .catch((error) => {
@@ -30,7 +30,7 @@ function Sort() {
 
   const fetchAverageRating = async (serviceId) => {
     try {
-      const response = await axios.get(`http://localhost:2024/review/${serviceId}`);
+      const response = await axios.get(`${API_URI}/review/${serviceId}`);
       const reviews = response.data;
 
       const totalRatings = reviews.reduce((acc, review) => acc + review.rating, 0);
@@ -49,7 +49,7 @@ function Sort() {
       const avgRating = await fetchAverageRating(service._id);
       ratings[service._id] = avgRating;
     }
-    setAverageRatings(ratings); // Store all ratings in state
+    setAverageRatings(ratings); 
   };
 
   const handleCityChange = (e) => {
@@ -74,7 +74,7 @@ function Sort() {
 
       setFilteredItems(newFilteredItems);
     } else {
-      setFilteredItems(allServices); // Reset to all services when no filters are applied
+      setFilteredItems(allServices); 
     }
   };
 

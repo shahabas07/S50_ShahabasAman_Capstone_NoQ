@@ -2,23 +2,22 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from 'js-cookie';
-// import API_URI from "../../Env"
+const API_URI = import.meta.env.VITE_API_URI;
 
 function SignIn() {
   const { register, handleSubmit } = useForm();
   const [error, setError] = useState(null);
 
   const GoogleLogin = (event) => {
-    // event.preventDefault();
-    window.location.href = "http://localhost:2024/auth/google"
+    event.preventDefault();
+    window.location.href = `${API_URI}/auth/google`
   }
 
   const onSubmit = (data) => {
-    const { username, password } = data;
-    console.log("about tio");
+    // const { username, password } = data;
+    // console.log("about tio");
 
-    // axios.post(`${API_URI}/service/sign-in`, { username, password })
-    axios.post('http://localhost:2024/service/sign-in', data)
+    axios.post(`${API_URI}/service/sign-in`, data)
 
       .then(response => {
         console.log(response);

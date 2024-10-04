@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { imDB } from "./firebase/firebase";
+import { imDB } from "../../firebase/firebase";
 import { v4 } from "uuid";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+const API_URI = import.meta.env.VITE_API_URI;
 
 function EditProfile({ profileData, onClose }) {
   const [userData, setUserData] = useState({
@@ -19,7 +20,7 @@ function EditProfile({ profileData, onClose }) {
     picture: null,
   });
 
-  const [loading, setLoading] = useState(false); // Track loading state
+  const [loading, setLoading] = useState(false); 
 
   useEffect(() => {
     if (profileData) {
@@ -73,43 +74,37 @@ function EditProfile({ profileData, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Start loading
+    setLoading(true); 
   
     try {
       const formData = new FormData();
   
-      // Handle avatar image upload or retain old avatar
       if (userData.avatar && userData.avatar !== "undefined" && typeof userData.avatar !== 'string') {
-        // Only upload if it's a new file (not a string or undefined)
         const avatarRef = ref(imDB, `images/avatar/${v4()}`);
         const uploadAvatar = await uploadBytes(avatarRef, userData.avatar);
         const avatarUrl = await getDownloadURL(uploadAvatar.ref);
-        formData.append("avatar", avatarUrl); // New avatar URL
+        formData.append("avatar", avatarUrl); 
       } else {
-        formData.append("avatar", profileData.avatar || ""); // Keep existing avatar from profileData
+        formData.append("avatar", profileData.avatar || ""); 
       }
   
-      // Handle picture image upload or retain old picture
       if (userData.picture && userData.picture !== "undefined" && typeof userData.picture !== 'string') {
-        // Only upload if it's a new file (not a string or undefined)
         const pictureRef = ref(imDB, `images/picture/${v4()}`);
         const uploadPicture = await uploadBytes(pictureRef, userData.picture);
         const pictureUrl = await getDownloadURL(uploadPicture.ref);
-        formData.append("picture", pictureUrl); // New picture URL
+        formData.append("picture", pictureUrl); 
       } else {
-        formData.append("picture", profileData.picture || ""); // Keep existing picture from profileData
+        formData.append("picture", profileData.picture || ""); 
       }
   
-      // Append other user data to formData (excluding avatar and picture)
       Object.keys(userData).forEach((key) => {
         if (key !== "avatar" && key !== "picture") {
           formData.append(key, userData[key]);
         }
       });
   
-      // Send the PUT request to update the profile
       await axios.put(
-        `http://localhost:2024/profile/${profileData._id}`,
+        `${API_URI}/profile/${profileData._id}`,
         formData,
         {
           headers: {
@@ -118,10 +113,10 @@ function EditProfile({ profileData, onClose }) {
         }
       );
   
-      setLoading(false); // End loading
-      window.location.reload(); // Reload the page after submission
+      setLoading(false);
+      window.location.reload();
     } catch (error) {
-      setLoading(false); // End loading on error
+      setLoading(false);
       console.error("Error updating profile:", error);
     }
   };
@@ -130,7 +125,7 @@ function EditProfile({ profileData, onClose }) {
   
   return (
     <div className=" bg-opacity-0 z-50">
-      {loading ? ( // Show loading view while saving changes
+      {loading ? ( 
         <div className="flex items-center bg-white p-6 rounded-2xl px-12 justify-center">
           <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"></div>
           <p className="ml-3 text-lg text-black">Saving changes...</p>
@@ -183,7 +178,7 @@ function EditProfile({ profileData, onClose }) {
                   name="bio"
                   value={userData.bio}
                   onChange={handleChange}
-                  rows="5" // Adjust the number of rows based on your preference
+                  rows="5" 
                   className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-indigo-200"
                 />
               </div>

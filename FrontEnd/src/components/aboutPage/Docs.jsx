@@ -3,7 +3,6 @@ import React from 'react';
 function Docs() {
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
       <div className="bg-violet-900 px-8 py-10 w-1/4 h-full text-white fixed shadow-lg">
         <div className="mb-10 text-4xl font-bold">
           <a href="/" className="logo text-yellow-400">
@@ -46,11 +45,9 @@ function Docs() {
         </nav>
       </div>
 
-      {/* Main Content */}
       <div className="ml-[25%] p-10 flex-grow bg-gray-100 text-gray-800">
         <div className="flex justify-between items-start">
           <div>
-            {/* About Section */}
             <div id="about" className=" pt-24 "> {/* Add pt-24 for top padding */}
               <h2 className="text-4xl font-bold mb-5 text-violet-900">About NoQ</h2>
               <p className="text-lg leading-relaxed">
@@ -58,7 +55,6 @@ function Docs() {
               </p>
             </div>
 
-            {/* Services Section */}
             <div id="services" className="py-2 pt-24">
               <h2 className="text-4xl font-bold mb-5 text-violet-900">Our Services</h2>
               <ul className="list-disc pl-6 space-y-2">
@@ -79,7 +75,6 @@ function Docs() {
         </div>
 
 
-        {/* FAQ Section */}
         <div id="faq" className="py-16">
           <h2 className="text-4xl font-bold mb-5 text-violet-900">Frequently Asked Questions</h2>
           <div className="space-y-4">
@@ -98,7 +93,6 @@ function Docs() {
           </div>
         </div>
 
-        {/* Support Section */}
         <div id="support" className="py-16">
           <h2 className="text-4xl font-bold mb-5 text-violet-900">Support</h2>
           <p className="text-lg leading-relaxed">
@@ -107,7 +101,6 @@ function Docs() {
           </p>
         </div>
 
-        {/* Contacts Section */}
         <div id="contacts" className="py-16">
 
           <div className="w-2/3">
@@ -124,7 +117,6 @@ function Docs() {
 
         </div>
 
-        {/* Feedback Section */}
         <div id="feedback" className="py-16">
           <h2 className="text-4xl font-bold mb-5 text-violet-900">Feedback</h2>
           <p className="text-lg leading-relaxed">

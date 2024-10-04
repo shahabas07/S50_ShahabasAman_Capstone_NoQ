@@ -2,15 +2,6 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getStorage } from "firebase/storage"
 
-// const firebaseConfig = {
-//   apiKey: firebasevariables.apiKey,
-//   authDomain: firebasevariables.authDomain,
-//   projectId: firebasevariables.projectId,
-//   storageBucket: firebasevariables.storageBucket,
-//   messagingSenderId: firebasevariables.messagingSenderId,
-//   appId: firebasevariables.appId,
-//   measurementId: firebasevariables.measurementId
-// };
 const firebaseConfig = {
     apiKey: "AIzaSyDtq3hXH9UdMGpZVR2-zHeif_L8CXQOj0U",
     authDomain: "nowq-85c44.firebaseapp.com",
