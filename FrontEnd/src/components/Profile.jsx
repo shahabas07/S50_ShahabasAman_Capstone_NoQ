@@ -8,6 +8,8 @@ import DeleteModal from "./DeleteModal";
 import EditProfile from "./EditProfile";
 import QR from "./QR";
 import NoQ from "../assets/NoQ.png";
+import DisableDate from "./DisableDate"
+import LogoutModal from "./Logout"
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import ReviewPage from "./ReviewPage";
@@ -153,43 +155,41 @@ const Profile = () => {
     setEditProfileVisible(false);
   };
 
-  function LogoutModal({ onCancel, onConfirm }) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center z-[1100]">
-        <div className="bg-white p-2 rounded-lg shadow-lg dark:bg-surface-dark ">
-          <h2 className="text-md font-semibold m-6 text-white dark:text-black">
-            Are you sure you want to log out?
-          </h2>
-          <div className=" flex justify-between px-8 mb-4">
-            <button
-              onClick={onCancel}
-              className="px-4 py-2 rounded-lg mr-2 border border-gray-800  text-gray-800  hover:bg-gray-200 transition duration-200"
-            >
-              Cancel
-            </button>
+  // function LogoutModal({ onCancel, onConfirm }) {
+  //   return (
+  //     <div className="fixed inset-0 flex items-center justify-center z-[1100]">
+  //       <div className="bg-white p-2 rounded-lg shadow-lg dark:bg-surface-dark ">
+  //         <h2 className="text-md font-semibold m-6 text-white dark:text-black">
+  //           Are you sure you want to log out?
+  //         </h2>
+  //         <div className=" flex justify-between px-8 mb-4">
+  //           <button
+  //             onClick={onCancel}
+  //             className="px-4 py-2 rounded-lg mr-2 border border-gray-800  text-gray-800  hover:bg-gray-200 transition duration-200"
+  //           >
+  //             Cancel
+  //           </button>
 
-            <button
-              onClick={onConfirm}
-              className="px-4 py-2 bg-red-500 text-white rounded-lg"
-            >
-              Log-Out
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  //           <button
+  //             onClick={onConfirm}
+  //             className="px-4 py-2 bg-red-500 text-white rounded-lg"
+  //           >
+  //             Log-Out
+  //           </button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogoutClick = () => {
     setShowLogoutModal(true);
   };
-
   const handleLogoutCancel = () => {
     setShowLogoutModal(false);
   };
-
   const handleLogoutConfirm = () => {
     // Clear cookies (you might want to clear specific cookies depending on your app)
     document.cookie.split(";").forEach((c) => {
@@ -197,11 +197,8 @@ const Profile = () => {
         .replace(/^ +/, "")
         .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
-
-    // Add your logout logic here, such as redirecting to the login page
-    window.location.reload();
+    window.location.href = '/';
   };
-  // console.log("profile:",profileData.avatar)
 
 
 
@@ -294,13 +291,10 @@ const Profile = () => {
                       <a
                         href="#"
                         className="block py-2 px-4 hover:bg-gray-200 transition duration-200"
-                        onClick={handleLogoutClick}
+                        onClick={handleLogoutClick}  // Trigger the logout modal
                       >
-                        Log-Out
+                        Log Out
                       </a>
-                      {showLogoutModal && (
-                        <LogoutModal onCancel={handleLogoutCancel} onConfirm={handleLogoutConfirm} />
-                      )}
                     </li>
                   </ul>
                 </div>
@@ -308,89 +302,91 @@ const Profile = () => {
             ) : (
               <div className="flex justify-between items-center">
                 <div className="flex items-center">
-                  {/* <a href="/">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-8 h-8 text-gray-600 hover:text-black transition duration-200"
-                    >
-                      <path d="M12 3l10 9h-3v9H5v-9H2l10-9zm0-2L1 10v13h6v-7h6v7h6V10l-11-9z" />
-                    </svg>
-                  </a> */}
                   <h2 className="text-2xl font-bold ml-5">{profileData.username}</h2>
                 </div>
               </div>
             )}
-
-            <div className="relative flex flex-col lg:flex-row p-6 bg-gradient-to-r from-violet-100 to-yellow-50 shadow-lg rounded-lg mt-8">
-              {/* Profile Sharing SVG */}
-              <div className="absolute top-4 right-4  ">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  className="w-8 h-8 text-gray-500 hover:text-gray-800"
-                  viewBox="0 0 24 24"
-                  onClick={QRPopup} // Function to show QR/Share popup
-                >
-                  <path d="M13 7h-2v6h6v-2h-4zM12 0C5.373 0 0 5.373 0 12c0 5.084 3.162 9.404 7.633 11.124v-1.775C4.021 19.708 2 16.105 2 12c0-5.523 4.477-10 10-10s10 4.477 10 10c0 4.103-2.019 7.707-5.633 9.349v1.775C20.838 21.405 24 17.085 24 12 24 5.373 18.627 0 12 0zm-1 17v-6h2v6h-2zm0 4v-2h2v2h-2z"></path>
-                </svg>
-                {popupVisible && (
-                  <div className="fixed inset-0 flex items-center justify-center bg-opacity-60 z-50">
-                    <div className="relative bg-gradient-to-tl from-violet-100 to-yellow-50 p-4 rounded-lg shadow-lg transform transition-transform ease-in-out duration-300">
-                      <button
-                        onClick={handleClose}
-                        className="absolute text-2xl top-2 right-2 m-2 text-white bg-black font-bold py-0 px-2 rounded focus:outline-none focus:shadow-outline"
-                      >
-                        X
-                      </button>
-                      <QR serviceCategory={profileData.category} serviceName={profileData.username} />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Profile Picture Section */}
-              <div className="lg:w-1/3 flex items-center justify-center">
+            <div className="relative p-6 bg-gradient-to-r from-violet-100 to-yellow-50 shadow-lg rounded-lg mt-8 ">
+              <div className="relative w-full mt-8 h-auto mb-6" style={{ paddingBottom: '16.25%' }}>
                 <img
-                  src={profileData.avatar || "https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"}
-                  className="w-40 h-40 rounded-full border-4 border-gray-200 shadow-lg object-cover"
+                  className="absolute top-0 left-0 w-full h-full object-cover rounded-lg opacity-80"  // Adjust opacity here (0 to 100%)
+                  src={profileData.picture || "https://cdn.pixabay.com/photo/2016/06/22/11/10/box-1472804_1280.png"}
+                  alt="YouTube Banner"
                 />
               </div>
 
-              {/* Profile Information Section */}
-              <div className="lg:w-2/3 mt-6 lg:mt-0 lg:ml-6">
-                {/* Name and Bio */}
-                <h1 className="text-3xl font-semibold mb-3">{profileData.name}</h1>
-                <p className="text-gray-700 mb-4">{profileData.bio}</p>
 
-                {/* Location and Contact Information */}
-                <div className="mb-4 text-gray-600">
-                  <address>
-                    {profileData.location}, India. Zip: {profileData.zip}
-                  </address>
-                  <p className="text-blue-500 mt-2">
-                    <a
-                      href={profileData.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:underline"
-                    >
-                      {profileData.website}
-                    </a>
-                  </p>
-                  <p>Email: {profileData.email}</p>
+              <div className=" flex flex-col lg:flex-row">
+                {/* Profile Sharing SVG */}
+
+                <div className="absolute top-4 right-4  ">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    className="w-8 h-8 text-gray-500 hover:text-gray-800"
+                    viewBox="0 0 24 24"
+                    onClick={QRPopup} // Function to show QR/Share popup
+                  >
+                    <path d="M13 7h-2v6h6v-2h-4zM12 0C5.373 0 0 5.373 0 12c0 5.084 3.162 9.404 7.633 11.124v-1.775C4.021 19.708 2 16.105 2 12c0-5.523 4.477-10 10-10s10 4.477 10 10c0 4.103-2.019 7.707-5.633 9.349v1.775C20.838 21.405 24 17.085 24 12 24 5.373 18.627 0 12 0zm-1 17v-6h2v6h-2zm0 4v-2h2v2h-2z"></path>
+                  </svg>
+                  {popupVisible && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-opacity-60 z-50">
+                      <div className="relative bg-gradient-to-tl from-violet-100 to-yellow-50 p-4 rounded-lg shadow-lg transform transition-transform ease-in-out duration-300">
+                        <button
+                          onClick={handleClose}
+                          className="absolute text-2xl top-2 right-2 m-2 text-white bg-black font-bold py-0 px-2 rounded focus:outline-none focus:shadow-outline"
+                        >
+                          X
+                        </button>
+                        <QR serviceCategory={profileData.category} serviceName={profileData.username} />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {/* Additional Profile Details */}
-                <div className="mt-6 grid grid-cols-2 gap-4">
-                  <div>
-                    <h3 className=" font-semibold">Category</h3>
-                    <p className="text-gray-700">{profileData.category}</p>
+                {/* Profile Picture Section */}
+
+                <div className="lg:w-1/3 flex items-center justify-center">
+                  <img
+                    src={profileData.avatar || "https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"}
+                    className="w-40 h-40 rounded-full border-4 border-gray-200 shadow-lg object-cover"
+                  />
+
+
+                </div>
+
+                {/* Profile Information Section */}
+                <div className="lg:w-2/3 mt-6 lg:mt-0 lg:ml-6">
+                  {/* Name and Bio */}
+                  <h1 className="text-3xl font-semibold mb-3">{profileData.name}</h1>
+                  <p className="text-gray-700 mb-4">{profileData.bio}</p>
+
+                  {/* Location and Contact Information */}
+                  <div className="mb-4 text-gray-600">
+                    <address>
+                      {profileData.location}, India. Zip: {profileData.zip}
+                    </address>
+                    <p className="text-blue-500 mt-2">
+                      <a
+                        href={profileData.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline"
+                      >
+                        {profileData.website}
+                      </a>
+                    </p>
+                    <p>Email: {profileData.email}</p>
                   </div>
 
-                  <div>
-                    <img src={profileData.picture}/>
+                  {/* Additional Profile Details */}
+                  <div className="mt-6 grid grid-cols-2 gap-4">
+                    <div>
+                      <h3 className=" font-semibold">Category</h3>
+                      <p className="text-gray-700">{profileData.category}</p>
+                    </div>
+
+
                   </div>
                 </div>
               </div>
@@ -398,12 +394,17 @@ const Profile = () => {
 
             <div className="mt-10 p-6 bg-gradient-to-tr from-violet-100 to-yellow-50 shadow-lg rounded-lg">
               {jwtUsername === profileData.username ? (
-                <div className="flex flex-wrap ">
-                  <div className="w-full lg:w-1/2 mt-5 gap-9">
-                    <SetAvailability sectionId={profileData.section} adminId={profileData._id} />
+                <div>
+                  <div className="flex flex-wrap ">
+                    <div className="w-full lg:w-1/2 mt-5 gap-9">
+                      <SetAvailability sectionId={profileData.section} adminId={profileData._id} />
+                    </div>
+                    <div className="w-full lg:w-1/2">
+                      <AppointmentData adminId={profileData._id} />
+                    </div>
                   </div>
-                  <div className="w-full lg:w-1/2">
-                    <AppointmentData adminId={profileData._id} />
+                  <div className=" mt-8 ml-3">
+                    <DisableDate adminId={profileData._id} />
                   </div>
                 </div>
               ) : (
@@ -458,6 +459,12 @@ const Profile = () => {
                 />
 
               </div>
+            )}
+            {showLogoutModal && (
+              <LogoutModal
+                onCancel={handleLogoutCancel}
+                onConfirm={handleLogoutConfirm}
+              />
             )}
           </div>
 

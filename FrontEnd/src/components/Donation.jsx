@@ -20,8 +20,8 @@ const DonationPage = () => {
 
         // Create a UPI link with your UPI ID and the amount
         const upiId = 'shezilaman@oksbi'; // Your UPI ID
-        const transactionId = `Txn_${Date.now()}_${Math.floor(Math.random() * 1000)}`; // Unique transaction ID
-        const newPayUrl = `upi://pay?pa=${upiId}&pn=NoQ&tid=${transactionId}&tn=Donation&am=${amount}&cu=INR`;
+        const newPayUrl = `upi://pay?pa=${upiId}&pn=NoQ&tn=Donation&am=${amount}&cu=INR`;
+
         setPayUrl(newPayUrl); // Set the generated pay URL
         console.log(newPayUrl)
 

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const multer = require('multer');
-const serviceProfile = require("../schema/serviceProfile");
+const serviceProfile = require("../Schemas/profileSchema");
 const Joi = require("joi");
 const cors = require("cors");
 require('dotenv').config()

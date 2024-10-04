@@ -1,23 +1,16 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
-const crypto = require('crypto'); // For generating OTP
-const path = require('path');
+const crypto = require('crypto');
 const app = express();
 
-// Temporarily store OTPs (use a database in production)
 let otpStore = {};
-
-// Middleware to parse JSON requests
 app.use(express.json());
 
-// Generate and send OTP
 app.post('/send-otp', async (req, res) => {
   const { email } = req.body;
 
-  // Generate OTP
-  // const otp = crypto.randomInt(1000, 9999).toString();
-  const otp = "1000";
-
+  const otp = crypto.randomInt(1000, 9999).toString();
+  // const otp = "1000";
 
   // Store OTP with expiration (5 minutes)
   otpStore[email] = {
@@ -40,15 +33,10 @@ app.post('/send-otp', async (req, res) => {
     subject: 'Your OTP Code',
     html: `
       <p>Your OTP is <strong>${otp}</strong>. It will expire in 5 minutes.</p>
-      <img src="cid:image1@company.com" alt="Example Image" style="width: 100%; max-width: 600px;">
-    `,
-    attachments: [
-      {
-        filename: 'NoQ.png',
-        path: path.join('Email', 'NoQ.png'), // Corrected path
-        cid: 'image1@company.com'
-      },
-    ],
+      <div style="text-align: center; margin-bottom: 20px;">
+          <img src="https://firebasestorage.googleapis.com/v0/b/nowq-85c44.appspot.com/o/NoQ.png?alt=media&token=481c9686-4c68-4bb1-a381-d745db1a4586" alt="NoQ Logo" style="width: 100px; height: auto;" />
+      </div>
+      `,
   };
 
   try {
@@ -60,7 +48,6 @@ app.post('/send-otp', async (req, res) => {
   }
 });
 
-// Verify OTP
 app.post('/verify-otp', (req, res) => {
   const { email, otp } = req.body;
 
@@ -76,36 +63,26 @@ app.post('/verify-otp', (req, res) => {
 
   if (storedOtp === otp) {
     res.status(200).send('OTP verified');
-    // Optionally, delete the OTP after successful verification
     delete otpStore[email];
   } else {
     res.status(400).send('Invalid OTP');
   }
 });
 
-// Send confirmation email
-
 app.post('/confirm-email', async (req, res) => {
   const { appointment, providerEmail } = req.body;
 
-  // if (!providerEmail) {
-  //   return res.status(400).json({ message: 'Provider email is required' });
-  // }
-
   try {
-    // Ensure that the appointment and providerEmail are provided
     if (!appointment || !providerEmail) {
       return res.status(400).json({ message: 'Appointment and provider email data are required' });
     }
 
-    // Extract necessary details from the appointment object
     const { customerName, appointmentDate, time, location, adminName, email } = appointment;
 
     if (!email) {
       return res.status(400).json({ message: 'Customer email address is missing' });
     }
 
-    // Nodemailer transporter
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
@@ -114,7 +91,6 @@ app.post('/confirm-email', async (req, res) => {
       },
     });
 
-    // Email template HTML
     const emailHTML = `
       <p>Dear ${customerName},</p>
       <p>Your appointment has been confirmed successfully!</p>
@@ -128,25 +104,19 @@ app.post('/confirm-email', async (req, res) => {
       </ul>
       <p>Please keep this information for future reference.</p>
       <p>Thank you for booking through NoQ!</p>
-      <img src="cid:image1@company.com" alt="Example Image" style="width: 100%; max-width: 300px;">
+      <div style="text-align: center; margin-bottom: 20px;">
+          <img src="https://firebasestorage.googleapis.com/v0/b/nowq-85c44.appspot.com/o/NoQ.png?alt=media&token=481c9686-4c68-4bb1-a381-d745db1a4586" alt="NoQ Logo" style="width: 100px; height: auto;" />
+      </div>
+      
     `;
 
-    // Mail options for customer
     const customerMailOptions = {
       from: `"NoQ" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: 'Appointment Confirmation',
       html: emailHTML,
-      attachments: [
-        {
-          filename: 'NoQ.png',
-          path: path.join('Email', 'NoQ.png'),  // Corrected path
-          cid: 'image1@company.com',
-        },
-      ],
     };
 
-    // Mail options for provider
     const providerMailOptions = {
       from: `"NoQ" <${process.env.EMAIL_USER}>`,
       to: providerEmail,
@@ -162,17 +132,12 @@ app.post('/confirm-email', async (req, res) => {
           <li>Location: ${location}</li>
         </ul>
         <p>Please confirm the appointment from your dashboard.</p>
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="https://firebasestorage.googleapis.com/v0/b/nowq-85c44.appspot.com/o/NoQ.png?alt=media&token=481c9686-4c68-4bb1-a381-d745db1a4586" alt="NoQ Logo" style="width: 100px; height: auto;" />
+        </div>
       `,
-      attachments: [
-        {
-          filename: 'NoQ.png',
-          path: path.join('Email', 'NoQ.png'),
-          cid: 'image1@company.com',
-        },
-      ],
     };
 
-    // Send emails to both customer and provider
     await transporter.sendMail(customerMailOptions);
     await transporter.sendMail(providerMailOptions);
 
@@ -182,6 +147,5 @@ app.post('/confirm-email', async (req, res) => {
     res.status(500).send('Error sending confirmation email');
   }
 });
-
 
 module.exports = app;

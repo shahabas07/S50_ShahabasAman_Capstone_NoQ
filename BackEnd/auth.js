@@ -3,7 +3,8 @@ const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt'); // Ensure you have bcrypt for password comparison if needed
 require('dotenv').config();
-const ServiceProfile = require('./schema/serviceProfile'); 
+const ServiceProfile = require('./Schemas/profileSchema'); 
+const sectionModal = require('./Schemas/availabilitySchema'); 
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -24,12 +25,18 @@ async function (request, accessToken, refreshToken, profile, done) {
 
         let userDoc;
         if (!profileDoc) {
+            newSection = new sectionModal();
+            await newSection.save();
+
+            console.log("---", newSection)
+
             userDoc = new ServiceProfile({
                 username: profile.displayName.replace(/\s+/g, '').toLowerCase(), // Create a username based on the display name
                 name: profile.displayName,
                 email: profile.email,
+                avatar: profile._json.picture,
+                section: newSection._id,
             });
-
             await userDoc.save();
             profileDoc = userDoc; 
         } else {
@@ -52,7 +59,6 @@ async function (request, accessToken, refreshToken, profile, done) {
         return done(null, { token, username: profileDoc.username });
     } catch (err) {
         return done(err);
-        console.log(err)
     }
 }));
 

@@ -3,13 +3,14 @@ import pic from "../assets/carservice.png";
 import gps from "../assets/gps.png";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
-// import API_URI from "../../Env"
 
 function Sort() {
   const { category } = useParams();
   const [filteredItems, setFilteredItems] = useState(null);
   const [cityFilter, setCityFilter] = useState("");
   const [ratingFilter, setRatingFilter] = useState("");
+  const [averageRatings, setAverageRatings] = useState({});
+  const [allServices, setAllServices] = useState([]); // Store all services
 
   useEffect(() => {
     axios
@@ -19,11 +20,37 @@ function Sort() {
           (service) => service.category === category
         );
         setFilteredItems(filteredServices);
+        setAllServices(filteredServices); // Keep a copy of all services
+        fetchAllAverageRatings(filteredServices);
       })
       .catch((error) => {
         console.error("Error fetching services:", error);
       });
   }, [category]);
+
+  const fetchAverageRating = async (serviceId) => {
+    try {
+      const response = await axios.get(`http://localhost:2024/review/${serviceId}`);
+      const reviews = response.data;
+
+      const totalRatings = reviews.reduce((acc, review) => acc + review.rating, 0);
+      const average = reviews.length ? (totalRatings / reviews.length).toFixed(1) : 0;
+
+      return average;
+    } catch (error) {
+      console.error("Error fetching reviews", error);
+      return 0;
+    }
+  };
+
+  const fetchAllAverageRatings = async (services) => {
+    const ratings = {};
+    for (const service of services) {
+      const avgRating = await fetchAverageRating(service._id);
+      ratings[service._id] = avgRating;
+    }
+    setAverageRatings(ratings); // Store all ratings in state
+  };
 
   const handleCityChange = (e) => {
     setCityFilter(e.target.value);
@@ -35,28 +62,19 @@ function Sort() {
 
   const handleSort = () => {
     if (cityFilter !== "" || ratingFilter !== "") {
-      const newFilteredItems = filteredItems.filter((service) => {
+      const newFilteredItems = allServices.filter((service) => {
         const matchesCity =
           cityFilter === "" ||
           service.location.toLowerCase().includes(cityFilter.toLowerCase());
         const matchesRating =
-          ratingFilter === "" || service.rating === parseInt(ratingFilter);
+          ratingFilter === "" ||
+          parseFloat(averageRatings[service._id]) === parseFloat(ratingFilter);
         return matchesCity && matchesRating;
       });
 
       setFilteredItems(newFilteredItems);
     } else {
-      axios
-        .get(`http://localhost:2024/profile?category=${category}`)
-        .then((response) => {
-          const filteredServices = response.data.filter(
-            (service) => service.category === category
-          );
-          setFilteredItems(filteredServices);
-        })
-        .catch((error) => {
-          console.error("Error fetching services:", error);
-        });
+      setFilteredItems(allServices); // Reset to all services when no filters are applied
     }
   };
 
@@ -76,7 +94,7 @@ function Sort() {
       >
         <div className="flex items-center">
           <img
-            src="https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"
+            src={service.avatar || "https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png"}
             className="p-4 w-24 h-24 rounded-full object-cover"
             alt="Service"
           />
@@ -93,8 +111,10 @@ function Sort() {
         </div>
         <div className="flex flex-col items-end p-4">
           <div className="flex items-center text-yellow-500">
-            <p className="mr-1 text-lg font-semibold">{service.rating}</p>
-            <p className="text-sm">/5</p>
+            <p className="mr-1 text-lg font-semibold">
+              {averageRatings[service._id] || 0}
+            </p>
+            <p className="mr-1 text-lg font-semibold">/5</p>
           </div>
           <Link
             to={`/profile/${service.username}`}
@@ -109,11 +129,11 @@ function Sort() {
 
   return (
     <div className="dotbg min-h-screen bg-gray-100">
-      <div className="bg-violet-950 ">
-      <div className="bg-violet-950 text-white pt-5">
-        <a href="/" className="logo text-white pl-6 ">
-          NoQ
-        </a>
+      <div className="bg-violet-950">
+        <div className="bg-violet-950 text-white pt-5">
+          <a href="/" className="logo text-white pl-6">
+            NoQ
+          </a>
         </div>
         <div className="mt-6 text-center pb-6">
           <h2 className="text-4xl font-bold text-gray-200">{category}</h2>
@@ -140,11 +160,12 @@ function Sort() {
               onChange={handleRatingChange}
             >
               <option value="">Select Rating</option>
-              <option value="1">1&#9733;</option>
-              <option value="2">2&#9733;&#9733;</option>
-              <option value="3">3&#9733;&#9733;&#9733;</option>
-              <option value="4">4&#9733;&#9733;&#9733;&#9733;</option>
-              <option value="5">5&#9733;&#9733;&#9733;&#9733;&#9733;</option>
+              <option value="0">0 out of 5</option>
+              <option value="1">1 out of 5</option>
+              <option value="2">2 out of 5</option>
+              <option value="3">3 out of 5</option>
+              <option value="4">4 out of 5</option>
+              <option value="5">5 out of 5</option>
             </select>
           </div>
           <button

@@ -51,31 +51,37 @@ const AppointmentData = ({ adminId }) => {
     <div className="container p-4 mx-auto">
       {/* Loading animation */}
       {loading ? (
-        <div className="loader mx-auto my-4" />
-      ) : (
-        <CSSTransition
-          in={!loading} // Animation triggers when loading is false
-          timeout={300}
-          classNames="appointment-list"
-          unmountOnExit
-        >
-          <div className="overflow-y-auto max-h-[600px]"> {/* Adjust max height as needed */}
-            <div className="grid grid-cols-1 gap-4">
-              {appointments.map((appointment) => (
-                <div
-                  key={appointment._id}
-                  className="p-4 transition-transform transform bg-white rounded-lg shadow-lg cursor-pointer hover:scale-105"
-                  onClick={() => openModal(appointment)}
-                >
-                  <h2 className="text-lg font-semibold">{`${new Date(appointment.appointmentDate).toLocaleDateString()} at ${appointment.time}`}</h2>
-                  <p className="text-gray-600">{`Customer: ${appointment.customerName}`}</p>
-                </div>
-              ))}
+  <div className="loader mx-auto my-4" />
+) : (
+  <CSSTransition
+    in={!loading} // Animation triggers when loading is false
+    timeout={300}
+    classNames="appointment-list"
+    unmountOnExit
+  >
+    <div className="overflow-y-auto max-h-[600px]"> {/* Adjust max height as needed */}
+      <div className="grid grid-cols-1 gap-4">
+        {appointments.length > 0 ? (
+          appointments.map((appointment) => (
+            <div
+              key={appointment._id}
+              className="p-4 transition-transform transform bg-white rounded-lg shadow-lg cursor-pointer hover:scale-105"
+              onClick={() => openModal(appointment)}
+            >
+              <h2 className="text-lg font-semibold">{`${new Date(appointment.appointmentDate).toLocaleDateString()} at ${appointment.time}`}</h2>
+              <p className="text-gray-600">{`Customer: ${appointment.customerName}`}</p>
             </div>
+          ))
+        ) : (
+          <div className="text-center text-gray-600 mt-6">
+            <p>No more appointments</p>
           </div>
+        )}
+      </div>
+    </div>
+  </CSSTransition>
+)}
 
-        </CSSTransition>
-      )}
 
       {/* Modal for detailed information */}
       <CSSTransition
@@ -92,7 +98,6 @@ const AppointmentData = ({ adminId }) => {
         >
           {selectedAppointment && (
             <>
-              {/* SVG Close Icon */}
               <svg
                 onClick={closeModal}
                 className="absolute text-black transition cursor-pointer top-4 right-4 hover:text-gray-700"

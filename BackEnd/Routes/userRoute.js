@@ -1,9 +1,9 @@
 // serviceRoutes.js
 const express = require("express");
 const router = express.Router();
-const Service = require("../schema/serviceModal");
-const ServiceProfile = require("../schema/serviceProfile");
-const Section = require("../schema/sectionSchema");
+const Service = require("../Schemas/userSchema");
+const ServiceProfile = require("../Schemas/profileSchema");
+const Section = require("../Schemas/availabilitySchema");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");

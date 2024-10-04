@@ -12,7 +12,6 @@ const profileSchema = new mongoose.Schema({
   bio: String,
   email: String,
   picture: { type: String },
-  timezone: String,
   review: Number,
   section: {
     type: mongoose.Schema.Types.ObjectId,
