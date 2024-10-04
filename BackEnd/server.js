@@ -48,7 +48,7 @@ app.get('/auth/google',
   passport.authenticate('google', { scope: ['email', 'profile'] })
 );
 
-router.get(
+app.get(
   "auth/google/callback",
   passport.authenticate('google', { failureRedirect: 'http://localhost:5173/sign-up' }),
   (req, res) => {
