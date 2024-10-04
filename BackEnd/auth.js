@@ -47,10 +47,11 @@ async function (request, accessToken, refreshToken, profile, done) {
         const token = generateToken(profileDoc);
 
         request.res.cookie("token", token, {
-            httpOnly: false,
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
-
         return done(null, { token, username: profileDoc.username });
     } catch (err) {
         return done(err);

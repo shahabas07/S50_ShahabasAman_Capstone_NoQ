@@ -30,7 +30,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      httpOnly: false,
+      httpOnly: true,
     }
   })
 );
@@ -48,15 +48,34 @@ app.get('/auth/google',
   passport.authenticate('google', { scope: ['email', 'profile'] })
 );
 
-app.get('/auth/google/callback',
+router.get(
+  "auth/google/callback",
   passport.authenticate('google', { failureRedirect: 'http://localhost:5173/sign-up' }),
   (req, res) => {
-    // Assuming req.user contains the authenticated user's information
-    const userName = req.user.username;
+    console.log(req);
+    const { token, username } = req.user;
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     console.log(req.user)
-    res.redirect(`http://localhost:5173/sign-up?isUpdatingProfile=true&username=${encodeURIComponent(userName)}`);
+
+    res.redirect(`http://localhost:5173/sign-up?isUpdatingProfile=true&username=${encodeURIComponent(username)}`);
   }
 );
+
+// app.get('/auth/google/callback',
+//   passport.authenticate('google', { failureRedirect: 'http://localhost:5173/sign-up' }),
+//   (req, res) => {
+//     const userName = req.user.username;
+//     console.log(req.user)
+//     res.redirect(`http://localhost:5173/sign-up?isUpdatingProfile=true&username=${encodeURIComponent(userName)}`);
+//   }
+// );
 
 
 app.get("/auth/failure", (req, res) => {
