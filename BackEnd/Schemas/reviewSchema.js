@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Schema for Service Provider Reviews & Ratings
 const reviewSchema = new mongoose.Schema({
     reviewerName: {
         type: String,
@@ -15,9 +14,9 @@ const reviewSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    adminId: {  // Add the adminId (serviceProviderId)
+    adminId: {  
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Profile', // Reference the service profile collection
+        ref: 'Profile',
         required: true
     }
 });

@@ -15,22 +15,18 @@ const disabledDateRoutes = require('./Routes/disabledDateRoute');
 const passport = require("passport");
 require('./auth');
 
-// Connect to the database
 connect();
 
-// CORS setup, allowing credentials
 app.use(cors({
-  origin: 'http://localhost:5173', // Frontend URL
+  origin: 'http://localhost:5173', 
   credentials: true
 }));
 
-// JSON parsing middleware
 app.use(express.json());
 
-// Session configuration (ensure this comes before passport)
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "defaultsecret", // Prefer environment variable
+    secret: process.env.SESSION_SECRET || "defaultsecret", 
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -39,7 +35,6 @@ app.use(
   })
 );
 
-// Passport initialization
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -59,7 +54,6 @@ app.get('/auth/google/callback',
     // Assuming req.user contains the authenticated user's information
     const userName = req.user.username;
     console.log(req.user)
-    // res.redirect(`http://localhost:5173/profile/${userName}`);
     res.redirect(`http://localhost:5173/sign-up?isUpdatingProfile=true&username=${encodeURIComponent(userName)}`);
   }
 );

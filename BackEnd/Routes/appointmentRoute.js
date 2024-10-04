@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
       return res.status(404).json({ message: 'No appointments found' });
     }
 
-    res.status(200).json(appointments); // Return all appointments
+    res.status(200).json(appointments);
   } catch (err) {
     console.error('Error fetching appointments:', err);
     res.status(500).json({ message: 'Failed to fetch appointments', error: err.message });
@@ -21,12 +21,10 @@ router.get('/', async (req, res) => {
 router.post('/create', async (req, res) => {
   const { appointmentDate, location, time, email, customerName, adminName, adminId } = req.body;
 
-  // Basic validation
   if (!appointmentDate || !location || !time || !email || !customerName || !adminName || !adminId) {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
-  // Validate adminId format
   if (!mongoose.Types.ObjectId.isValid(adminId)) {
     return res.status(400).json({ message: 'Invalid admin ID format' });
   }
@@ -54,10 +52,8 @@ router.post('/create', async (req, res) => {
 router.get('/admin/:adminId/:appointmentDate', async (req, res) => {
   const { adminId, appointmentDate } = req.params;
   
-  // Convert appointmentDate to ISODate format
   const date = new Date(appointmentDate);
   
-  // Check if the date conversion was successful
   if (isNaN(date.getTime())) {
     return res.status(400).json({ message: 'Invalid date format' });
   }
@@ -85,7 +81,6 @@ router.get('/admin/:adminId', async (req, res) => {
   const { adminId } = req.params;
 
   try {
-    // Fetch all appointments for the given adminId
     const appointments = await Appointment.find({ adminId: adminId });
 
     if (!appointments || appointments.length === 0) {

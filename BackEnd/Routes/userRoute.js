@@ -41,14 +41,6 @@ function validateService(req, res, next) {
   next();
 }
 
-function validatePutService(req, res, next) {
-  const { error } = putServiceJoiSchema.validate(req.body);
-  if (error) {
-    return res.status(400).json({ error: error.details[0].message });
-  }
-  next();
-}
-
 router.get("/", async (req, res) => {
   try {
     const data = await Service.find().populate('profile');
@@ -77,10 +69,8 @@ router.post("/", validateService, async (req, res) => {
     const { username, email, timezone, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create the profile first
     const profile = await ServiceProfile.create({ username: username, email });
 
-    // Create a section document
     const section = await Section.create({
       daysOfWeek: {
         Monday: false,
@@ -93,11 +83,9 @@ router.post("/", validateService, async (req, res) => {
       }
     });
 
-    // Update the profile with the section ID
     profile.section = section._id;
     await profile.save();
 
-    // Create the service with the profile ID
     const newService = await Service.create({
       username: username,
       email: email,
@@ -126,7 +114,6 @@ router.post('/sign-in', async (req, res) => {
 
     const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
     
-    // Include the username in the response
     res.json({ token, username: user.username });
   } catch (error) {
     res.status(500).json({ message: 'Error signing in' });

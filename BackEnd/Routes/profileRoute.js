@@ -8,30 +8,6 @@ require('dotenv').config()
 router.use(express.json());
 router.use(cors());
 
-const putProfileJoiSchema = Joi.object({
-    username: Joi.string().alphanum().min(3).max(30),
-    email: Joi.string().email(),
-    timezone: Joi.string(),
-    name: Joi.string(),
-    avatar: Joi.any(), 
-    location: Joi.string(),
-    zip: Joi.number().integer(), 
-    website: Joi.string().uri(), 
-    bio: Joi.string(),
-    picture: Joi.any(),
-    category: Joi.string(),
-    review: Joi.number().integer()
-
-}).min(1);
-
-function validateputProfile(req, res, next) {
-    const { error } = putProfileJoiSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ error: error.details[0].message });
-    }
-    next();
-}
-
 router.get("/", async (req, res) => {
     try {
         const data = await serviceProfile.find();
@@ -62,7 +38,7 @@ router.put("/:id",upload.fields([{ name: 'avatar' }, { name: 'picture' }]), asyn
     try {
       const id = req.params.id;
       const updateFields = { ...req.body };
-     console.log(updateFields)
+    //  console.log(updateFields)
       const updatedService = await serviceProfile.findByIdAndUpdate(
         id,
         updateFields,
@@ -79,9 +55,6 @@ router.put("/:id",upload.fields([{ name: 'avatar' }, { name: 'picture' }]), asyn
       res.status(500).json({ message: "Internal server error" });
     }
   });
-
-
-
 
 router.delete("/:id", async (req, res) => {
     try {
@@ -100,11 +73,10 @@ router.put("/username/:username", upload.fields([{ name: 'avatar' }, { name: 'pi
     try {
         const username = req.params.username;
         const updateFields = { ...req.body };
-        console.log(updateFields)
+        // console.log(updateFields)
 
-        // Find the service profile by username
         const updatedService = await serviceProfile.findOneAndUpdate(
-            { username: username }, // Query by username
+            { username: username }, 
             updateFields,
             { new: true }
         );

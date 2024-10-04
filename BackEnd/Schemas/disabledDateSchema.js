@@ -11,7 +11,7 @@ const DisabledDateSchema = new mongoose.Schema({
     required: true
   },
   startTime: {
-    type: String, // You can store times as strings or Dates if they include date components
+    type: String, 
     required: true
   },
   endTime: {
@@ -19,7 +19,7 @@ const DisabledDateSchema = new mongoose.Schema({
     required: true
   },
   DisabledDay: {
-    type: String, // e.g., 'Sunday', 'Monday', etc.
+    type: String, 
     required: true
   }
 }, {
