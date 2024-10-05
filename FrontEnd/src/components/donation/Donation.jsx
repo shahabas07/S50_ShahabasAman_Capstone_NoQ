@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import QRCode from 'qrcode.react';
-import '../styles/Donation.css'; 
+import '../styles/Donation.css';
 
 const DonationPage = () => {
     const [amount, setAmount] = useState('');
     const [showQRCode, setShowQRCode] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
-    const [payUrl, setPayUrl] = useState(''); 
+    const [payUrl, setPayUrl] = useState('');
     useEffect(() => {
         setIsMobile(/Mobi|Android/i.test(navigator.userAgent));
     }, []);
@@ -17,14 +17,14 @@ const DonationPage = () => {
             return;
         }
 
-        const upiId = 'shezilaman@oksbi'; 
+        const upiId = 'shezilaman@oksbi';
         const newPayUrl = `upi://pay?pa=${upiId}&pn=NoQ&tn=Donation&am=${amount}&cu=INR`;
 
-        setPayUrl(newPayUrl); 
+        setPayUrl(newPayUrl);
 
         setTimeout(() => {
             setShowQRCode(true);
-        }, 300); 
+        }, 300);
 
         if (isMobile) {
             window.open(newPayUrl, '_blank');
@@ -48,7 +48,12 @@ const DonationPage = () => {
                             <input
                                 type="number"
                                 value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value > 0 || value === '') {
+                                        setAmount(value);
+                                    }
+                                }}
                                 placeholder="Enter donation amount in INR"
                                 className="donation-input"
                             />
@@ -60,7 +65,7 @@ const DonationPage = () => {
                     ) : (
                         <div className="qr-code-animation">
                             <h2>Scan to Donate</h2>
-                            <QRCode value={payUrl} size={256} /> 
+                            <QRCode value={payUrl} size={256} />
                             <p>Open your UPI app and scan the QR code to complete your donation.</p>
                         </div>
                     )}
