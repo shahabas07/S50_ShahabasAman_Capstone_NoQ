@@ -49,8 +49,9 @@ async function (request, accessToken, refreshToken, profile, done) {
         request.res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "none",
+            sameSite: "None",
             maxAge: 7 * 24 * 60 * 60 * 1000,
+            domain: '.s50-shahabas-aman-capstone-no-q.vercel.app',
         });
         
         return done(null, { token, username: profileDoc.username });
