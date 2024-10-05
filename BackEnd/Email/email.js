@@ -12,13 +12,11 @@ app.post('/send-otp', async (req, res) => {
   const otp = crypto.randomInt(1000, 9999).toString();
   // const otp = "1000";
 
-  // Store OTP with expiration (5 minutes)
   otpStore[email] = {
     otp,
     expiresAt: Date.now() + 5 * 60 * 1000,
   };
 
-  // Send OTP via email
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {

@@ -10,7 +10,7 @@ const AppointmentData = ({ adminId }) => {
   const [appointments, setAppointments] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [loading, setLoading] = useState(true); // State to manage loading
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const fetchAppointments = async () => {

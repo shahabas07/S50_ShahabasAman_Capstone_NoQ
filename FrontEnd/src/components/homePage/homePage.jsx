@@ -89,7 +89,7 @@ const HomePage = () => {
           <div className="mr-14 mt-1">
             <a
               href="/DonationPage"
-              className="text-md hover:text-purple-800 text-black hover:bg-slate-100 bg-gray-200 py-4 px-8 border border-black rounded-md shadow-xl"
+              className="text-md hover:text-purple-800 text-black hover:bg-slate-100 bg-gray-200 py-4 px-8 border border-black rounded-md shadow-xl transition duration-300 ease-in-out"
             >
               <strong> Donate </strong>
             </a>
@@ -97,7 +97,7 @@ const HomePage = () => {
           <div className="mr-14 mt-1">
             <a
               href="/categories"
-              className="text-md hover:text-purple-800 text-white hover:bg-slate-100 bg-gray-700 py-4 px-8 border border-black rounded-md shadow-xl"
+              className="text-md hover:text-purple-800 text-white hover:bg-slate-100 bg-gray-700 py-4 px-8 border border-black rounded-md shadow-xl transition duration-300 ease-in-out"
             >
               <strong>Service Categories </strong>
             </a>
@@ -105,11 +105,12 @@ const HomePage = () => {
           <div className="mr-20 mt-1">
             <a
               href="/Docs"
-              className="text-md hover:text-purple-800 text-black hover:bg-slate-100 bg-gray-200 py-4 px-8 border border-black rounded-md shadow-xl"
+              className="text-md hover:text-purple-800 text-black hover:bg-slate-100 bg-gray-200 py-4 px-8 border border-black rounded-md shadow-xl transition duration-300 ease-in-out"
             >
               <strong> Docs </strong>
             </a>
           </div>
+
         </div>
       </nav>
       <div className="px-8 flex mt-5 mb-20">
@@ -127,7 +128,7 @@ const HomePage = () => {
                 <h3>Hey {username}👋</h3>
                 <p>It’s good to see you again.</p>
                 <a href={`/profile/${username}`}>
-                <button className="inline-flex h-12 animate-shimmer items-center justify-center rounded-xl 
+                  <button className="inline-flex h-12 animate-shimmer items-center justify-center rounded-xl 
               bg-[linear-gradient(110deg,#4B0082,45%,#1e2631,55%,#4B0082)] bg-[length:200%_100%] 
               text-xl text-white font-medium px-12 py-4 mt-8 transition-all duration-200 transform 
               focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 
@@ -151,9 +152,9 @@ const HomePage = () => {
 
                 <a href="/sign-in">
                   <button className="inline-flex h-12 animate-shimmer items-center justify-center rounded-xl 
-              bg-[linear-gradient(110deg,#FF4500,40%,#1e2631,45%,#FF4500)] bg-[length:200%_100%] 
+              bg-[linear-gradient(110deg,#FF4500,40%,#FF7500,45%,#FF4500)] bg-[length:200%_100%] 
               text-xl text-white font-medium px-12 py-4 mt-8 transition-all duration-200 transform 
-              hover:bg-[linear-gradient(110deg,#CC3700,45%,#1e2631,55%,#CC3700)] hover:scale-105">
+              hover:bg-[linear-gradient(110deg,#CC3700,45%,#D86B24,55%,#CC3700)] hover:scale-105">
                     <strong>Login</strong>
                   </button>
                 </a>

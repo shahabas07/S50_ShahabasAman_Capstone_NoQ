@@ -11,13 +11,11 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
 const generateToken = (user) => {
-    // Create a token payload. You can add more fields if needed.
     const payload = {
         username: user.username,
-        id: user._id, // You can include the user ID if needed
+        id: user._id, 
     };
 
-    // Sign the token with the payload and secret, set expiration as needed (e.g., 1h)
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
     return token;
 };
@@ -70,8 +68,6 @@ router.put("/:id",upload.fields([{ name: 'avatar' }, { name: 'picture' }]), asyn
     }
   });
 
-
-
 const decodetoken = (req, res, next) => {
     console.log(req.cookies)
     const token = req.cookies.token || req.headers["x-access-token"] || req.body.token;
@@ -91,9 +87,6 @@ const decodetoken = (req, res, next) => {
     }
   };
   
-  
-  
-  // Token decoding to retrieve userID / profileID
   router.post('/token/getId/:idType', decodetoken, async (req, res) => {
     try {
         const { idType } = req.params;
@@ -103,7 +96,6 @@ const decodetoken = (req, res, next) => {
             return res.status(400).json({ error: 'User ID not found in token' });
         }
   
-        // Fetch user once and reuse
         const user = await userModel.findById(userId);
   
         if (!user) {
@@ -164,37 +156,12 @@ router.put("/username/:username", upload.fields([{ name: 'avatar' }, { name: 'pi
             return res.status(404).json({ message: "Service not found" });
         }
 
-        // Generate token after updating the profile
         const token = generateToken(updatedService);
-        res.json({ updatedService, token }); // Send the updated service and token
+        res.json({ updatedService, token }); 
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
-
-
-// router.put("/username/:username", upload.fields([{ name: 'avatar' }, { name: 'picture' }]), async (req, res) => {
-//     try {
-//         const username = req.params.username;
-//         const updateFields = { ...req.body };
-//         // console.log(updateFields)
-
-//         const updatedService = await serviceProfile.findOneAndUpdate(
-//             { username: username }, 
-//             updateFields,
-//             { new: true }
-//         );
-
-//         if (!updatedService) {
-//             return res.status(404).json({ message: "Service not found" });
-//         }
-
-//         res.json(updatedService);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: "Internal server error" });
-//     }
-// });
 
 module.exports = router;
