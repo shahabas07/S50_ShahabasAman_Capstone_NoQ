@@ -18,7 +18,7 @@ require('./auth');
 connect();
 
 app.use(cors({
-  origin: 'http://localhost:5173', 
+  origin: '*', 
   credentials: true
 }));
 
@@ -50,7 +50,8 @@ app.get('/auth/google',
 
 app.get(
   "/auth/google/callback",
-  passport.authenticate('google', { failureRedirect: 'http://localhost:5173/sign-up' }),
+  // passport.authenticate('google', { failureRedirect: 'http://localhost:5173/sign-up' }),
+  passport.authenticate('google', { failureRedirect: 'https://s50-shahabas-aman-capstone-no-q.vercel.app/sign-up' }),
   (req, res) => {
     console.log(req);
     const { token, username } = req.user;
@@ -64,7 +65,8 @@ app.get(
 
     console.log(req.user)
 
-    res.redirect(`http://localhost:5173/sign-up?isUpdatingProfile=true&username=${encodeURIComponent(username)}`);
+    // res.redirect(`http://localhost:5173/sign-up?isUpdatingProfile=true&username=${encodeURIComponent(username)}`);
+    res.redirect(`https://s50-shahabas-aman-capstone-no-q.vercel.app//sign-up?isUpdatingProfile=true&username=${encodeURIComponent(username)}`);
   }
 );
 
