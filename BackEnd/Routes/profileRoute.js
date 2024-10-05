@@ -120,7 +120,7 @@ const decodetoken = (req, res, next) => {
     }
   });
 
-  
+
 
 router.delete("/:id", async (req, res) => {
     try {
@@ -139,7 +139,6 @@ router.put("/username/:username", upload.fields([{ name: 'avatar' }, { name: 'pi
     try {
         const username = req.params.username;
         const updateFields = { ...req.body };
-        // console.log(updateFields)
 
         const updatedService = await serviceProfile.findOneAndUpdate(
             { username: username }, 
@@ -151,11 +150,37 @@ router.put("/username/:username", upload.fields([{ name: 'avatar' }, { name: 'pi
             return res.status(404).json({ message: "Service not found" });
         }
 
-        res.json(updatedService);
+        // Generate token after updating the profile
+        const token = generateToken(updatedService);
+        res.json({ updatedService, token }); // Send the updated service and token
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
+
+
+// router.put("/username/:username", upload.fields([{ name: 'avatar' }, { name: 'picture' }]), async (req, res) => {
+//     try {
+//         const username = req.params.username;
+//         const updateFields = { ...req.body };
+//         // console.log(updateFields)
+
+//         const updatedService = await serviceProfile.findOneAndUpdate(
+//             { username: username }, 
+//             updateFields,
+//             { new: true }
+//         );
+
+//         if (!updatedService) {
+//             return res.status(404).json({ message: "Service not found" });
+//         }
+
+//         res.json(updatedService);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: "Internal server error" });
+//     }
+// });
 
 module.exports = router;

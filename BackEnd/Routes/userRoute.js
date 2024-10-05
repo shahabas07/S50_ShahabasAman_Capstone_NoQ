@@ -94,7 +94,6 @@ router.post("/", validateService, async (req, res) => {
       email: email,
       password: hashedPassword,
       profile: profile._id,
-      timezone: timezone,
     });
 
     const token = generateToken(newService);
