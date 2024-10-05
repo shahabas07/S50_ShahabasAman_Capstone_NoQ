@@ -7,6 +7,20 @@ const cors = require("cors");
 require('dotenv').config()
 router.use(express.json());
 router.use(cors());
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
+
+const generateToken = (user) => {
+    // Create a token payload. You can add more fields if needed.
+    const payload = {
+        username: user.username,
+        id: user._id, // You can include the user ID if needed
+    };
+
+    // Sign the token with the payload and secret, set expiration as needed (e.g., 1h)
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+    return token;
+};
 
 router.get("/", async (req, res) => {
     try {
