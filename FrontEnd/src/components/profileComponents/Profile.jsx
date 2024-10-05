@@ -332,7 +332,7 @@ const Profile = () => {
                     href={`/Profile/Reviews/${profileData.username}/${profileData._id}`}
                     className="inline-block text-blue-800 p-2 hover:text-blue-950 "
                   >
-                    Go to Reviews Page
+                    Go to Reviews
                   </a>
                   <p className="text-gray-600 mt-2">
                     Share your experience and help others make informed decisions by posting reviews and ratings about our services. Your feedback is valuable!

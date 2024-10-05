@@ -221,7 +221,7 @@ const HomePage = () => {
         </div>
         <hr className="mt-10" />
         <div className="py-10">
-          <h2 className="font-bold text-3xl text-center mb-10">See what our users are saying.</h2>
+          <h1 className="font-bold text-3xl text-center mb-10">See what our users are saying.</h1>
           <div className="overflow-hidden relative">
             <div className="flex mx-8">
               {reviews.map((review, index) => (
