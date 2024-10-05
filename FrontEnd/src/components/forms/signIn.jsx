@@ -14,8 +14,6 @@ function SignIn() {
   }
 
   const onSubmit = (data) => {
-    // const { username, password } = data;
-    // console.log("about tio");
 
     axios.post(`${API_URI}/service/sign-in`, data)
 
@@ -107,5 +105,3 @@ function SignIn() {
 }
 
 export default SignIn;
-
-

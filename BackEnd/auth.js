@@ -26,7 +26,6 @@ async function (request, accessToken, refreshToken, profile, done) {
         if (!profileDoc) {
             newSection = new sectionModal();
             await newSection.save();
-
             // console.log("---", newSection)
 
             userDoc = new ServiceProfile({
@@ -41,7 +40,6 @@ async function (request, accessToken, refreshToken, profile, done) {
         } else {
             profileDoc = await ServiceProfile.findOne({ email: profile.email });
         }
-
         // console.log("success")
 
         const token = generateToken(profileDoc);
