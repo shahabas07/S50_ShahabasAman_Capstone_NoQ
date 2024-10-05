@@ -57,12 +57,14 @@ function SignUp() {
 
     // Use the current username from state
     axios.put(`${API_URI}/profile/username/${username}`, formData)
-      .then(response => {
+    .then(response => {
+        const token = response.data.token; // Get the token from response
+        Cookies.set('token', token, { expires: 7 }); // Set the cookie
         window.location.href = `/profile/${username}`;
-      })
-      .catch(error => {
+    })
+    .catch(error => {
         setError('Error updating profile. Please try again.');
-      });
+    });
   };
 
   return (
