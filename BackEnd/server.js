@@ -18,7 +18,7 @@ require('./auth');
 connect();
 
 app.use(cors({
-  origin: '*', 
+  origin: 'https://s50-shahabas-aman-capstone-no-q.vercel.app', 
   credentials: true
 }));
 
@@ -59,14 +59,15 @@ app.get(
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
+      sameSite: "None",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      domain: '.s50-shahabas-aman-capstone-no-q.vercel.app',
     });
 
     console.log(req.user)
 
     // res.redirect(`http://localhost:5173/sign-up?isUpdatingProfile=true&username=${encodeURIComponent(username)}`);
-    res.redirect(`https://s50-shahabas-aman-capstone-no-q.vercel.app//sign-up?isUpdatingProfile=true&username=${encodeURIComponent(username)}`);
+    res.redirect(`https://s50-shahabas-aman-capstone-no-q.vercel.app/sign-up?isUpdatingProfile=true&username=${encodeURIComponent(username)}`);
   }
 );
 
