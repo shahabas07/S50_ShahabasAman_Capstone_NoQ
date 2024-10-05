@@ -1,0 +1,29 @@
+name: Sync Fork
+
+on:
+  push:
+    branches:
+      - main  # or the default branch of your fork
+  schedule:
+    - cron: '* * * * *' # Runs every minute
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "Your Name"
+          git config --global user.email "your-email@example.com"
+
+      - name: Sync with upstream
+        run: |
+          git remote add upstream https://github.com/shahabas07/S50_ShahabasAman_Capstone_NoQ
+          git fetch upstream
+          git checkout main # or the default branch of your fork
+          git merge upstream/main
+          git push origin main # or the default branch of your fork
