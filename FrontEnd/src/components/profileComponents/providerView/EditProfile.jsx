@@ -15,7 +15,6 @@ function EditProfile({ profileData, onClose }) {
     website: "",
     bio: "",
     email: "",
-
     avatar: null,
     picture: null,
   });
@@ -182,8 +181,6 @@ function EditProfile({ profileData, onClose }) {
                   className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-indigo-200"
                 />
               </div>
-
-
 
             </div>
             <button type="submit" className="w-full py-3 bg-violet-900 text-white font-semibold rounded-lg hover:bg-violet-950 focus:ring focus:ring-blue-300">

@@ -16,7 +16,7 @@ function SignUp() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const [error, setError] = useState(null);
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(isUpdatingProfileQueryParam);
-  
+  const [loading, setLoading] = useState(false);
   const usernameFromURL = query.get('username');
   const [username, setUsername] = useState(usernameFromURL || ''); 
 
@@ -25,6 +25,7 @@ function SignUp() {
   };
 
   const onSubmit = (data) => {
+    setLoading(true);
     if (data.username) {
       setUsername(data.username);
     }
@@ -34,9 +35,11 @@ function SignUp() {
         const token = response.data.token;
         Cookies.set('token', token, { expires: 7 });
         setIsUpdatingProfile(true);
+        setLoading(false);
       })
       .catch(error => {
         setError('Error signing up. Please try again.');
+        setLoading(false);
       });
   };
 
@@ -55,15 +58,16 @@ function SignUp() {
 
     if (data.avatar[0]) formData.append('avatar', imageUrlofAvatar);
 
-    // Use the current username from state
     axios.put(`${API_URI}/profile/username/${username}`, formData)
     .then(response => {
-        const token = response.data.token; // Get the token from response
-        Cookies.set('token', token, { expires: 7 }); // Set the cookie
+        const token = response.data.token; 
+        Cookies.set('token', token, { expires: 7 }); 
         window.location.href = `/profile/${username}`;
+        setLoading(false);
     })
     .catch(error => {
         setError('Error updating profile. Please try again.');
+        setLoading(false);
     });
   };
 
@@ -127,7 +131,11 @@ function SignUp() {
               </div>
               <div className="flex justify-center mt-6">
                 <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-6 rounded-full">
-                  Sign Up
+                  {loading ? (
+                    <div className="loader"></div> 
+                  ) : (
+                    "Sign Up"
+                  )}
                 </button>
               </div>
               {error && <div className="text-center mt-4 text-red-600">{error}</div>}
@@ -201,17 +209,22 @@ function SignUp() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="avatar" className="block text-yellow-200">Profile Picture</label>
+                  <label htmlFor="avatar" className="block text-yellow-200">Profile Image</label>
                   <input
                     {...register("avatar")}
-                    className="w-full p-2 rounded-full text-black focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                    className="w-full text-black"
                     type="file"
+                    accept="image/*"
                   />
                 </div>
               </div>
               <div className="flex justify-center mt-6">
                 <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-6 rounded-full">
-                  Submit
+                {loading ? (
+                    <div className="loader"></div> 
+                  ) : (
+                    "Update Profile"
+                  )}
                 </button>
               </div>
               {error && <div className="text-center mt-4 text-red-600">{error}</div>}

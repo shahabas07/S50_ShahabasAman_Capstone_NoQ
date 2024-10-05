@@ -23,22 +23,7 @@ const Profile = () => {
   const [popupVisible, setPopupVisible] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [editProfileVisible, setEditProfileVisible] = useState(false);
-
-  function getCookieValue(cookieName) {
-    let name = cookieName + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let cookieArray = decodedCookie.split(';');
   
-    for (let i = 0; i < cookieArray.length; i++) {
-      let cookie = cookieArray[i].trim();
-      if (cookie.indexOf(name) === 0) {
-        return cookie.substring(name.length, cookie.length);
-      }
-    }
-    return "";
-  }
-  
-  console.log(getCookieValue("token"));
 
   useEffect(() => {
     axios
@@ -140,7 +125,6 @@ const Profile = () => {
     setShowLogoutModal(false);
   };
   const handleLogoutConfirm = () => {
-    // Clear cookies (you might want to clear specific cookies depending on your app)
     document.cookie.split(";").forEach((c) => {
       document.cookie = c
         .replace(/^ +/, "")
@@ -227,7 +211,7 @@ const Profile = () => {
                       <a
                         href="#"
                         className="block py-2 px-4 hover:bg-gray-200 transition duration-200"
-                        onClick={handleLogoutClick}  // Trigger the logout modal
+                        onClick={handleLogoutClick} 
                       >
                         Log Out
                       </a>
@@ -245,7 +229,7 @@ const Profile = () => {
             <div className="relative p-6 bg-gradient-to-r from-violet-100 to-yellow-50 shadow-lg rounded-lg mt-8 ">
               <div className="relative w-full mt-8 h-auto mb-6" style={{ paddingBottom: '16.25%' }}>
                 <img
-                  className="absolute top-0 left-0 w-full h-full object-cover rounded-lg opacity-80"  // Adjust opacity here (0 to 100%)
+                  className="absolute top-0 left-0 w-full h-full object-cover rounded-lg opacity-80" 
                   src={profileData.picture || "https://cdn.pixabay.com/photo/2016/06/22/11/10/box-1472804_1280.png"}
                   alt="YouTube Banner"
                 />

@@ -30,7 +30,6 @@ function SetAvailability({ sectionId, adminId }) {
     "July", "August", "September", "October", "November", "December"
   ];
 
-
   useEffect(() => {
     axios
       .get(`${API_URI}/section/${sectionId}`)
@@ -194,9 +193,6 @@ function SetAvailability({ sectionId, adminId }) {
 
   return (
     <div>
-
-
-
       <div className="flex flex-col items-start p-4 bg-white shadow-lg rounded-lg">
         <div className="flex space-x-4 mb-4">
           
