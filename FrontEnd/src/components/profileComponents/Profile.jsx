@@ -24,6 +24,22 @@ const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [editProfileVisible, setEditProfileVisible] = useState(false);
 
+  function getCookieValue(cookieName) {
+    let name = cookieName + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let cookieArray = decodedCookie.split(';');
+  
+    for (let i = 0; i < cookieArray.length; i++) {
+      let cookie = cookieArray[i].trim();
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+    return "";
+  }
+  
+  console.log(getCookieValue("token"));
+
   useEffect(() => {
     axios
       .get(`${API_URI}/profile`)
