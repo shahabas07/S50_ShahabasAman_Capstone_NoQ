@@ -16,3 +16,4 @@ describe('OTP Functions', () => {
     expect(isOtpExpired(futureTime)).to.be.false;
   });
 });
+
